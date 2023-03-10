@@ -227,7 +227,7 @@ export class GroupWarningProductComponent implements OnInit {
 	public listBranchs: Branch[] = [];
 	public listDatas: ProductWarning[] = [];
 	public query: SearchEarlyWarning = {
-		retailerId : 0,
+		retailerId : 717250,
 		search : '',
 		page : 0,
 		size : 0,
@@ -249,7 +249,7 @@ export class GroupWarningProductComponent implements OnInit {
 	}
 
 	getListBranch() {
-		const queryParams = queryString.stringify({retailerId: 0});
+		const queryParams = queryString.stringify({retailerId: 717250});
 		this.$service.getListBranch(queryParams)
 		.pipe(takeUntil(this.unsubscribe$))
 		.subscribe(results => {

@@ -9,7 +9,7 @@
         &>ul>li{
             &.active{
                 a{
-                    background: #e98000 !important;
+                    background: #04080e !important;
                     .p-menuitem-text{
                         color: #fff;
                     }
@@ -17,8 +17,19 @@
             }
             a{
                 padding: 9px 10px 9px !important;
+                background: #e67e00 !important;
+                &:hover{
+                    background: #04080e !important;
+                    .p-menuitem-text{
+                        color: #fff;
+                    }
+                }
+                &:focus{
+                    box-shadow: none;
+                }
                 .p-menuitem-text{
                     font-size: 12px;
+                    color: #fff !important;
                 }
             }
         }

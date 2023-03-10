@@ -213,7 +213,7 @@ app-sidebar{
         margin-top: 10px !important;
         overflow: visible !important;
         z-index: 9999 !important;
-        background: #fff;
+        background: #e88000;
         box-shadow: #ccc;
     }
     .p-menubar-root-list .p-menuitem .p-submenu-list:after {
@@ -226,6 +226,9 @@ app-sidebar{
         right: 15px;
         top: -8px;
         z-index: 9999;
+    }
+    .p-menubar .p-menuitem-link .p-menuitem-text{
+        color: #fff;
     }
 }
 

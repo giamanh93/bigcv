@@ -14,51 +14,48 @@ export const menus = [
   },
   {
       label: 'Hệ thống kiểm soát',
-      code: 'danh-muc',
+      code: 'control-system',
       icon: 'pi pi-qrcode',
-      routerLink: '/control-system',
       items: [
-          { label: 'Hệ thống kiểm soát 1', routerLink: '/hop-dong-dai-ly/dat-lenh' },
-          { label: 'Hệ thống kiểm soát 2', routerLink: '/hop-dong-dai-ly/so-lenh' },
-          { label: 'Hệ thống kiểm soát 3', routerLink: '/hop-dong-dai-ly/so-lenh' },
-          { label: 'Hệ thống kiểm soát 4', routerLink: '/hop-dong-dai-ly/so-lenh' },
+          { label: '1. Kiểm soát công nợ nhà cung cấp', routerLink: '/hop-dong-dai-ly/dat-lenh' },
+          { label: '2. Kiểm soát công nợ khách hàng', routerLink: '/hop-dong-dai-ly/so-lenh' },
+          { label: '3. Kiểm soát thất thoát hàng hóa', routerLink: '/hop-dong-dai-ly/so-lenh' },
+          { label: '4. Kiểm soát thất thoát thu ngân', routerLink: '/hop-dong-dai-ly/so-lenh' },
+          { label: '5. Kiểm soát chi phí', routerLink: '/hop-dong-dai-ly/so-lenh' },
       ] 
   },
 
   {
       label: 'Hệ thống quản trị nhà cung cấp',
-      code: 'dao-tao',
+      code: 'supplier-management-system',
       icon: 'pi pi-box',
-      routerLink: '/supplier-management-system',
       items: [
-          { label: 'Hệ thống quản trị nhà cung cấp 1', routerLink: '/truy-van/giao-dich' },
-          { label: 'Hệ thống quản trị nhà cung cấp 2', routerLink: '/truy-van/giao-dich' },
-          { label: 'Hệ thống quản trị nhà cung cấp 3', routerLink: '/truy-van/giao-dich' },
-          { label: 'Hệ thống quản trị nhà cung cấp 4', routerLink: '/truy-van/giao-dich' },
-          { label: 'Hệ thống quản trị nhà cung cấp 5', routerLink: '/truy-van/giao-dich' },
+          { label: '1. Theo dõi lợi nhuận sản phẩm nhà cung cấp', routerLink: '/truy-van/giao-dich' },
+          { label: '2. Theo dõi sản phẩm hỏng hủy theo từng nhà cung cấp', routerLink: '/truy-van/giao-dich' },
+          { label: '3. Theo dõi hiệu quả chiến dịch khuyến mãi từng nhà cung cấp', routerLink: '/truy-van/giao-dich' },
+          { label: '4. Theo dõi lượng hàng tồn theo từng nhà cung cấp', routerLink: '/truy-van/giao-dich' },
       ]
   },
   // 0200f578-4b8e-45e8-99eb-c5446db7efb6
 
   {
       label: 'Hệ thống quản trị khách hàng',
-      code: 'bao-cao',
+      code: 'customer-management-system',
       icon: 'pi pi-file',
-      routerLink: '/customer-management-system',
       items: [
-          { label: 'Hệ thống quản trị khách hàng 1', routerLink: '/bao-cao/truy-van-bc' },
-          { label: 'Hệ thống quản trị khách hàng 2', routerLink: '/bao-cao/truy-van-bc' },
-          { label: 'Hệ thống quản trị khách hàng 3', routerLink: '/bao-cao/truy-van-bc' },
-          { label: 'Hệ thống quản trị khách hàng 4', routerLink: '/bao-cao/truy-van-bc' },
+          { label: '1. Theo dõi doanh số khách hàng theo sản phẩm', routerLink: '/bao-cao/truy-van-bc' },
+          { label: '2. Theo dõi doanh số khách hàng theo chu kỳ', routerLink: '/bao-cao/truy-van-bc' },
+          { label: '3. Theo dõi theo giá trị đơn hàng', routerLink: '/bao-cao/truy-van-bc' },
+          { label: '4. Theo dõi theo hình thức mua hàng', routerLink: '/bao-cao/truy-van-bc' },
+          { label: '5. Theo dõi doanh số khách hàng theo khu vực', routerLink: '/bao-cao/truy-van-bc' },
       ]
   },
   // 7f991b49-4816-4b89-ba83-4996cfc8966e
   
   {
       label: 'Hệ thống đối soát tài chính',
-      code: 'bao-cao',
+      code: 'financial-control-system',
       icon: 'pi pi-file',
-      routerLink: '/financial-control-system',
       items: [
           { label: 'Hệ thống đối soát tài chính 1', routerLink: '/cai-dat/quan-ly-ngay-nghi' },
           { label: 'Hệ thống đối soát tài chính 2', routerLink: '/cai-dat/quan-ly-ngay-nghi' },

@@ -24,7 +24,7 @@ import { ProductService } from './services/product.service';
     DefaultLayoutComponent,
     FooterComponent,
     NavbarComponent,
-    SidebarComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,

@@ -5,14 +5,20 @@ import { DefaultLayoutComponent } from './containers/default-layout';
   imports: [
       RouterModule.forRoot([
           {
+            path: '',
+            redirectTo: 'early-warning-system',
+            pathMatch: 'full',
+          },
+          {
               path: '', component: DefaultLayoutComponent,
               children: [
                 { path: '', loadChildren: () => import('../app/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
-                  // { path: 'uikit', loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },
-                  // { path: 'utilities', loadChildren: () => import('./demo/components/utilities/utilities.module').then(m => m.UtilitiesModule) },
-                  // { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },
-                  // { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
-                  // { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) }
+                { path: 'customer-management-system', loadChildren: () => import('../app/components/customer-management-system/customer-management-system.module').then(m => m.CustomerManagementSystemModule) },
+                { path: 'early-warning-system', loadChildren: () => import('../app/components/early-warning-system/early-warning-system.module').then(m => m.EarlyWarningSystemModule) },
+                { path: 'control-system', loadChildren: () => import('../app/components/control-system/control-system.module').then(m => m.ControlSystemModule) },
+                { path: 'financial-control-system', loadChildren: () => import('../app/components/financial-control-system/financial-control-system.module').then(m => m.FinancialControlSystemModule) },
+                { path: 'supplier-management-system', loadChildren: () => import('../app/components/supplier-management-system/supplier-management-system.module').then(m => m.SupplierManagementSystemModule) },
+                  
               ]
           },
           // { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },

@@ -1,4 +1,7 @@
 
+@import "assets/layout/styles/layout/layout.scss";
+
+   
 $fontMmedium: 'Arial','Apple SD Gothic Neo','Gulim';
 $fontRegular: 'Arial','Apple SD Gothic Neo','Gulim';
 
@@ -80,6 +83,9 @@ body {
         svg{
             max-height: 30px;
         }
+        img{
+            max-width: 33px;
+        }
     }
 }
 
@@ -102,6 +108,7 @@ body {
     position: relative;
     z-index: 12;
     background: #E9A34D;
+    padding-left: 54px;
 }
 
 .p-toolbar{
@@ -264,6 +271,41 @@ app-sidebar{
         &>g{
             path{
                 fill: #4d7ae9;
+            }
+        }
+    }
+}
+.main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.p-breadcrumb{
+    background: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-bottom: 30px !important;
+    margin-top: -10px;
+    li{
+        font-size: 8px;
+        font-weight: 500;
+        a{
+            .p-menuitem-text{
+                font-size: 13px;
+                font-weight: 400;
+                color: #A3A9B9 !important;
+                font-family: $fontRegular;
+            }
+        }
+        &.p-breadcrumb-chevron{
+            color: rgba(43, 47, 51, 0.4) !important;
+        }
+        &:last-child{
+            a{
+                .p-menuitem-text{
+                    // color: #4C97E4 !important;
+                }
             }
         }
     }

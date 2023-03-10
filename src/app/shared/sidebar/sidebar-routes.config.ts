@@ -1,19 +1,22 @@
-
 export const menus = [
   {
       label: 'Hệ thống cảnh báo sớm',
-      code: "nguoi-dung",
+      code: "early-warning-system",
       icon: 'pi pi-user',
-    //   items: [
-    //       { label: 'Tham số đầu tư', routerLink: '/quan-ly-dau-tu/tham-so-dau-tu' },
-    //       { label: 'Sản phẩm đầu tư', routerLink: '/quan-ly-dau-tu/san-pham-dau-tu' },
-    //       { label: 'Phân phối đầu tư', routerLink: '/quan-ly-dau-tu/phan-phoi-dau-tu' },
-    //   ]
+      class: 'navigation-header',
+      // routerLink: 'early-warning-system',
+      items: [
+          { label: '1. Nhóm cảnh báo liên quan đến sản phẩm', routerLink: '/early-warning-system/group-warning-product', class: 'nav-item', },
+          { label: '2. Nhóm cảnh báo liên quan đến khách hàng', routerLink: '/early-warning-system/group-warning-customer', class: 'nav-item', },
+          { label: '3. Nhóm cảnh báo liên quan đến chốt quầy', routerLink: '/early-warning-system/group-warning-counter', class: 'nav-item', },
+          { label: '4. Nhóm cảnh báo liên quan đến nhà cung cấp', routerLink: '/early-warning-system/group-warning-supplier', class: 'nav-item', },
+      ]
   },
   {
       label: 'Hệ thống kiểm soát',
       code: 'danh-muc',
       icon: 'pi pi-qrcode',
+      routerLink: '/control-system'
     //   items: [
     //       { label: 'Đặt lệnh', routerLink: '/hop-dong-dai-ly/dat-lenh' },
     //       { label: 'Sổ lệnh', routerLink: '/hop-dong-dai-ly/so-lenh' },
@@ -34,6 +37,7 @@ export const menus = [
       label: 'Hệ thống quản trị nhà cung cấp',
       code: 'dao-tao',
       icon: 'pi pi-box',
+      routerLink: '/supplier-management-system'
     //   items: [
     //       { label: 'Giao dịch', routerLink: '/truy-van/giao-dich' },
     //       { label: 'Thị trường thứ cấp', routerLink: '/truy-van/thi-truong-thu-cap' },
@@ -48,6 +52,7 @@ export const menus = [
       label: 'Hệ thống quản trị khách hàng',
       code: 'bao-cao',
       icon: 'pi pi-file',
+      routerLink: '/customer-management-system'
     //   items: [
     //       { label: 'Truy vấn BC', routerLink: '/bao-cao/truy-van-bc' },
     //       { label: 'Báo cáo QT', routerLink: '/bao-cao/bao-cao-qt' },
@@ -60,6 +65,7 @@ export const menus = [
       label: 'Hệ thống đối soát tài chính',
       code: 'bao-cao',
       icon: 'pi pi-file',
+      routerLink: '/financial-control-system'
     //   items: [
     //       { label: 'Quản lý ngày nghỉ', routerLink: '/cai-dat/quan-ly-ngay-nghi' },
     //       { label: 'Tổng thầu', routerLink: '/cai-dat/tong-thau' },

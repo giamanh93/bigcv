@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Event, RouterEvent, Router, NavigationEnd} from '@angular/router';
+import { filter } from 'rxjs';
 import { menus } from './sidebar-routes.config';
 // import { menus } from './sidebar-routes.config';
 declare var $: any;
@@ -13,48 +14,54 @@ export class SidebarComponent implements OnInit {
     constructor (
         private router: Router,
     ) {
-      
+        router.events.pipe(
+            filter(event => event instanceof NavigationEnd)
+         ).subscribe((e: any) => {
+            const pathname  = window.location.pathname ;
+            if(this.menuItems.length > 0) {
+                this.parseObjectProperties(this.menuItems, e.url);
+                this.menuItems = [...this.menuItems];
+                localStorage.setItem('menuItems', JSON.stringify(this.menuItems));
+            }else {
+                this.menuItems = menus.filter(menuItem => menuItem);
+            }
+                
+         });
     }
 
     ngOnInit() {
         const pathname  = window.location.pathname ;
         this.menuItems = menus.filter(menuItem => menuItem);
-            // this.parseObjectProperties(this.menuItems, pathname);
+            this.parseObjectProperties(this.menuItems, pathname);
             this.menuItems = [...this.menuItems];
     }
 
-
     parseObjectProperties(obj: any[], pathname: string = '') {
         for (let k of obj) {
-            k.label = k.title;
-            // if (k.path && k.classs !== 'navigation-header') {
-            //     k.routerLink = k.path
-            // }
-            // if (k.submenus && k.submenus.length > 0) {
-            //     k.items = k.submenus.filter((d: any) => d.classs && (d.classs.indexOf("hidden") < 0));
-            // }
             if (k.routerLink) {
                 // active menu con
                 if(k.isExternalLink) {
                     if (k.routerLink && pathname.includes(k.routerLink)) {
-                        k.styleClass ='parent_active' + ' ' + k.classs
+                        k.styleClass = 'parent_active' 
                     } else {
-                        k.styleClass ='parent_no_active' + ' ' + k.classs
+                        k.styleClass = 'parent_no_active' 
                     }
                 }else {
                     if (k.routerLink && pathname.includes(k.routerLink)) {
-                        k.styleClass = k.path === '/hop-dong-dai-ly/xu-ly-dat-coc' ?  'active hidden' : 'active'
+                        console.log(pathname)
+                        console.log(k.routerLink)
+                        k.styleClass = 'active' 
                     } else {
-                        k.styleClass =  k.path === '/hop-dong-dai-ly/xu-ly-dat-coc' ?  'no-active hidden' : 'no-active'
+                        k.styleClass = 'no-active' 
                     }
                 }
                
             } else {
                 //active cha
-                if (k.badgeClass && pathname && pathname.split('/').indexOf(k.badgeClass) > -1 && k.classs === 'navigation-header') {
-                    k.styleClass ="parent_active" + ' ' + k.classs
+                if (k.code && pathname && pathname.split('/').indexOf(k.code) > -1 && k.class === 'navigation-header') {
+                    k.styleClass = "parent_active"
                 } else {
-                    k.styleClass ="parent_no_active" + ' ' + k.classs
+                    k.styleClass = "parent_no_active" 
                 }
             }
 

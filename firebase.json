@@ -1,0 +1,11 @@
+{
+    "hosting": {
+        "public": "dist",
+        "site": "big-cv",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  }

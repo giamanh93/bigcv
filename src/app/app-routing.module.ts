@@ -25,7 +25,8 @@ import { DefaultLayoutComponent } from './containers/default-layout';
           // { path: 'landing', loadChildren: () => import('./demo/components/landing/landing.module').then(m => m.LandingModule) },
           // { path: 'notfound', component: NotfoundComponent },
           // { path: '**', redirectTo: '/notfound' },
-      ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })
+      ])
+      // ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })
   ],
   exports: [RouterModule]
 })

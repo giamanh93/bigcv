@@ -2,14 +2,14 @@
     color: var(--f68c1f);
 }
 .p-menubar .p-menubar-root-list > .p-menuitem.parent_active > a{
-    background: #e98000 !important;
+    background: #df4800 !important;
 }
 .p-menubar .p-menubar-root-list > .p-menuitem{
     p-menubarsub{
         &>ul>li{
             &.active{
                 a{
-                    background: #04080e !important;
+                    background: #df4800 !important;
                     .p-menuitem-text{
                         color: #fff;
                     }
@@ -19,7 +19,7 @@
                 padding: 9px 10px 9px !important;
                 background: #e67e00 !important;
                 &:hover{
-                    background: #04080e !important;
+                    background: #df4800 !important;
                     .p-menuitem-text{
                         color: #fff;
                     }
@@ -37,7 +37,7 @@
 }
 @media screen and (max-width: 960px) {
     .p-menubar .p-menubar-root-list{
-        background: #e9a34d !important;
+        background: #e67e00 !important;
     }
     .main .sidebarBody{
         padding: 7px 20px !important;

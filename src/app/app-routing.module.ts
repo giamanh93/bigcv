@@ -13,11 +13,11 @@ import { DefaultLayoutComponent } from './containers/default-layout';
               path: '', component: DefaultLayoutComponent,
               children: [
                 { path: '', loadChildren: () => import('../app/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
-                { path: 'customer-management-system', loadChildren: () => import('../app/components/customer-management-system/customer-management-system.module').then(m => m.CustomerManagementSystemModule) },
+                { path: 'customer-mgmt-system', loadChildren: () => import('../app/components/customer-management-system/customer-management-system.module').then(m => m.CustomerManagementSystemModule) },
                 { path: 'early-warning-system', loadChildren: () => import('../app/components/early-warning-system/early-warning-system.module').then(m => m.EarlyWarningSystemModule) },
                 { path: 'control-system', loadChildren: () => import('../app/components/control-system/control-system.module').then(m => m.ControlSystemModule) },
                 { path: 'financial-control-system', loadChildren: () => import('../app/components/financial-control-system/financial-control-system.module').then(m => m.FinancialControlSystemModule) },
-                { path: 'supplier-management-system', loadChildren: () => import('../app/components/supplier-management-system/supplier-management-system.module').then(m => m.SupplierManagementSystemModule) },
+                { path: 'supplier-mgmt-system', loadChildren: () => import('../app/components/supplier-management-system/supplier-management-system.module').then(m => m.SupplierManagementSystemModule) },
                   
               ]
           },

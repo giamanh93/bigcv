@@ -10,6 +10,11 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { CustomerManagementSystemRoutingModule } from './customer-management-system-routing.module';
 import { CustomerManagementSystemComponent } from './customer-management-system.component';
 import { HrmBreadCrumbModule } from 'src/app/common/hrm-breadcrumb/hrm-breadcrumb.module';
+import { FollowUpCustomerSalesProductComponent } from './follow-up-customer-sales-product/follow-up-customer-sales-product.component';
+import { FollowUpCustomerCycleComponent } from './follow-up-customer-cycle/follow-up-customer-cycle.component';
+import { FollowOrderValueComponent } from './follow-order-value/follow-order-value.component';
+import { FollowFormShoppingComponent } from './follow-form-shopping/follow-form-shopping.component';
+import { FollowUpCustomerSalesAreaComponent } from './follow-up-customer-sales-area/follow-up-customer-sales-area.component';
 
 @NgModule({
     imports: [
@@ -24,6 +29,6 @@ import { HrmBreadCrumbModule } from 'src/app/common/hrm-breadcrumb/hrm-breadcrum
         CustomerManagementSystemRoutingModule,
         HrmBreadCrumbModule
     ],
-    declarations: [CustomerManagementSystemComponent]
+    declarations: [CustomerManagementSystemComponent, FollowUpCustomerSalesProductComponent, FollowUpCustomerCycleComponent, FollowOrderValueComponent, FollowFormShoppingComponent, FollowUpCustomerSalesAreaComponent]
 })
 export class CustomerManagementSystemModule { }

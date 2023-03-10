@@ -12,6 +12,11 @@
         <p-tabView>
             <p-tabPanel header="Sản phẩm không đạt biên độ lợi nhuận">
                 <p-table [value]="products"  [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
+                    <ng-template pTemplate="caption">
+                        <div class="ui-helper-clearfix" style="text-align: left">
+                            <p-dropdown [options]="listBranchs" [(ngModel)]="query.branchId" optionLabel="branchName" (change)="loadTab1()" optionValue="branchId" [filter]="true" filterBy="branchName"></p-dropdown>
+                        </div>
+                    </ng-template>
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th>Code</th>

@@ -1,3 +1,4 @@
+import { MessageService } from 'primeng/api';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,6 +19,8 @@ import { ButtonModule } from 'primeng/button';
 import { StyleClassModule } from 'primeng/styleclass';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { ProductService } from './services/product.service';
+import {ToastModule} from 'primeng/toast';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,10 +42,11 @@ import { ProductService } from './services/product.service';
     TableModule,
     StyleClassModule,
     PanelMenuModule,
-    ButtonModule
+    ButtonModule,
+    ToastModule
   ],
   providers: [
-    ProductService 
+    MessageService 
   ],
   
   bootstrap: [AppComponent]

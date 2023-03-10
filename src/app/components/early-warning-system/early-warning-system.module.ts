@@ -16,6 +16,10 @@ import { GroupWarningProductComponent } from './group-warning-product/group-warn
 import { GroupWarningCustomerComponent } from './group-warning-customer/group-warning-customer.component';
 import { GroupWarningCounterComponent } from './group-warning-counter/group-warning-counter.component';
 import { GroupWarningSupplierComponent } from './group-warning-supplier/group-warning-supplier.component';
+import { EarlyWarningSystemService } from 'src/app/services/earlyWarningSystem.service';
+import { MessageService } from 'primeng/api';
+import {MessageModule} from 'primeng/message';
+import {DropdownModule} from 'primeng/dropdown';
 @NgModule({
     imports: [
         CommonModule,
@@ -29,7 +33,12 @@ import { GroupWarningSupplierComponent } from './group-warning-supplier/group-wa
         EarlyWarningSystemRoutingModule,
         HrmBreadCrumbModule,
         DividerModule,
-        TabViewModule
+        TabViewModule,
+        MessageModule,
+        DropdownModule
+    ],
+    providers: [
+        EarlyWarningSystemService,
     ],
     declarations: [EarlyWarningSystemComponent, GroupWarningProductComponent, GroupWarningCustomerComponent, GroupWarningCounterComponent, GroupWarningSupplierComponent]
 })

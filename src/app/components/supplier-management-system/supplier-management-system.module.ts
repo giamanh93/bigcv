@@ -10,6 +10,10 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { SupplierManagementSystemRoutingModule } from './supplier-management-system-routing.module';
 import { SupplierManagementSystemComponent } from './supplier-management-system.component';
 import { HrmBreadCrumbModule } from 'src/app/common/hrm-breadcrumb/hrm-breadcrumb.module';
+import { FollowProfitProductSupplierComponent } from './follow-profit-product-supplier/follow-profit-product-supplier.component';
+import { FollowProductCancelSupplierComponent } from './follow-product-cancel-supplier/follow-product-cancel-supplier.component';
+import { FollowEffectivePromotionSupplierComponent } from './follow-effective-promotion-supplier/follow-effective-promotion-supplier.component';
+import { FollowInventorySupplierComponent } from './follow-inventory-supplier/follow-inventory-supplier.component';
 
 @NgModule({
     imports: [
@@ -24,6 +28,6 @@ import { HrmBreadCrumbModule } from 'src/app/common/hrm-breadcrumb/hrm-breadcrum
         SupplierManagementSystemRoutingModule,
         HrmBreadCrumbModule
     ],
-    declarations: [SupplierManagementSystemComponent]
+    declarations: [SupplierManagementSystemComponent, FollowProfitProductSupplierComponent, FollowProductCancelSupplierComponent, FollowEffectivePromotionSupplierComponent, FollowInventorySupplierComponent]
 })
 export class SupplierManagementSystemModule { }

@@ -10,6 +10,11 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { ControlSystemRoutingModule } from './control-system-routing.module';
 import { ControlSystemComponent } from './control-system.component';
 import { HrmBreadCrumbModule } from 'src/app/common/hrm-breadcrumb/hrm-breadcrumb.module';
+import { TakeControlDebtSupplierComponent } from './take-control-debt-supplier/take-control-debt-supplier.component';
+import { TakeControlDebtCustomerComponent } from './take-control-debt-customer/take-control-debt-customer.component';
+import { TakeControlLossProductComponent } from './take-control-loss-product/take-control-loss-product.component';
+import { TakeControlLossCounterComponent } from './take-control-loss-counter/take-control-loss-counter.component';
+import { TakeControlCostsComponent } from './take-control-costs/take-control-costs.component';
 
 @NgModule({
     imports: [
@@ -24,6 +29,6 @@ import { HrmBreadCrumbModule } from 'src/app/common/hrm-breadcrumb/hrm-breadcrum
         ControlSystemRoutingModule,
         HrmBreadCrumbModule
     ],
-    declarations: [ControlSystemComponent]
+    declarations: [ControlSystemComponent, TakeControlDebtSupplierComponent, TakeControlDebtCustomerComponent, TakeControlLossProductComponent, TakeControlLossCounterComponent, TakeControlCostsComponent]
 })
 export class ControlSystemModule { }

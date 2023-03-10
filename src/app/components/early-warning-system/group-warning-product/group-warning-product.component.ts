@@ -1,17 +1,21 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import queryString from 'query-string';
+import { Subject, takeUntil } from 'rxjs';
 import { HrmBreadcrumb } from 'src/app/common/hrm-breadcrumb/hrm-breadcrumb.component';
-import { EarlyWarning } from 'src/app/models/early-warning';
+import { Branch, EarlyWarning, ProductWarning, SearchEarlyWarning } from 'src/app/models/early-warning';
+import { EarlyWarningSystemService } from 'src/app/services/earlyWarningSystem.service';
 
 
 @Component({
-  selector: 'app-group-warning-product',
-  templateUrl: './group-warning-product.component.html',
-  styleUrls: ['./group-warning-product.component.scss']
+	selector: 'app-group-warning-product',
+	templateUrl: './group-warning-product.component.html',
+	styleUrls: ['./group-warning-product.component.scss']
 })
 export class GroupWarningProductComponent implements OnInit {
-  itemsBreadcrumb : HrmBreadcrumb[] = [];
-  products: EarlyWarning[] = [
+	itemsBreadcrumb: HrmBreadcrumb[] = [];
+	products: EarlyWarning[] = [
 		{
 			"id": "1000",
 			"code": "f230fh0g3",
@@ -217,11 +221,61 @@ export class GroupWarningProductComponent implements OnInit {
 			"rating": 3
 		}
 	]
-  ngOnInit(): void {
-    this.itemsBreadcrumb = [
-      { label: 'Trang chủ', routerLink: '/home' },
-      { label: 'Hệ thống cảnh báo sớm' },
-      { label: '1. Nhóm cảnh báo liên quan đến sản phẩm' },
-    ];
-  }
+	private readonly unsubscribe$: Subject<void> = new Subject();
+	private $service= inject(EarlyWarningSystemService);
+	private $messageService= inject(MessageService);
+	public listBranchs: Branch[] = [];
+	public listDatas: ProductWarning[] = [];
+	public query: SearchEarlyWarning = {
+		retailerId : 0,
+		search : '',
+		page : 0,
+		size : 0,
+		branchId : 0,
+	}
+
+	ngOnDestroy() {
+	  this.unsubscribe$.next();
+	  this.unsubscribe$.complete();
+	}
+	
+	ngOnInit(): void {
+		this.itemsBreadcrumb = [
+			{ label: 'Trang chủ', routerLink: '/home' },
+			{ label: 'Hệ thống cảnh báo sớm' },
+			{ label: '1. Nhóm cảnh báo liên quan đến sản phẩm' },
+		];
+		this.getListBranch();
+	}
+
+	getListBranch() {
+		const queryParams = queryString.stringify({retailerId: 0});
+		this.$service.getListBranch(queryParams)
+		.pipe(takeUntil(this.unsubscribe$))
+		.subscribe(results => {
+			if(results.success) {
+				this.listBranchs = results.data.content ?? [];
+				this.query.branchId = this.listBranchs.length > 0 ? this.listBranchs[0].branchId : 0;
+				this.loadTab1();
+			}else {
+				this.listDatas = [];
+				this.$messageService.add({severity:'error', summary: 'Error Message', detail: results.code});
+			}
+		})
+	}
+
+	loadTab1() {
+		const queryParams = queryString.stringify(this.query);
+		this.$service.getListProductNotProfitMargin(queryParams)
+		.pipe(takeUntil(this.unsubscribe$))
+		.subscribe(results => {
+			if(results.success) {
+				this.listDatas = results.data.content ?? [];
+			}else {
+				this.listDatas = [];
+				this.$messageService.add({severity:'error', summary: 'Error Message', detail: results.code});
+			}
+		})
+	}
+
 }

@@ -9,7 +9,7 @@
     <p-divider></p-divider>
 
     <div class="card ">
-        <p-tabView>
+        <p-tabView [(activeIndex)]="indexTab" (onChange)="handleChange($event.index)">
             <p-tabPanel header="Sản phẩm không đạt biên độ lợi nhuận">
                 <p-table [value]="products"  [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
                     <ng-template pTemplate="caption">

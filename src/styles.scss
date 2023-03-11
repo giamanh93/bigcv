@@ -216,17 +216,17 @@ app-sidebar{
         background: #e88000;
         box-shadow: #ccc;
     }
-    .p-menubar-root-list .p-menuitem .p-submenu-list:after {
-        content: "";
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 8px solid #ffffff;
-        display: block;
-        position: absolute;
-        right: 15px;
-        top: -8px;
-        z-index: 9999;
-    }
+    // .p-menubar-root-list .p-menuitem .p-submenu-list:after {
+    //     content: "";
+    //     border-left: 8px solid transparent;
+    //     border-right: 8px solid transparent;
+    //     border-bottom: 8px solid #ffffff;
+    //     display: block;
+    //     position: absolute;
+    //     right: 15px;
+    //     top: -8px;
+    //     z-index: 9999;
+    // }
     .p-menubar .p-menuitem-link .p-menuitem-text{
         color: #fff;
     }

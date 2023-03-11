@@ -15,6 +15,7 @@ import { EarlyWarningSystemService } from 'src/app/services/earlyWarningSystem.s
 })
 export class GroupWarningProductComponent implements OnInit {
 	itemsBreadcrumb: HrmBreadcrumb[] = [];
+	indexTab: number = 0;
 	products: EarlyWarning[] = [
 		{
 			"id": "1000",
@@ -276,6 +277,10 @@ export class GroupWarningProductComponent implements OnInit {
 				this.$messageService.add({severity:'error', summary: 'Error Message', detail: results.code});
 			}
 		})
+	}
+
+	handleChange(index: number) {
+		this.indexTab = index;
 	}
 
 }

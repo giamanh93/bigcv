@@ -4,7 +4,7 @@
             <div class="col-8 p-0">
                 <app-hrm-breadcrumb [items]="itemsBreadcrumb" ></app-hrm-breadcrumb>
             </div>
-            <div class="col-4 p-0 flex justify-content-end align-items-center">
+            <div class="col-4 p-0 flex justify-content-end align-items-center dropdown-branch">
                 <p-dropdown [options]="listBranchs" [(ngModel)]="query.branchId" optionLabel="branchName" (change)="loadTab1()" optionValue="branchId" [filter]="true" filterBy="branchName"></p-dropdown>
             </div>
         </div>

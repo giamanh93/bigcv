@@ -1,22 +1,20 @@
 <div class="main-grid">
-    <section class="bread-crumb" style="margin-bottom: -20px;">
-        <div class="d-flex bet middle">
-            <div class="col-12 p-0">
+    <section class="bread-crumb" >
+        <div class="flex bet middle">
+            <div class="col-8 p-0">
                 <app-hrm-breadcrumb [items]="itemsBreadcrumb" ></app-hrm-breadcrumb>
+            </div>
+            <div class="col-4 p-0 flex justify-content-end align-items-center">
+                <p-dropdown [options]="listBranchs" [(ngModel)]="query.branchId" optionLabel="branchName" (change)="loadTab1()" optionValue="branchId" [filter]="true" filterBy="branchName"></p-dropdown>
             </div>
         </div>
     </section>
-    <p-divider></p-divider>
-
+    <!-- this.organizeInfoService.setStocks(e.value); -->
+    
     <div class="card ">
         <p-tabView [(activeIndex)]="indexTab" (onChange)="handleChange($event.index)">
             <p-tabPanel header="Sản phẩm không đạt biên độ lợi nhuận">
                 <p-table [value]="products"  [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
-                    <ng-template pTemplate="caption">
-                        <div class="ui-helper-clearfix" style="text-align: left">
-                            <p-dropdown [options]="listBranchs" [(ngModel)]="query.branchId" optionLabel="branchName" (change)="loadTab1()" optionValue="branchId" [filter]="true" filterBy="branchName"></p-dropdown>
-                        </div>
-                    </ng-template>
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th>Code</th>

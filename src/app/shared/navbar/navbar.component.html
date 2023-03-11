@@ -9,7 +9,7 @@
   </div>
   <div class="flex gap12 end col-6 middle p-0 justify-content-end">
     <div class="p-toolbar-group-right profile">
-        <div class="card flex align-items-center" (click)="menu.toggle($event)">
+        <div class="card flex align-items-center" >
           <p-avatar class="img-avatar" image="../../../assets/images/walter.png"   severity="danger" [style]="{'z-index': 9999}" shape="circle" ></p-avatar>
           <span  class="ml-12 mr-15 text-color name"> {{userName}}</span>
           <p-menu #menu [popup]="true" [model]="items" styleClass="my-account-menu"></p-menu>

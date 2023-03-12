@@ -17,7 +17,6 @@ import { GroupWarningCustomerComponent } from './group-warning-customer/group-wa
 import { GroupWarningCounterComponent } from './group-warning-counter/group-warning-counter.component';
 import { GroupWarningSupplierComponent } from './group-warning-supplier/group-warning-supplier.component';
 import { EarlyWarningSystemService } from 'src/app/services/earlyWarningSystem.service';
-import { MessageService } from 'primeng/api';
 import {MessageModule} from 'primeng/message';
 import {DropdownModule} from 'primeng/dropdown';
 @NgModule({

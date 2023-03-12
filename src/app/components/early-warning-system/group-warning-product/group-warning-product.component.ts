@@ -250,12 +250,23 @@ export class GroupWarningProductComponent implements OnInit {
 	}
 
 	getListBranch() {
+		this.listBranchs = [{
+			branchName: "ư42w3232",
+			branchId: 434
+		},
+		{
+			branchName: "ư42w3232",
+			branchId: 434
+		}];
 		const queryParams = queryString.stringify({retailerId: 717250});
 		this.$service.getListBranch(queryParams)
 		.pipe(takeUntil(this.unsubscribe$))
 		.subscribe(results => {
 			if(results.success) {
-				this.listBranchs = results.data.content ?? [];
+				this.listBranchs = [{
+					branchName: "ư42w3232",
+					branchId: 434
+				}];
 				this.query.branchId = this.listBranchs.length > 0 ? this.listBranchs[0].branchId : 0;
 				this.loadTab1();
 			}else {

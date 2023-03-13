@@ -21,6 +21,9 @@ import {MessageModule} from 'primeng/message';
 import {DropdownModule} from 'primeng/dropdown';
 import { LoadingGridModule } from 'src/app/common/components/loading-grid/loading-grid.module';
 import { SkeletonModule } from 'primeng/skeleton';
+import {PaginatorModule} from 'primeng/paginator';
+import {ToolbarModule} from 'primeng/toolbar';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -39,7 +42,9 @@ import { SkeletonModule } from 'primeng/skeleton';
         MessageModule,
         DropdownModule,
         LoadingGridModule,
-        SkeletonModule
+        SkeletonModule,
+        PaginatorModule,
+        ToolbarModule
     ],
     providers: [
         EarlyWarningSystemService,

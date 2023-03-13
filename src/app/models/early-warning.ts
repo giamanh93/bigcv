@@ -34,7 +34,13 @@ export interface Branch {
 export interface SearchEarlyWarning {
     retailerId?: number;
     search?: string;
-    page?: number;
-    size?: number;
+    page: number;
+    size: number;
     branchId?: number;
+}
+
+export interface CountRecord {
+    totalRecord: number;
+    currentRecordStart: number;
+    currentRecordEnd: number;
 }

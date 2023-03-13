@@ -4,16 +4,22 @@ import { MessageService } from 'primeng/api';
 import queryString from 'query-string';
 import { Subject, takeUntil } from 'rxjs';
 import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.component';
-import { Branch, ProductWarning, SearchEarlyWarning } from 'src/app/models/early-warning';
+import { Branch, CountRecord, ProductWarning, SearchEarlyWarning } from 'src/app/models/early-warning';
 import { EarlyWarningSystemService } from 'src/app/services/earlyWarningSystem.service';
 @Component({
 	selector: 'app-group-warning-product',
 	templateUrl: './group-warning-product.component.html',
 	styleUrls: ['./group-warning-product.component.scss']
 })
+
 export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 	itemsBreadcrumb: HrmBreadcrumb[] = [];
 	indexTab: number = 0;
+	countRecord: CountRecord = {
+		totalRecord: 0,
+		currentRecordStart: 0,
+		currentRecordEnd: 0
+	}
 	private readonly unsubscribe$: Subject<void> = new Subject();
 	private $service = inject(EarlyWarningSystemService);
 	private $messageService = inject(MessageService);
@@ -108,6 +114,7 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 				}
 			})
 	}
+
 	loadTab2() {
 		const queryParams = queryString.stringify(this.query);
 		this.$service.getListProductNotProfitMargin(queryParams)
@@ -123,6 +130,7 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 				}
 			})
 	}
+
 	loadTab3() {
 		const queryParams = queryString.stringify(this.query);
 		this.$service.getListProductNotProfitMargin(queryParams)
@@ -138,6 +146,7 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 				}
 			})
 	}
+
 	loadTab4() {
 		const queryParams = queryString.stringify(this.query);
 		this.$service.getListProductNotProfitMargin(queryParams)
@@ -159,4 +168,45 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 		this.getLists();
 	}
 
+	first: number = 0;
+	paginate(event: any) {
+		this.query.page = event.first;
+		this.first = event.first;
+		this.query.size = event.rows;
+		this.getLists();
+	}
+
+	fnCountRecord(results: any) {
+		this.countRecord.totalRecord = results.totalPages;
+		this.countRecord.currentRecordStart = results.totalPages === 0 ? this.query.page = 0 : this.query.page + 1;
+		if ((results.totalPages - this.query.page) > this.query.size) {
+			this.countRecord.currentRecordEnd = this.query.page + Number(this.query.size);
+		} else {
+			this.countRecord.currentRecordEnd = results.totalPages;
+		}
+	}
+
+	loadjs = 0;
+	heightGrid = 0
+	ngAfterViewChecked(): void {
+		const a: any = document.querySelector(".header");
+		const b: any = document.querySelector(".sidebarBody");
+		const c: any = document.querySelector(".breadcrumb");
+		const e: any = document.querySelector(".paginator");
+		const d: any = document.querySelector(".toolbar");
+		this.loadjs++
+		if (this.loadjs === 5) {
+			if (b && b.clientHeight && d) {
+				const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight  + e.clientHeight + 91;
+				this.heightGrid = window.innerHeight - totalHeight;
+				console.log(this.heightGrid)
+				this.$changeDetech.detectChanges();
+			} else {
+				this.loadjs = 0;
+			}
+		}
+	}
+
+
+	
 }

@@ -5,7 +5,7 @@
                 <app-hrm-breadcrumb [items]="itemsBreadcrumb" ></app-hrm-breadcrumb>
             </div>
             <div class="col-4 p-0 flex justify-content-end align-items-center dropdown-branch">
-                <p-dropdown [options]="listBranchs" [(ngModel)]="query.branchId" optionLabel="branchName" (change)="changeBranch()" optionValue="branchId" [appendTo]="'body'" [filter]="true" filterBy="branchName"></p-dropdown>
+                <p-dropdown [options]="listBranchs" [(ngModel)]="query.branchId" [autoDisplayFirst]="false" optionLabel="branchName" optionValue="branchId" (onChange)="changeBranch()" [appendTo]="'body'" [filter]="true" filterBy="branchName"></p-dropdown>
             </div>
         </div>
     </section>
@@ -14,7 +14,7 @@
     <div class="card ">
         <p-tabView [(activeIndex)]="indexTab" (onChange)="handleChange($event.index)">
             <p-tabPanel header="Sản phẩm không đạt biên độ lợi nhuận">
-                <p-table [value]="products"  [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
+                <p-table [value]="isLoading ? listDatasLoading : listDatas"  [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th>Sản phẩm</th>
@@ -28,17 +28,21 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-columns="columns">
-                        <tr>
-                            <td><span class="p-column-title">Sản phẩm</span>{{product.productName}}</td>
-                            <td><span class="p-column-title">Mã</span>{{product.barCode}}</td>
-                            <td><span class="p-column-title">Đơn vị</span>{{product.unit}}</td>
-                            <td><span class="p-column-title">Chi nhánh</span>{{product.branchName}}</td>
-                            <td><span class="p-column-title">Giá bán</span>{{product.sellPrice | number}}</td>
-                            <td><span class="p-column-title">realMargin</span>{{product.realMargin | number}}</td>
-                            <td><span class="p-column-title">standardMargin</span>{{product.standardMargin | number}}</td>
+                        <tr >
+                            <td><span class="p-column-title">Sản phẩm</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.productName}}</td>
+                            <td><span class="p-column-title">Mã</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.barCode}}</td>
+                            <td><span class="p-column-title">Đơn vị</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.unit}}</td>
+                            <td><span class="p-column-title">Chi nhánh</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.branchName}}</td>
+                            <td><span class="p-column-title">Giá mua</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.buyPrice | number}}</td>
+                            <td><span class="p-column-title">Giá bán</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.sellPrice | number}}</td>
+                            <td><span class="p-column-title">Real margin</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.realMargin | number}}</td>
+                            <td><span class="p-column-title">Standard margin</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.standardMargin | number}}</td>
                         </tr>
+                       
                     </ng-template>
                 </p-table>
+                
+
             
             </p-tabPanel>
             <p-tabPanel header="Sản phẩm có tỷ lệ hỏng hủy vượt định mức">

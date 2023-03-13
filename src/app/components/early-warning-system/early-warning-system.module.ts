@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChartModule } from 'primeng/chart';
 import { MenuModule } from 'primeng/menu';
 import { TableModule } from 'primeng/table';
@@ -19,10 +19,13 @@ import { GroupWarningSupplierComponent } from './group-warning-supplier/group-wa
 import { EarlyWarningSystemService } from 'src/app/services/earlyWarningSystem.service';
 import {MessageModule} from 'primeng/message';
 import {DropdownModule} from 'primeng/dropdown';
+import { LoadingGridModule } from 'src/app/common/components/loading-grid/loading-grid.module';
+import { SkeletonModule } from 'primeng/skeleton';
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         ChartModule,
         MenuModule,
         TableModule,
@@ -34,7 +37,9 @@ import {DropdownModule} from 'primeng/dropdown';
         DividerModule,
         TabViewModule,
         MessageModule,
-        DropdownModule
+        DropdownModule,
+        LoadingGridModule,
+        SkeletonModule
     ],
     providers: [
         EarlyWarningSystemService,

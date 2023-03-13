@@ -3,6 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
 import { Responses } from '../models/responses';
+import { MessageService } from 'primeng/api';
+import { ErrorService } from './error.service';
 
 const baseUrl = 'http://3.0.125.181:8888/api';
 
@@ -11,24 +13,48 @@ const baseUrl = 'http://3.0.125.181:8888/api';
 })
 export class EarlyWarningSystemService {
     private $http = inject(HttpClient);
-    //   private $messageService = inject(MessageService);
+    private $messageService = inject(MessageService);
+    private $errorService = inject(ErrorService)
 
 
     getListProductNotProfitMargin(query: string): Observable<Responses> {
-        return this.$http.get<Responses>(baseUrl + `/product/alert/v1/getListProductNotProfitMargin?` + query);
+        return this.$http.get<Responses>(baseUrl + `/product/alert/v1/getListProductNotProfitMargin?` + query).pipe(
+            catchError(error => {
+                this.handleError(error)
+                return of(error.error);
+            })
+        );;
+
     }
 
     getListBranch(query: string): Observable<Responses> {
-        return this.$http.get<Responses>(baseUrl + `/branch/v1/getListBranch?` + query);
+        return this.$http.get<Responses>(baseUrl + `/branch/v1/getListBranch?` + query)
+            .pipe(
+                catchError(error => {
+                    this.handleError(error)
+                    return of(error.error);
+                })
+            );;
     }
 
-    private handleError(err: any, showError = true) {
-        if (showError) {
-            this.showError(err);
-        }
-
-        return of(undefined);
+    private handleError(error: any) {
+        this.$errorService.setError(error.error);
+        this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: error.error });
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     private showError(err: any) {
         if (err) {

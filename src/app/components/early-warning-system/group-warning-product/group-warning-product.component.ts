@@ -1,34 +1,39 @@
 
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, SimpleChanges, OnChanges } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import queryString from 'query-string';
 import { Subject, takeUntil } from 'rxjs';
 import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.component';
 import { Branch, EarlyWarning, ProductWarning, SearchEarlyWarning } from 'src/app/models/early-warning';
 import { EarlyWarningSystemService } from 'src/app/services/earlyWarningSystem.service';
-
-
 @Component({
 	selector: 'app-group-warning-product',
 	templateUrl: './group-warning-product.component.html',
 	styleUrls: ['./group-warning-product.component.scss']
 })
-export class GroupWarningProductComponent implements OnInit {
+export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 	itemsBreadcrumb: HrmBreadcrumb[] = [];
 	indexTab: number = 0;
-	products: EarlyWarning[] = [];
 	private readonly unsubscribe$: Subject<void> = new Subject();
 	private $service = inject(EarlyWarningSystemService);
 	private $messageService = inject(MessageService);
-	public listBranchs: Branch[] = [];
+	private $changeDetech = inject(ChangeDetectorRef);
+	public listBranchs: any[] = [];
 	public listDatas: ProductWarning[] = [];
+	public listDatasLoading: any[] = Array(20).fill(1).map((x, i) => i);
+	public isLoading: boolean = false;
 	public query: SearchEarlyWarning = {
 		retailerId: 717250,
 		search: '',
-		page: 0,
+		page: 1,
 		size: 50,
-		branchId: 0,
+		branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
 	}
+
+	ngAfterViewInit() {
+		this.$changeDetech.detectChanges();
+	}
+
 
 	ngOnDestroy() {
 		this.unsubscribe$.next();
@@ -47,15 +52,11 @@ export class GroupWarningProductComponent implements OnInit {
 	getListBranch() {
 		const queryParams = queryString.stringify({ retailerId: 717250 });
 		this.$service.getListBranch(queryParams)
-			.pipe(takeUntil(this.unsubscribe$))
+			// .pipe(takeUntil(this.unsubscribe$))
 			.subscribe(results => {
 				if (results.success) {
 					this.listBranchs = results.data.content ?? [];
-					if(localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId')) {
-						this.query.branchId = Number(localStorage.getItem('branchId'));
-					}else {
-						this.query.branchId = this.listBranchs.length > 0 ? this.listBranchs[0].branchId : 0;
-					}
+					if (this.query.branchId === 0 && this.listBranchs.length > 0) this.query.branchId = this.listBranchs[0].branchId;
 					this.getLists();
 				} else {
 					this.listDatas = [];
@@ -70,6 +71,7 @@ export class GroupWarningProductComponent implements OnInit {
 	}
 
 	getLists() {
+		this.isLoading = true;
 		this.listDatas = [];
 		switch (this.indexTab) {
 			case 0:
@@ -98,8 +100,10 @@ export class GroupWarningProductComponent implements OnInit {
 			.subscribe(results => {
 				if (results.success) {
 					this.listDatas = results.data.content ?? [];
+					this.isLoading = false;
 				} else {
 					this.listDatas = [];
+					this.isLoading = false;
 					this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
 				}
 			})
@@ -111,8 +115,10 @@ export class GroupWarningProductComponent implements OnInit {
 			.subscribe(results => {
 				if (results.success) {
 					this.listDatas = results.data.content ?? [];
+					this.isLoading = false;
 				} else {
 					this.listDatas = [];
+					this.isLoading = false;
 					this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
 				}
 			})
@@ -124,8 +130,10 @@ export class GroupWarningProductComponent implements OnInit {
 			.subscribe(results => {
 				if (results.success) {
 					this.listDatas = results.data.content ?? [];
+					this.isLoading = false;
 				} else {
 					this.listDatas = [];
+					this.isLoading = false;
 					this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
 				}
 			})
@@ -137,8 +145,10 @@ export class GroupWarningProductComponent implements OnInit {
 			.subscribe(results => {
 				if (results.success) {
 					this.listDatas = results.data.content ?? [];
+					this.isLoading = false;
 				} else {
 					this.listDatas = [];
+					this.isLoading = false;
 					this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
 				}
 			})

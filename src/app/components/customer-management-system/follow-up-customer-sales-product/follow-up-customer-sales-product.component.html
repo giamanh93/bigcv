@@ -12,33 +12,69 @@
     <!-- this.organizeInfoService.setStocks(e.value); -->
     
     <div class="card ">
-        <p-table [value]="isLoading ? listDatasLoading : listDatas"  [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
+       <div class=" toolbar">
+        <p-toolbar>
+            <div class="p-toolbar-group-start">
+                <p-button label="New" icon="pi pi-plus"></p-button>
+                <!-- <p-button label="Upload" icon="pi pi-upload" styleClass="p-button-success"></p-button> -->
+            </div>
+            <div class="p-toolbar-group-end">
+                <div class="p-inputgroup">
+                    <input type="text"(onChange)="getLists()" pInputText placeholder="Keyword">   
+                    <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"></button>      
+                </div>
+                <p-button icon="pi pi-calendar" styleClass="p-button-success"></p-button>
+                <p-button icon="pi pi-times" styleClass="p-button-danger"></p-button>
+            </div>
+        </p-toolbar>
+       </div>
+       <div class="table-default" #container>
+        <p-table [value]="isLoading ? listDatasLoading : listDatas"  [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-height': this.heightGrid + 'px'}"  styleClass="table-row  p-datatable-sm">
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th>Khách hàng</th>
-                    <th>revenue</th>
-                    <!-- <th>Đơn vị</th>
-                    <th>Chi nhánh</th>
-                    <th>Giá mua</th>
-                    <th>Giá bán</th>
-                    <th>realMargin</th>
-                    <th>standardMargin</th> -->
+                    <th>Sản phầm</th>
+                    <th>Doanh thu</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-product let-columns="columns">
                 <tr >
                     <td><span class="p-column-title">Khách hàng</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.customerName}}</td>
-                    <td><span class="p-column-title">revenue</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.revenue}}</td>
-                    <!-- <td><span class="p-column-title">Đơn vị</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.unit}}</td>
-                    <td><span class="p-column-title">Chi nhánh</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.branchName}}</td>
-                    <td><span class="p-column-title">Giá mua</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.buyPrice | number}}</td>
-                    <td><span class="p-column-title">Giá bán</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.sellPrice | number}}</td>
-                    <td><span class="p-column-title">Real margin</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.realMargin | number}}</td>
-                    <td><span class="p-column-title">Standard margin</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.standardMargin | number}}</td> -->
+                    <td><span class="p-column-title">Sản phầm</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.productName}}</td>
+                    <td><span class="p-column-title">Doanh thu</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.revenue | number}}</td>
                 </tr>
                
             </ng-template>
         </p-table>
-
+        <!-- <p-table rowGroupMode="rowspan" groupRowsBy="representative.name" sortField="representative.name" [value]="isLoading ? listDatasLoading : listDatas"  [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-height': this.heightGrid + 'px'}"  styleClass="table-row  p-datatable-sm">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th style="width:3rem">#</th>
+                    <th>Representative</th>
+                    <th>Name</th>
+                    <th>Country</th>
+                    <th>Company</th>
+                    <th>Date</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product let-columns="columns" let-rowIndex="rowIndex" let-rowgroup="rowgroup" let-rowspan="rowspan">
+                <tr >
+                    <td><span class="p-column-title">#</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{rowIndex}}</td>
+                    <td *ngIf="rowgroup" [attr.rowspan]="rowspan"><span class="p-column-title">Representative</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.representative.name}}</td>
+                    <td><span class="p-column-title">Name</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.name}}</td>
+                    <td><span class="p-column-title">Country</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.country.name}}</td>
+                    <td><span class="p-column-title">Company</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.company}}</td>
+                    <td><span class="p-column-title">Date</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.date}}</td>
+                </tr>
+               
+            </ng-template>
+        </p-table> -->
+        <div class="paginator flex justify-content-end align-items-center" style="background-color: #fff;">
+            <span>Từ {{ countRecord.currentRecordStart }} đến {{ countRecord.currentRecordEnd }} trên tổng số {{ countRecord.totalRecord }} kết quả</span>
+            <p-paginator [rows]="query.size" [totalRecords]="countRecord.totalRecord" [first]="first"
+                (onPageChange)="paginate($event)" [rowsPerPageOptions]="[20,40,60,100,200,{ showAll: 'ALL' }]">
+            </p-paginator>
+        </div>
+        </div>
         </div>
 </div>

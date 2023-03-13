@@ -6,8 +6,8 @@ export interface Customer {
 
 export interface CustmerSearch {
     retailerId?: number;
-    page?: number;
-    size?: number;
+    page: number;
+    size: number;
     branchId?: number;
     startDate?: string;
     endDate?: string;

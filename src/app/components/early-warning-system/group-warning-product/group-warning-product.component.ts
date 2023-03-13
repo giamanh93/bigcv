@@ -197,7 +197,7 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 		this.loadjs++
 		if (this.loadjs === 5) {
 			if (b && b.clientHeight && d) {
-				const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight  + e.clientHeight + 91;
+				const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight  + e.clientHeight + 85;
 				this.heightGrid = window.innerHeight - totalHeight;
 				console.log(this.heightGrid)
 				this.$changeDetech.detectChanges();

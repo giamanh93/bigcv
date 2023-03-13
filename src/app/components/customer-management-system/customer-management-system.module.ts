@@ -18,6 +18,8 @@ import { FollowUpCustomerSalesAreaComponent } from './follow-up-customer-sales-a
 import { SkeletonModule } from 'primeng/skeleton';
 import { DropdownModule } from 'primeng/dropdown';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
+import { PaginatorModule } from 'primeng/paginator';
+import { ToolbarModule } from 'primeng/toolbar';
 
 @NgModule({
     imports: [
@@ -32,7 +34,9 @@ import { customerManagementSystem } from 'src/app/services/customerManagementSys
         CustomerManagementSystemRoutingModule,
         HrmBreadCrumbModule,
         SkeletonModule,
-        DropdownModule
+        DropdownModule,
+        PaginatorModule,
+        ToolbarModule
     ],
     providers: [
         customerManagementSystem

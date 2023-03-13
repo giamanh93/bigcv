@@ -20,6 +20,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
 import { PaginatorModule } from 'primeng/paginator';
 import { ToolbarModule } from 'primeng/toolbar';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
+import {CalendarModule} from 'primeng/calendar';
+
 
 @NgModule({
     imports: [
@@ -36,7 +39,9 @@ import { ToolbarModule } from 'primeng/toolbar';
         SkeletonModule,
         DropdownModule,
         PaginatorModule,
-        ToolbarModule
+        ToolbarModule,
+        OverlayPanelModule,
+        CalendarModule
     ],
     providers: [
         customerManagementSystem

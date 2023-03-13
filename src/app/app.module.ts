@@ -20,6 +20,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ToastModule} from 'primeng/toast';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import {ToastModule} from 'primeng/toast';
     ToastModule
   ],
   providers: [
-    MessageService 
+    MessageService,
+    DatePipe
   ],
   
   bootstrap: [AppComponent]

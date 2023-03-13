@@ -12,3 +12,8 @@ export interface CustmerSearch {
     startDate?: string;
     endDate?: string;
 }
+
+export interface STATUS {
+    label?: string;
+    value?: number
+}

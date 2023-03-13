@@ -23,7 +23,38 @@
                     <input type="text"(onChange)="getLists()" pInputText placeholder="Keyword">   
                     <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"></button>      
                 </div>
-                <p-button icon="pi pi-calendar" styleClass="p-button-success"></p-button>
+                <p-button icon="pi pi-filter-fill" styleClass="p-button-success" (click)="op.toggle($event)"></p-button>
+                <p-overlayPanel #op [style]="{'width': '25rem'}" [dismissable]="true" appendTo="body" >
+                    <ng-template pTemplate>
+                        <div class="p-fluid grid formgrid">
+                            <div class="field col-12 md:col-6">
+                                <label for="dateformat">Từ ngày</label>
+                                <p-calendar placeholder="Từ ngày" 
+                                    panelStyleClass="datepicker-default" placeholder="Từ ngày (YYYY-MM-DD)"
+                                    [appendTo]="'body'" [baseZIndex]="101" [(ngModel)]="query.startDate" 
+                                    [monthNavigator]="true"
+                                    [yearNavigator]="true" inputId="navigators" dateFormat="yy-mm-dd"
+                                    name="startDate"></p-calendar>
+                            </div>
+                        
+                            <div class="field col-12 md:col-6">
+                                <label for="icon">Đến ngày</label>
+                                <p-calendar placeholder="Từ ngày" 
+                                panelStyleClass="datepicker-default" placeholder="Từ ngày (YYYY-MM-DD)"
+                                [appendTo]="'body'" [baseZIndex]="101" [(ngModel)]="query.endDate" 
+                                [monthNavigator]="true"
+                                [yearNavigator]="true" inputId="navigators" dateFormat="yy-mm-dd"
+                                name="endDate"></p-calendar>
+                            </div>
+                        </div>
+
+                        <div class="flex grid justify-content-end">
+                            <button type="button" pButton pRipple icon="pi pi-search" label="Tìm kiếm" (onClick)="getLists()" class="p-button-warn mr-1"></button>  
+                            <button type="button" pButton pRipple icon="pi pi-times" label="Làm mới" (onClick)="refresh()" class="p-button-danger"></button>  
+                        </div>
+                        
+                    </ng-template>
+                </p-overlayPanel>
                 <p-button icon="pi pi-times" styleClass="p-button-danger"></p-button>
             </div>
         </p-toolbar>

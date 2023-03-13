@@ -1,13 +1,12 @@
+import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, SimpleChanges, OnChanges, HostListener } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import queryString from 'query-string';
 import { Subject, takeUntil } from 'rxjs';
 import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.component';
-import { CustmerSearch, Customer } from 'src/app/models/customer-management-system';
-import { Branch, CountRecord, ProductWarning, SearchEarlyWarning } from 'src/app/models/early-warning';
+import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
-import { EarlyWarningSystemService } from 'src/app/services/earlyWarningSystem.service';
 @Component({
   selector: 'app-follow-up-customer-sales-product',
   templateUrl: './follow-up-customer-sales-product.component.html',
@@ -24,16 +23,17 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   }
   private readonly unsubscribe$: Subject<void> = new Subject();
   private $service = inject(customerManagementSystem);
+  private $datepipe = inject(DatePipe);
   private $messageService = inject(MessageService);
   private $changeDetech = inject(ChangeDetectorRef);
   public listBranchs: Branch[] = [];
   public listDatas: any[] = [];
   public listDatasLoading: any[] = Array(20).fill(1).map((x, i) => i);
   public isLoading: boolean = false;
-  public query: CustmerSearch = {
+  public query: any = {
     retailerId: 717250,
-    startDate: '2023-01-01',
-    endDate: '2023-03-31',
+    startDate: new Date('2023-01-01'),
+    endDate: new Date('2023-03-31'),
     page: 1,
     size: 20,
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
@@ -54,6 +54,11 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     this.screenWidth = window.innerWidth;
   }
 
+  refresh() {
+    this.query.startDate= new Date('2023-01-01'),
+    this.query.endDate= new Date('2023-03-31'),
+    this.getLists();
+  }
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
@@ -93,7 +98,10 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     // })
     this.listDatas = [];
     this.isLoading = true;
-    const queryParams = queryString.stringify(this.query);
+    const params = { ...this.query };
+    params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd')
+    params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd')
+    const queryParams = queryString.stringify(params);
     this.$service.getRevenueByCustomer(queryParams)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(results => {

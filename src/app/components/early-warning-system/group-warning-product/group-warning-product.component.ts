@@ -51,7 +51,11 @@ export class GroupWarningProductComponent implements OnInit {
 			.subscribe(results => {
 				if (results.success) {
 					this.listBranchs = results.data.content ?? [];
-					this.query.branchId = this.listBranchs.length > 0 ? this.listBranchs[0].branchId : 0;
+					if(localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId')) {
+						this.query.branchId = Number(localStorage.getItem('branchId'));
+					}else {
+						this.query.branchId = this.listBranchs.length > 0 ? this.listBranchs[0].branchId : 0;
+					}
 					this.getLists();
 				} else {
 					this.listDatas = [];

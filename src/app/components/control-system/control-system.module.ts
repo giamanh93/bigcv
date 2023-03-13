@@ -9,7 +9,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { ControlSystemRoutingModule } from './control-system-routing.module';
 import { ControlSystemComponent } from './control-system.component';
-import { HrmBreadCrumbModule } from 'src/app/common/hrm-breadcrumb/hrm-breadcrumb.module';
+import { HrmBreadCrumbModule } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.module';
 import { TakeControlDebtSupplierComponent } from './take-control-debt-supplier/take-control-debt-supplier.component';
 import { TakeControlDebtCustomerComponent } from './take-control-debt-customer/take-control-debt-customer.component';
 import { TakeControlLossProductComponent } from './take-control-loss-product/take-control-loss-product.component';

@@ -9,7 +9,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { FinancialControlSystemRoutingModule } from './financial-control-system-routing.module';
 import { FinancialControlSystemComponent } from './financial-control-system.component';
-import { HrmBreadCrumbModule } from 'src/app/common/hrm-breadcrumb/hrm-breadcrumb.module';
+import { HrmBreadCrumbModule } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.module';
 
 @NgModule({
     imports: [

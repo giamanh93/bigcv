@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HrmBreadcrumb } from 'src/app/common/hrm-breadcrumb/hrm-breadcrumb.component';
+import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.component';
 import { EarlyWarning } from 'src/app/models/early-warning';
 
 @Component({

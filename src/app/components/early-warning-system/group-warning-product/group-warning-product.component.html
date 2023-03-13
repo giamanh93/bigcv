@@ -5,7 +5,7 @@
                 <app-hrm-breadcrumb [items]="itemsBreadcrumb" ></app-hrm-breadcrumb>
             </div>
             <div class="col-4 p-0 flex justify-content-end align-items-center dropdown-branch">
-                <p-dropdown [options]="listBranchs" [(ngModel)]="query.branchId" optionLabel="branchName" (change)="loadTab1()" optionValue="branchId" [appendTo]="'body'" [filter]="true" filterBy="branchName"></p-dropdown>
+                <p-dropdown [options]="listBranchs" [(ngModel)]="query.branchId" optionLabel="branchName" (change)="changeBranch()" optionValue="branchId" [appendTo]="'body'" [filter]="true" filterBy="branchName"></p-dropdown>
             </div>
         </div>
     </section>
@@ -17,18 +17,25 @@
                 <p-table [value]="products"  [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Quantity</th>
+                            <th>Sản phẩm</th>
+                            <th>Mã</th>
+                            <th>Đơn vị</th>
+                            <th>Chi nhánh</th>
+                            <th>Giá mua</th>
+                            <th>Giá bán</th>
+                            <th>realMargin</th>
+                            <th>standardMargin</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-columns="columns">
                         <tr>
-                            <td><span class="p-column-title">Code</span>{{product.code}}</td>
-                            <td><span class="p-column-title">Name</span>{{product.name}}</td>
-                            <td><span class="p-column-title">Category</span>{{product.category}}</td>
-                            <td><span class="p-column-title">Quantity</span>{{product.quantity}}</td>
+                            <td><span class="p-column-title">Sản phẩm</span>{{product.productName}}</td>
+                            <td><span class="p-column-title">Mã</span>{{product.barCode}}</td>
+                            <td><span class="p-column-title">Đơn vị</span>{{product.unit}}</td>
+                            <td><span class="p-column-title">Chi nhánh</span>{{product.branchName}}</td>
+                            <td><span class="p-column-title">Giá bán</span>{{product.sellPrice | number}}</td>
+                            <td><span class="p-column-title">realMargin</span>{{product.realMargin | number}}</td>
+                            <td><span class="p-column-title">standardMargin</span>{{product.standardMargin | number}}</td>
                         </tr>
                     </ng-template>
                 </p-table>

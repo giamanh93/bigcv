@@ -9,7 +9,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { EarlyWarningSystemRoutingModule } from './early-warning-system-routing.module';
 import { EarlyWarningSystemComponent } from './early-warning-system.component';
-import { HrmBreadCrumbModule } from 'src/app/common/hrm-breadcrumb/hrm-breadcrumb.module';
+import { HrmBreadCrumbModule } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.module';
 import {DividerModule} from 'primeng/divider';
 import {TabViewModule} from 'primeng/tabview';
 import { GroupWarningProductComponent } from './group-warning-product/group-warning-product.component';

@@ -1,5 +1,5 @@
 
-import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, SimpleChanges, OnChanges, HostListener } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import queryString from 'query-string';
 import { Subject, takeUntil } from 'rxjs';
@@ -15,6 +15,7 @@ import { EarlyWarningSystemService } from 'src/app/services/earlyWarningSystem.s
 export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 	itemsBreadcrumb: HrmBreadcrumb[] = [];
 	indexTab: number = 0;
+	screenWidth: number = 0;
 	countRecord: CountRecord = {
 		totalRecord: 0,
 		currentRecordStart: 0,
@@ -31,8 +32,8 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 	public query: SearchEarlyWarning = {
 		retailerId: 717250,
 		search: '',
-		page: 0,
-		size: 50,
+		page: 1,
+		size: 20,
 		branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
 	}
 
@@ -46,7 +47,13 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 		this.unsubscribe$.complete();
 	}
 
+	@HostListener('window:resize', ['$event'])
+	onResize() {
+		this.screenWidth = window.innerWidth;
+	}
+
 	ngOnInit(): void {
+		this.screenWidth = window.innerWidth;
 		this.itemsBreadcrumb = [
 			{ label: 'Trang chủ', routerLink: '/home' },
 			{ label: 'Hệ thống cảnh báo sớm' },
@@ -107,6 +114,7 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 				if (results.success) {
 					this.listDatas = results.data.content ?? [];
 					this.isLoading = false;
+					this.fnCountRecord(results.data);
 				} else {
 					this.listDatas = [];
 					this.isLoading = false;
@@ -168,7 +176,7 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 		this.getLists();
 	}
 
-	first: number = 0;
+	first: number = 1;
 	paginate(event: any) {
 		this.query.page = event.first;
 		this.first = event.first;
@@ -177,13 +185,9 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 	}
 
 	fnCountRecord(results: any) {
-		this.countRecord.totalRecord = results.totalPages;
-		this.countRecord.currentRecordStart = results.totalPages === 0 ? this.query.page = 0 : this.query.page + 1;
-		if ((results.totalPages - this.query.page) > this.query.size) {
-			this.countRecord.currentRecordEnd = this.query.page + Number(this.query.size);
-		} else {
-			this.countRecord.currentRecordEnd = results.totalPages;
-		}
+		this.countRecord.totalRecord = results.totalElements;
+		this.countRecord.currentRecordStart = results.totalPages === 0 ? this.query.page = 1 : this.query.page;
+		this.countRecord.currentRecordEnd = this.query.page === 1 ? this.query.size : this.query.page + Number(this.query.size)
 	}
 
 	loadjs = 0;
@@ -197,7 +201,7 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 		this.loadjs++
 		if (this.loadjs === 5) {
 			if (b && b.clientHeight && d) {
-				const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight  + e.clientHeight + 85;
+				const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight + e.clientHeight + 85;
 				this.heightGrid = window.innerHeight - totalHeight;
 				console.log(this.heightGrid)
 				this.$changeDetech.detectChanges();
@@ -208,5 +212,5 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 	}
 
 
-	
+
 }

@@ -1,10 +1,10 @@
 <div class="main-grid">
     <section class="bread-crumb" >
         <div class="flex bet middle">
-            <div class="col-8 p-0">
+            <div class="md:col-8 sm:col-12 p-0">
                 <app-hrm-breadcrumb [items]="itemsBreadcrumb" ></app-hrm-breadcrumb>
             </div>
-            <div class="col-4 p-0 flex justify-content-end align-items-center dropdown-branch">
+            <div class="md:col-4 p-0 flex justify-content-end align-items-center dropdown-branch">
                 <p-dropdown [options]="listBranchs" [(ngModel)]="query.branchId" [autoDisplayFirst]="false" optionLabel="branchName" optionValue="branchId" (onChange)="changeBranch()" [appendTo]="'body'" [filter]="true" filterBy="branchName"></p-dropdown>
             </div>
         </div>
@@ -15,7 +15,7 @@
        <div class=" toolbar">
         <p-toolbar>
             <div class="p-toolbar-group-start">
-                <p-button label="New" icon="pi pi-plus"></p-button>
+                <!-- <p-button label="New" icon="pi pi-plus"></p-button> -->
                 <!-- <p-button label="Upload" icon="pi pi-upload" styleClass="p-button-success"></p-button> -->
             </div>
             <div class="p-toolbar-group-end">
@@ -30,8 +30,10 @@
        </div>
         <p-tabView [(activeIndex)]="indexTab" (onChange)="handleChange($event.index)">
             <p-tabPanel header="Sản phẩm không đạt biên độ lợi nhuận">
-                <div class="table-default" #container>
-                    <p-table [value]="isLoading ? listDatasLoading : listDatas"  [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-height': this.heightGrid + 'px'}"  styleClass="table-row  p-datatable-sm">
+                <div class="table-default" #container >
+                    <p-table [value]="isLoading ? listDatasLoading : listDatas" 
+                     [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'"
+                      [scrollable]="screenWidth> 960" [tableStyle]="{'min-height': this.heightGrid + 'px'}" scrollHeight="{{heightGrid}}px" styleClass="table-row  p-datatable-sm">
                         <ng-template pTemplate="header" let-columns>
                             <tr>
                                 <th>Sản phẩm</th>

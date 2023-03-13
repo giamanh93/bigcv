@@ -25,6 +25,16 @@ export class customerManagementSystem {
 
     }
 
+    getCustomerRevenueInPeriod(query: string): Observable<Responses> {
+        return this.$http.get<Responses>(baseUrl + `/customer/v1/getCustomerRevenueInPeriod?` + query).pipe(
+            catchError(error => {
+                this.handleError(error)
+                return of(error.error);
+            })
+        );;
+
+    }
+
     getListBranch(query: string): Observable<Responses> {
         return this.$http.get<Responses>(baseUrl + `/branch/v1/getListBranch?` + query)
             .pipe(

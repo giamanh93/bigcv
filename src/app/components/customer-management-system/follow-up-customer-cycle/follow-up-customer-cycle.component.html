@@ -55,8 +55,8 @@
                         </div>
 
                         <div class="flex grid justify-content-end">
-                            <button type="button" pButton pRipple icon="pi pi-search" label="Tìm kiếm" (onClick)="getLists()" class="p-button-warn mr-1"></button>  
-                            <button type="button" pButton pRipple icon="pi pi-times" label="Làm mới" (onClick)="refresh()" class="p-button-danger"></button>  
+                            <button type="button" pButton pRipple icon="pi pi-search" label="Tìm kiếm" (click)="getLists()" class="p-button-warn mr-1"></button>  
+                            <button type="button" pButton pRipple icon="pi pi-times" label="Làm mới" (click)="refresh()" class="p-button-danger"></button>  
                         </div>
                         
                     </ng-template>
@@ -71,15 +71,17 @@
           responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-height': this.heightGrid + 'px'}"  styleClass="table-row  p-datatable-sm">
             <ng-template pTemplate="header" let-columns>
                 <tr>
+                    <th>#</th>
                     <th>Khách hàng</th>
-                    <th>Chu kỳ</th>
+                    <th>{{query.period === 2 ? 'Tháng' : query.period === 1 ? 'Tuần' : 'Quỹ'}}</th>
                     <th>Doanh thu</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-product let-columns="columns">
                 <tr >
+                    <td><span class="p-column-title">#</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.customerId}}</td>
                     <td><span class="p-column-title">Khách hàng</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.customerName}}</td>
-                    <td><span class="p-column-title">Chu kỳ</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.period === 1 ? 'Theo tuần' : product.period === 2 ? 'Theo tháng' : 'Theo quý'}}</td>
+                    <td><span class="p-column-title">Chu kỳ</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.period | number}}</td>
                     <td><span class="p-column-title">Doanh thu</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.revenue | number}}</td>
                 </tr>
                

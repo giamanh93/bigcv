@@ -118,17 +118,18 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   }
 
   first: number = 1;
-  paginate(event: any) {
-    this.query.page = event.first;
-    this.first = event.first;
-    this.query.size = event.rows;
-    this.getLists();
-  }
+	paginate(event: any) {
+    console.log(event)
+		this.query.page = event.page + 1;
+		this.first = event.first;
+		this.query.size = event.rows;
+		this.getLists();
+	}
 
   fnCountRecord(results: any) {
     this.countRecord.totalRecord = results.totalElements;
-    this.countRecord.currentRecordStart = results.totalPages === 0 ? this.query.page = 1 : this.query.page;
-    this.countRecord.currentRecordEnd = this.query.page === 1 ? this.query.size : this.query.page + Number(this.query.size)
+    this.countRecord.currentRecordStart = this.query.page === 1 ? this.query.page = 1 : this.countRecord.currentRecordEnd;
+    this.countRecord.currentRecordEnd = this.query.page === 1 ? this.query.size : this.query.page * Number(this.query.size)
   }
 
   loadjs = 0;

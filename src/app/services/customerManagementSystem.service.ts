@@ -10,14 +10,13 @@ const baseUrl = 'http://3.0.125.181:8888/api';
 @Injectable({
     providedIn: 'root'
 })
-export class EarlyWarningSystemService {
+export class customerManagementSystem {
     private $http = inject(HttpClient);
     private $messageService = inject(MessageService);
     private $errorService = inject(ErrorService)
 
-
-    getListProductNotProfitMargin(query: string): Observable<Responses> {
-        return this.$http.get<Responses>(baseUrl + `/product/alert/v1/getListProductNotProfitMargin?` + query).pipe(
+    getRevenueByCustomer(query: string): Observable<Responses> {
+        return this.$http.get<Responses>(baseUrl + `/customer/v1/getRevenueByCustomer?` + query).pipe(
             catchError(error => {
                 this.handleError(error)
                 return of(error.error);

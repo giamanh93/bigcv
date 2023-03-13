@@ -4,7 +4,7 @@ import { MessageService } from 'primeng/api';
 import queryString from 'query-string';
 import { Subject, takeUntil } from 'rxjs';
 import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.component';
-import { Branch, EarlyWarning, ProductWarning, SearchEarlyWarning } from 'src/app/models/early-warning';
+import { Branch, ProductWarning, SearchEarlyWarning } from 'src/app/models/early-warning';
 import { EarlyWarningSystemService } from 'src/app/services/earlyWarningSystem.service';
 @Component({
 	selector: 'app-group-warning-product',
@@ -18,14 +18,14 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 	private $service = inject(EarlyWarningSystemService);
 	private $messageService = inject(MessageService);
 	private $changeDetech = inject(ChangeDetectorRef);
-	public listBranchs: any[] = [];
+	public listBranchs: Branch[] = [];
 	public listDatas: ProductWarning[] = [];
 	public listDatasLoading: any[] = Array(20).fill(1).map((x, i) => i);
 	public isLoading: boolean = false;
 	public query: SearchEarlyWarning = {
 		retailerId: 717250,
 		search: '',
-		page: 1,
+		page: 0,
 		size: 50,
 		branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
 	}
@@ -52,7 +52,7 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 	getListBranch() {
 		const queryParams = queryString.stringify({ retailerId: 717250 });
 		this.$service.getListBranch(queryParams)
-			// .pipe(takeUntil(this.unsubscribe$))
+			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe(results => {
 				if (results.success) {
 					this.listBranchs = results.data.content ?? [];

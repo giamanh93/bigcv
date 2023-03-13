@@ -15,6 +15,9 @@ import { FollowUpCustomerCycleComponent } from './follow-up-customer-cycle/follo
 import { FollowOrderValueComponent } from './follow-order-value/follow-order-value.component';
 import { FollowFormShoppingComponent } from './follow-form-shopping/follow-form-shopping.component';
 import { FollowUpCustomerSalesAreaComponent } from './follow-up-customer-sales-area/follow-up-customer-sales-area.component';
+import { SkeletonModule } from 'primeng/skeleton';
+import { DropdownModule } from 'primeng/dropdown';
+import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
 
 @NgModule({
     imports: [
@@ -27,7 +30,12 @@ import { FollowUpCustomerSalesAreaComponent } from './follow-up-customer-sales-a
         PanelMenuModule,
         ButtonModule,
         CustomerManagementSystemRoutingModule,
-        HrmBreadCrumbModule
+        HrmBreadCrumbModule,
+        SkeletonModule,
+        DropdownModule
+    ],
+    providers: [
+        customerManagementSystem
     ],
     declarations: [CustomerManagementSystemComponent, FollowUpCustomerSalesProductComponent, FollowUpCustomerCycleComponent, FollowOrderValueComponent, FollowFormShoppingComponent, FollowUpCustomerSalesAreaComponent]
 })

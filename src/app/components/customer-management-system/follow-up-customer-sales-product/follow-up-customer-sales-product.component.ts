@@ -55,12 +55,20 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   }
 
   refresh() {
-    this.query.startDate= new Date('2023-01-01'),
-    this.query.endDate= new Date('2023-03-31'),
+    this.query.startDate= new Date('2023-01-01');
+    this.query.endDate= new Date('2023-03-31');
     this.getLists();
   }
 
   ngOnInit(): void {
+    const filterDate = localStorage.hasOwnProperty('filterDate') && localStorage.getItem('filterDate') ? localStorage.getItem('filterDate') : null;
+    if(filterDate) {
+      this.query.endDate = JSON.parse(filterDate).endDate;
+      this.query.startDate = JSON.parse(filterDate).startDate;
+    }else {
+      this.query.startDate= new Date('2023-01-01');
+      this.query.endDate= new Date('2023-03-31');
+    }
     this.screenWidth = window.innerWidth;
     this.itemsBreadcrumb = [
       { label: 'Trang chủ', routerLink: '/home' },
@@ -99,8 +107,9 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     this.listDatas = [];
     this.isLoading = true;
     const params = { ...this.query };
-    params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd')
-    params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd')
+    params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
+    params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
+    localStorage.setItem('filterDate', JSON.stringify({endDate: params.endDate, startDate: params.startDate}));
     const queryParams = queryString.stringify(params);
     this.$service.getRevenueByCustomer(queryParams)
       .pipe(takeUntil(this.unsubscribe$))

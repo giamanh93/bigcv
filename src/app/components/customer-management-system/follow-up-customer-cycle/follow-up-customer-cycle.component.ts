@@ -37,6 +37,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     period: 2,
     page: 1,
     size: 20,
+    search: '',
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
   }
 
@@ -131,6 +132,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
           this.listDatas = results.data.content ?? [];
           this.isLoading = false;
           this.fnCountRecord(results.data);
+          this.expandAll()
         } else {
           this.listDatas = [];
           this.isLoading = false;
@@ -174,6 +176,28 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     }
   }
 
+  calculateCustomerTotal(name: string) {
+    let total = 0;
 
+    if (this.listDatas) {
+      for (let product of this.listDatas) {
+        if (product.customer.customerName === name) {
+          total++;
+        }
+      }
+    }
 
+    return total;
+  }
+
+  expandedRows: any = {};
+  expandAll() {
+    if(this.listDatas.length > 0){
+      this.listDatas.forEach(data =>{
+        this.expandedRows[data.customer.customerName] = true;
+      })
+    } else {
+      this.expandedRows={};
+    }
+  }
 }

@@ -18,9 +18,9 @@
                 <!-- <p-button label="New" icon="pi pi-plus"></p-button> -->
                 <!-- <p-button label="Upload" icon="pi pi-upload" styleClass="p-button-success"></p-button> -->
             </div>
-            <div class="p-toolbar-group-end">
+            <div class="p-toolbar-group-end gap-1">
                 <div class="p-inputgroup">
-                    <input type="text"(onChange)="getLists()" pInputText placeholder="Keyword">   
+                    <input type="text"(onChange)="getLists()" [(ngModel)]="query.search" pInputText placeholder="Keyword">   
                     <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"></button>      
                 </div>
                 <p-button icon="pi pi-filter-fill" styleClass="p-button-success" (click)="op.toggle($event)"></p-button>
@@ -60,7 +60,7 @@
         </p-toolbar>
        </div>
        <div class="table-default" #container>
-        <p-table [value]="isLoading ? listDatasLoading : listDatas" 
+        <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth<= 960"
          [resizableColumns]="true" [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px"
           responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
             <ng-template pTemplate="header" let-columns>
@@ -81,29 +81,44 @@
                
             </ng-template>
         </p-table>
-        <!-- <p-table rowGroupMode="rowspan" groupRowsBy="representative.name" sortField="representative.name" [value]="isLoading ? listDatasLoading : listDatas"  [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-height': this.heightGrid + 'px'}"  styleClass="table-row  p-datatable-sm">
+        <p-table  *ngIf="screenWidth> 960" rowGroupMode="subheader" sortField="customer.customerName"
+        [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px" 
+          responsiveLayout="stack" [expandedRowKeys]="expandedRows"
+         groupRowsBy="customer.customerName" dataKey="customer.customerName"
+          sortMode="single" [value]="isLoading ? listDatasLoading : listDatas"
+            [resizableColumns]="true"  [breakpoint]="'960px'"
+             styleClass="table-row  p-datatable-sm">
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th style="width:3rem">#</th>
-                    <th>Representative</th>
-                    <th>Name</th>
-                    <th>Country</th>
-                    <th>Company</th>
-                    <th>Date</th>
+                    <th>Khách hàng</th>
+                    <th>Sản phầm</th>
+                    <th>Doanh thu</th>
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-product let-columns="columns" let-rowIndex="rowIndex" let-rowgroup="rowgroup" let-rowspan="rowspan">
+            <ng-template  pTemplate="groupheader" let-product let-rowIndex="rowIndex" let-expanded="expanded">
+                <tr>
+                    <td colspan="4">
+                        <button type="button" pButton pRipple [pRowToggler]="product" class="p-button-text td-button-dropdown p-button-rounded p-button-plain mr-2" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                        <span class="font-bold ml-2">{{product?.customer?.customerName}}</span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="groupfooter" let-product>
+                <tr class="p-rowgroup-footer">
+                    <td colspan="4" style="text-align: right">Khách hàng: {{calculateCustomerTotal(product.customer.customerName)}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-product let-columns="columns">
                 <tr >
-                    <td><span class="p-column-title">#</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{rowIndex}}</td>
-                    <td *ngIf="rowgroup" [attr.rowspan]="rowspan"><span class="p-column-title">Representative</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.representative.name}}</td>
-                    <td><span class="p-column-title">Name</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.name}}</td>
-                    <td><span class="p-column-title">Country</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.country.name}}</td>
-                    <td><span class="p-column-title">Company</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.company}}</td>
-                    <td><span class="p-column-title">Date</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.date}}</td>
+                    <td><span class="p-column-title">#</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.customerId}}</td>
+                    <td><span class="p-column-title">Khách hàng</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.customerName}}</td>
+                    <td><span class="p-column-title">Sản phầm</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.productName}}</td>
+                    <td><span class="p-column-title">Doanh thu</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.revenue | number}}</td>
                 </tr>
                
             </ng-template>
-        </p-table> -->
+        </p-table>
         <div class="paginator flex justify-content-end align-items-center" style="background-color: #fff;background-color: #fff;
         position: fixed;
         bottom: 0;

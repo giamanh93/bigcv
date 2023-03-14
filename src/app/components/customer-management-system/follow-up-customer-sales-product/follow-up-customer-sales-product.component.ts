@@ -36,6 +36,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     endDate: new Date('2023-03-31'),
     page: 1,
     size: 20,
+    search: '',
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
   }
 
@@ -55,19 +56,19 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   }
 
   refresh() {
-    this.query.startDate= new Date('2023-01-01');
-    this.query.endDate= new Date('2023-03-31');
+    this.query.startDate = new Date('2023-01-01');
+    this.query.endDate = new Date('2023-03-31');
     this.getLists();
   }
 
   ngOnInit(): void {
     const filterDate = localStorage.hasOwnProperty('filterDate') && localStorage.getItem('filterDate') ? localStorage.getItem('filterDate') : null;
-    if(filterDate) {
+    if (filterDate) {
       this.query.endDate = JSON.parse(filterDate).endDate;
       this.query.startDate = JSON.parse(filterDate).startDate;
-    }else {
-      this.query.startDate= new Date('2023-01-01');
-      this.query.endDate= new Date('2023-03-31');
+    } else {
+      this.query.startDate = new Date('2023-01-01');
+      this.query.endDate = new Date('2023-03-31');
     }
     this.screenWidth = window.innerWidth;
     this.itemsBreadcrumb = [
@@ -109,7 +110,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     const params = { ...this.query };
     params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
-    localStorage.setItem('filterDate', JSON.stringify({endDate: params.endDate, startDate: params.startDate}));
+    localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
     const queryParams = queryString.stringify(params);
     this.$service.getRevenueByCustomer(queryParams)
       .pipe(takeUntil(this.unsubscribe$))
@@ -118,6 +119,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
           this.listDatas = results.data.content ?? [];
           this.isLoading = false;
           this.fnCountRecord(results.data);
+          this.expandAll();
         } else {
           this.listDatas = [];
           this.isLoading = false;
@@ -127,13 +129,13 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   }
 
   first: number = 1;
-	paginate(event: any) {
+  paginate(event: any) {
     console.log(event)
-		this.query.page = event.page + 1;
-		this.first = event.first;
-		this.query.size = event.rows;
-		this.getLists();
-	}
+    this.query.page = event.page + 1;
+    this.first = event.first;
+    this.query.size = event.rows;
+    this.getLists();
+  }
 
   fnCountRecord(results: any) {
     this.countRecord.totalRecord = results.totalElements;
@@ -159,6 +161,31 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
       } else {
         this.loadjs = 0;
       }
+    }
+  }
+
+  calculateCustomerTotal(name: string) {
+    let total = 0;
+
+    if (this.listDatas) {
+      for (let product of this.listDatas) {
+        if (product.customer.customerName === name) {
+          total++;
+        }
+      }
+    }
+
+    return total;
+  }
+
+  expandedRows: any = {};
+  expandAll() {
+    if (this.listDatas.length > 0) {
+      this.listDatas.forEach(data => {
+        this.expandedRows[data.customer.customerName] = true;
+      })
+    } else {
+      this.expandedRows = {};
     }
   }
 

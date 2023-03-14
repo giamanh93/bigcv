@@ -28,12 +28,13 @@
             </div>
         </p-toolbar>
        </div>
+       <!-- [tableStyle]="{'min-height': this.heightGrid + 'px'}" -->
         <p-tabView [(activeIndex)]="indexTab" (onChange)="handleChange($event.index)">
             <p-tabPanel header="Sản phẩm không đạt biên độ lợi nhuận">
                 <div class="table-default" #container >
                     <p-table [value]="isLoading ? listDatasLoading : listDatas" 
                      [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'"
-                      [scrollable]="screenWidth> 960" [tableStyle]="{'min-height': this.heightGrid + 'px'}" scrollHeight="{{heightGrid}}px" styleClass="table-row  p-datatable-sm">
+                      [scrollable]="screenWidth> 960"  scrollHeight="{{heightGrid}}px" styleClass="table-row  p-datatable-sm">
                         <ng-template pTemplate="header" let-columns>
                             <tr>
                                 <th>Sản phẩm</th>
@@ -60,7 +61,11 @@
                            
                         </ng-template>
                     </p-table>
-                    <div class="paginator flex justify-content-end align-items-center">
+                    <div class="paginator flex justify-content-end align-items-center" style="background-color: #fff;
+                    position: fixed;
+                    bottom: 0;
+                    width: 100%;
+                    left: 0;">
                         <span>Từ {{ countRecord.currentRecordStart }} đến {{ countRecord.currentRecordEnd }} trên tổng số {{ countRecord.totalRecord }} kết quả</span>
                         <p-paginator [rows]="query.size" [totalRecords]="countRecord.totalRecord" [first]="first"
                             (onPageChange)="paginate($event)" [rowsPerPageOptions]="[20,40,60,100,200,{ showAll: 'ALL' }]">

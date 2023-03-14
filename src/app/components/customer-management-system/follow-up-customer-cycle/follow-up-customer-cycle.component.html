@@ -68,7 +68,7 @@
        <div class="table-default" #container>
         <p-table [value]="isLoading ? listDatasLoading : listDatas" 
          [resizableColumns]="true" [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px"
-          responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-height': this.heightGrid + 'px'}"  styleClass="table-row  p-datatable-sm">
+          responsiveLayout="stack" [breakpoint]="'960px'" styleClass="table-row  p-datatable-sm">
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th>#</th>
@@ -110,7 +110,11 @@
                
             </ng-template>
         </p-table> -->
-        <div class="paginator flex justify-content-end align-items-center" style="background-color: #fff;">
+        <div class="paginator flex justify-content-end align-items-center" style="background-color: #fff;background-color: #fff;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        left: 0;">
             <span>Từ {{ countRecord.currentRecordStart }} đến {{ countRecord.currentRecordEnd }} trên tổng số {{ countRecord.totalRecord }} kết quả</span>
             <p-paginator [rows]="query.size" [totalRecords]="countRecord.totalRecord" [first]="first"
                 (onPageChange)="paginate($event)" [rowsPerPageOptions]="[20,40,60,100,200,{ showAll: 'ALL' }]">

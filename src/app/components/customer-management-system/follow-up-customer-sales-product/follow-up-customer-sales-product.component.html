@@ -20,7 +20,7 @@
             </div>
             <div class="p-toolbar-group-end gap-1">
                 <div class="p-inputgroup">
-                    <input type="text"(onChange)="getLists()" [(ngModel)]="query.search" pInputText placeholder="Keyword">   
+                    <input type="text"(change)="getLists()" [(ngModel)]="query.search" pInputText placeholder="Keyword">   
                     <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"></button>      
                 </div>
                 <p-button icon="pi pi-filter-fill" styleClass="p-button-success" (click)="op.toggle($event)"></p-button>
@@ -55,7 +55,7 @@
                         
                     </ng-template>
                 </p-overlayPanel>
-                <p-button icon="pi pi-times" styleClass="p-button-danger"></p-button>
+                <p-button  (click)="expandAll(true)" [icon]=" isExpanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" label="Expanded" styleClass=""></p-button>
             </div>
         </p-toolbar>
        </div>
@@ -78,10 +78,29 @@
                     <td><span class="p-column-title">Sản phầm</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.productName}}</td>
                     <td><span class="p-column-title">Doanh thu</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.revenue | number}}</td>
                 </tr>
-               
             </ng-template>
         </p-table>
-        <p-table  *ngIf="screenWidth> 960" rowGroupMode="subheader" sortField="customer.customerName"
+        <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth> 960 && isLoading"
+        [resizableColumns]="true" [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px"
+         responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
+           <ng-template pTemplate="header" let-columns>
+               <tr>
+                   <th>#</th>
+                   <th>Khách hàng</th>
+                   <th>Sản phầm</th>
+                   <th>Doanh thu</th>
+               </tr>
+           </ng-template>
+           <ng-template pTemplate="body" let-product let-columns="columns">
+               <tr >
+                   <td><span class="p-column-title">#</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.customerId}}</td>
+                   <td><span class="p-column-title">Khách hàng</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.customerName}}</td>
+                   <td><span class="p-column-title">Sản phầm</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.productName}}</td>
+                   <td><span class="p-column-title">Doanh thu</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.revenue | number}}</td>
+               </tr>
+           </ng-template>
+       </p-table>
+        <p-table  *ngIf="screenWidth> 960 && !isLoading" rowGroupMode="subheader" sortField="customer.customerName"
         [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px" 
           responsiveLayout="stack" [expandedRowKeys]="expandedRows"
          groupRowsBy="customer.customerName" dataKey="customer.customerName"
@@ -96,7 +115,7 @@
                     <th>Doanh thu</th>
                 </tr>
             </ng-template>
-            <ng-template  pTemplate="groupheader" let-product let-rowIndex="rowIndex" let-expanded="expanded">
+            <ng-template *ngIf="!isLoading" pTemplate="groupheader" let-product let-rowIndex="rowIndex" let-expanded="expanded">
                 <tr>
                     <td colspan="4">
                         <button type="button" pButton pRipple [pRowToggler]="product" class="p-button-text td-button-dropdown p-button-rounded p-button-plain mr-2" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
@@ -106,7 +125,7 @@
             </ng-template>
             <ng-template pTemplate="groupfooter" let-product>
                 <tr class="p-rowgroup-footer">
-                    <td colspan="4" style="text-align: right">Khách hàng: {{calculateCustomerTotal(product.customer.customerName)}}</td>
+                    <td colspan="4" style="text-align: left;font-weight: bold; ">Tổng tiền: {{calculateCustomerTotal(product.customer.customerName)}}</td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="rowexpansion" let-product let-columns="columns">

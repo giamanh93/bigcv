@@ -119,7 +119,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
           this.listDatas = results.data.content ?? [];
           this.isLoading = false;
           this.fnCountRecord(results.data);
-          this.expandAll();
+          this.expandAll(false);
         } else {
           this.listDatas = [];
           this.isLoading = false;
@@ -164,29 +164,29 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     }
   }
 
+  isExpanded: boolean = true;
+  expandedRows: any = {};
+  expandAll(type: boolean = false) {
+    this.isExpanded = type ? !this.isExpanded : this.isExpanded;
+    if(this.listDatas.length > 0){
+      this.listDatas.forEach(data =>{
+        this.expandedRows[data.customer.customerName] = this.isExpanded;
+      })
+    } else {
+      this.expandedRows={};
+    }
+  }
+
   calculateCustomerTotal(name: string) {
     let total = 0;
-
     if (this.listDatas) {
       for (let product of this.listDatas) {
         if (product.customer.customerName === name) {
-          total++;
+          total += product.revenue
         }
       }
     }
-
     return total;
-  }
-
-  expandedRows: any = {};
-  expandAll() {
-    if (this.listDatas.length > 0) {
-      this.listDatas.forEach(data => {
-        this.expandedRows[data.customer.customerName] = true;
-      })
-    } else {
-      this.expandedRows = {};
-    }
   }
 
 

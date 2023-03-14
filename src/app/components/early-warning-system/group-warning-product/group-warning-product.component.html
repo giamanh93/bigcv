@@ -20,7 +20,7 @@
             </div>
             <div class="p-toolbar-group-end">
                 <div class="p-inputgroup">
-                    <input type="text" [(ngModel)]="query.search" (onChange)="getLists()" pInputText placeholder="Keyword">   
+                    <input type="text" [(ngModel)]="query.search" (change)="getLists()" pInputText placeholder="Keyword">   
                     <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"></button>      
                 </div>
                 <p-button icon="pi pi-calendar" styleClass="p-button-success"></p-button>

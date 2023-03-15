@@ -125,7 +125,7 @@
             </ng-template>
             <ng-template pTemplate="groupfooter" let-product>
                 <tr class="p-rowgroup-footer">
-                    <td colspan="4" style="text-align: left;font-weight: bold; ">Tổng tiền: {{calculateCustomerTotal(product.customer.customerName)}}</td>
+                    <td colspan="4" style="text-align: left;font-weight: bold; ">Tổng tiền: {{calculateCustomerTotal(product.customer.customerName) | number}}</td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="rowexpansion" let-product let-columns="columns">

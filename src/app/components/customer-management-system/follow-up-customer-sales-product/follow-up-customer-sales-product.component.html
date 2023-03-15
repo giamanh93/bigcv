@@ -61,47 +61,53 @@
         </p-toolbar>
        </div>
        <div class="table-default" #container>
-        <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth<= 960"
+        <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth<= 960" [columns]="cols"
          [resizableColumns]="true" [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px"
           responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th>#</th>
-                    <th>Khách hàng</th>
-                    <th>Sản phầm</th>
-                    <th>Doanh thu</th>
+                    <th *ngFor="let col of columns">
+                        {{ col.header }}
+                      </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-product let-columns="columns">
-                <tr >
-                    <td><span class="p-column-title">#</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.customerId}}</td>
-                    <td><span class="p-column-title">Khách hàng</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.customerName}}</td>
-                    <td><span class="p-column-title">Sản phầm</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.productName}}</td>
-                    <td><span class="p-column-title">Doanh thu</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.revenue | number}}</td>
+                <tr [pSelectableRow]="product">
+                    <ng-container *ngFor="let col of columns">
+                        <td *ngIf="col.typeField === 'text'">
+                            <span class="p-column-title">{{ col.header }}</span><p-skeleton *ngIf="isLoading"></p-skeleton> {{ product[col.field] }}
+                        </td>
+                        <td *ngIf="col.typeField === 'number'">
+                            <span class="p-column-title">{{ col.header }}</span><p-skeleton *ngIf="isLoading"></p-skeleton> {{ product[col.field] | number}}
+                        </td>
+                    </ng-container>
                 </tr>
             </ng-template>
         </p-table>
-        <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth> 960 && isLoading"
+        <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth> 960 && isLoading" [columns]="cols"
         [resizableColumns]="true" [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px"
          responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
            <ng-template pTemplate="header" let-columns>
                <tr>
-                   <th>#</th>
-                   <th>Khách hàng</th>
-                   <th>Sản phầm</th>
-                   <th>Doanh thu</th>
+                <th *ngFor="let col of columns">
+                    {{ col.header }}
+                  </th>
                </tr>
            </ng-template>
            <ng-template pTemplate="body" let-product let-columns="columns">
-               <tr >
-                   <td><span class="p-column-title">#</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.customerId}}</td>
-                   <td><span class="p-column-title">Khách hàng</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.customerName}}</td>
-                   <td><span class="p-column-title">Sản phầm</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.productName}}</td>
-                   <td><span class="p-column-title">Doanh thu</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.revenue | number}}</td>
+               <tr [pSelectableRow]="product">
+                <ng-container *ngFor="let col of columns">
+                    <td *ngIf="col.typeField === 'text'">
+                        <span class="p-column-title">{{ col.header }}</span><p-skeleton *ngIf="isLoading"></p-skeleton> {{ product[col.field] }}
+                    </td>
+                    <td *ngIf="col.typeField === 'number'">
+                        <span class="p-column-title">{{ col.header }}</span><p-skeleton *ngIf="isLoading"></p-skeleton> {{ product[col.field] | number}}
+                    </td>
+                </ng-container>
                </tr>
            </ng-template>
        </p-table>
-        <p-table  *ngIf="screenWidth> 960 && !isLoading" rowGroupMode="subheader" sortField="customer.customerName" id="my-table"
+        <p-table  *ngIf="screenWidth> 960 && !isLoading" rowGroupMode="subheader" sortField="customer.customerName" id="my-table" [columns]="cols"
         [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px" 
           responsiveLayout="stack" [expandedRowKeys]="expandedRows"
          groupRowsBy="customer.customerName" dataKey="customer.customerName"
@@ -110,10 +116,9 @@
              styleClass="table-row  p-datatable-sm">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th style="width:3rem">#</th>
-                    <th>Khách hàng</th>
-                    <th>Sản phầm</th>
-                    <th>Doanh thu</th>
+                    <th *ngFor="let col of columns">
+                        {{ col.header }}
+                      </th>
                 </tr>
             </ng-template>
             <ng-template *ngIf="!isLoading" pTemplate="groupheader" let-product let-rowIndex="rowIndex" let-expanded="expanded">
@@ -130,11 +135,15 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="rowexpansion" let-product let-columns="columns">
-                <tr >
-                    <td>{{product.customerId}}</td>
-                    <td>{{product.customerName}}</td>
-                    <td>{{product.productName}}</td>
-                    <td>{{product.revenue | number}}</td>
+                <tr [pSelectableRow]="product">
+                    <ng-container *ngFor="let col of columns">
+                        <td *ngIf="col.typeField === 'text'">
+                            {{ product[col.field] }}
+                        </td>
+                        <td *ngIf="col.typeField === 'number'">
+                            {{ product[col.field] | number}}
+                        </td>
+                    </ng-container>
                 </tr>
                
             </ng-template>

@@ -43,6 +43,12 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     search: '',
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
   }
+  public cols: any[] = [
+    { field: "customerId", header: "#", typeField : 'text' },
+    { field: "customerName", header: "Khách hàng", typeField : 'text' },
+    { field: "period", header: `Tháng`, typeField : 'number' },
+    { field: "revenue", header: "Doanh thu", typeField : 'number' },
+  ];
 
   listPeriod: STATUS[] = [
     {
@@ -59,11 +65,21 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     }
   ]
 
+  initCols() {
+    this.cols = [
+      { field: "customerId", header: "#", typeField : 'text' },
+      { field: "customerName", header: "Khách hàng", typeField : 'text' },
+      { field: "period", header: `${this.query.period === 1 ? 'Tuần' : this.query.period === 2 ? 'Tháng' : 'Quý'}`, typeField : 'number' },
+      { field: "revenue", header: "Doanh thu", typeField : 'number' },
+    ];
+  }
+
   ngAfterViewInit() {
     this.$changeDetech.detectChanges();
   }
 
   refresh() {
+    this.initCols();
     this.query.startDate = new Date('2023-01-01');
     this.query.endDate = new Date('2023-03-31');
     this.query.period = 2;
@@ -79,7 +95,6 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
   onResize() {
     this.screenWidth = window.innerWidth;
   }
-
 
   ngOnInit(): void {
     const filterDate = localStorage.hasOwnProperty('filterDate') && localStorage.getItem('filterDate') ? localStorage.getItem('filterDate') : null;
@@ -119,7 +134,10 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     localStorage.setItem('branchId', this.query.branchId?.toString() ?? '');
     this.getLists();
   }
-
+  search() {
+    this.initCols();
+    this.getLists();
+  }
   getLists() {
     this.listDatas = [];
     this.isLoading = true;

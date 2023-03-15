@@ -43,6 +43,13 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
   }
 
+  public cols: any[] = [
+    { field: "customerId", header: "#", typeField : 'text' },
+    { field: "customerName", header: "Khách hàng", typeField : 'text' },
+    { field: "productName", header: `Sản phầm`, typeField : 'text' },
+    { field: "revenue", header: "Doanh thu", typeField : 'number' },
+  ];
+
   ngAfterViewInit() {
     this.$changeDetech.detectChanges();
   }

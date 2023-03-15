@@ -49,8 +49,8 @@ export const menus = [
           { label: '1. Theo dõi doanh số khách hàng theo sản phẩm', routerLink: '/customer-mgmt-system/follow-up-customer-sales-product', class: 'nav-item' },
           { label: '2. Theo dõi doanh số khách hàng theo chu kỳ', routerLink: '/customer-mgmt-system/follow-up-customer-cycle', class: 'nav-item' },
           { label: '3. Theo dõi theo giá trị đơn hàng', routerLink: '/customer-mgmt-system/follow-order-value', class: 'nav-item' },
-          { label: '4. Theo dõi theo hình thức mua hàng', routerLink: '/customer-mgmt-system/follow-form-shopping', class: 'nav-item' },
-          { label: '5. Theo dõi doanh số khách hàng theo khu vực', routerLink: '/customer-mgmt-system/follow-up-customer-sales-area', class: 'nav-item' },
+        //   { label: '4. Theo dõi theo hình thức mua hàng', routerLink: '/customer-mgmt-system/follow-form-shopping', class: 'nav-item' },
+          { label: '4. Theo dõi doanh số khách hàng theo khu vực', routerLink: '/customer-mgmt-system/follow-up-customer-sales-area', class: 'nav-item' },
       ]
   },
   // 7f991b49-4816-4b89-ba83-4996cfc8966e

@@ -32,31 +32,26 @@
         <p-tabView [(activeIndex)]="indexTab" (onChange)="handleChange($event.index)">
             <p-tabPanel header="Sản phẩm không đạt biên độ lợi nhuận">
                 <div class="table-default" #container >
-                    <p-table [value]="isLoading ? listDatasLoading : listDatas" 
+                    <p-table [value]="isLoading ? listDatasLoading : listDatas"   [columns]="cols"
                      [resizableColumns]="true" responsiveLayout="stack" [breakpoint]="'960px'"
                       [scrollable]="screenWidth> 960"  scrollHeight="{{heightGrid}}px" styleClass="table-row  p-datatable-sm">
                         <ng-template pTemplate="header" let-columns>
                             <tr>
-                                <th>Sản phẩm</th>
-                                <th>Mã</th>
-                                <th>Đơn vị</th>
-                                <th>Chi nhánh</th>
-                                <th>Giá mua</th>
-                                <th>Giá bán</th>
-                                <th>realMargin</th>
-                                <th>standardMargin</th>
+                                <th *ngFor="let col of columns">
+                                    {{ col.header }}
+                                  </th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-product let-columns="columns">
-                            <tr >
-                                <td><span class="p-column-title">Sản phẩm</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.productName}}</td>
-                                <td><span class="p-column-title">Mã</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.barCode}}</td>
-                                <td><span class="p-column-title">Đơn vị</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.unit}}</td>
-                                <td><span class="p-column-title">Chi nhánh</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.branchName}}</td>
-                                <td><span class="p-column-title">Giá mua</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.buyPrice | number}}</td>
-                                <td><span class="p-column-title">Giá bán</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.sellPrice | number}}</td>
-                                <td><span class="p-column-title">Real margin</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.realMargin | number}}</td>
-                                <td><span class="p-column-title">Standard margin</span><p-skeleton *ngIf="isLoading"></p-skeleton>{{product.standardMargin | number}}</td>
+                            <tr [pSelectableRow]="product">
+                                <ng-container *ngFor="let col of columns">
+                                    <td *ngIf="col.typeField === 'text'">
+                                        <span class="p-column-title">{{ col.header }}</span><p-skeleton *ngIf="isLoading"></p-skeleton> {{ product[col.field] }}
+                                    </td>
+                                    <td *ngIf="col.typeField === 'number'">
+                                        <span class="p-column-title">{{ col.header }}</span><p-skeleton *ngIf="isLoading"></p-skeleton> {{ product[col.field] | number}}
+                                    </td>
+                                </ng-container>
                             </tr>
                            
                         </ng-template>

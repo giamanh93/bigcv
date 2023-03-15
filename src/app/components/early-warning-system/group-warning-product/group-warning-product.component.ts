@@ -37,6 +37,17 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 		branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
 	}
 
+	public cols: any[] = [
+		{ field: "productName", header: "Sản phẩm", typeField : 'text' },
+		{ field: "barCode", header: "Mã", typeField : 'text' },
+		{ field: "unit", header: "Đơn vị", typeField : 'text' },
+		{ field: "branchName", header: "Chi nhánh", typeField : 'number' },
+		{ field: "buyPrice", header: "Giá mua", typeField : 'number' },
+		{ field: "sellPrice", header: "Giá bán", typeField : 'number' },
+		{ field: "realMargin", header: "Real margin", typeField : 'number' },
+		{ field: "standardMargin", header: "Standard margin", typeField : 'number' },
+	  ];
+
 	ngAfterViewInit() {
 		this.$changeDetech.detectChanges();
 	}

@@ -42,6 +42,16 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
   }
 
+  public cols = [
+    { field: "customerId", header: "#", typeField : 'text' },
+    { field: "customerName", header: "Khách hàng", typeField : 'text' },
+    { field: "address", header: "Địa chỉ", typeField : 'text' },
+    { field: "purchaseDate", header: "Ngày hóa đơn", typeField : 'text' },
+    { field: "staff", header: "Nhân viên bán", typeField : 'text' },
+    { field: "salePanel", header: "Kênh bán", typeField : 'text' },
+    { field: "revenue", header: "Doanh thu", typeField : 'number' }
+  ];
+
   ngAfterViewInit() {
     this.$changeDetech.detectChanges();
   }

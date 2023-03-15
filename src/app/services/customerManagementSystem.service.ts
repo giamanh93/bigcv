@@ -34,6 +34,15 @@ export class customerManagementSystem {
         );;
     }
 
+    getCustomerRevenueByArea(query: string): Observable<Responses> {
+        return this.$http.get<Responses>(baseUrl + `/customer/v1/getCustomerRevenueByArea?` + query).pipe(
+            catchError(error => {
+                this.handleError(error)
+                return of(error.error);
+            })
+        );;
+    }
+
     getCustomerRevenueByInvoiceCost(query: string): Observable<Responses> {
         return this.$http.get<Responses>(baseUrl + `/customer/v1/getCustomerRevenueByInvoiceCost?` + query).pipe(
             catchError(error => {

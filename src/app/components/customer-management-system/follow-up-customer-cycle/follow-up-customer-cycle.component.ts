@@ -4,9 +4,11 @@ import { MessageService } from 'primeng/api';
 import queryString from 'query-string';
 import { Subject, takeUntil } from 'rxjs';
 import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.component';
-import { CustmerSearch, Customer, STATUS } from 'src/app/models/customer-management-system';
-import { Branch, CountRecord, ProductWarning, SearchEarlyWarning } from 'src/app/models/early-warning';
+import { STATUS } from 'src/app/models/customer-management-system';
+import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-follow-up-customer-cycle',
   templateUrl: './follow-up-customer-cycle.component.html',
@@ -30,6 +32,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
   public listDatas: any[] = [];
   public listDatasLoading: any[] = Array(20).fill(1).map((x, i) => i);
   public isLoading: boolean = false;
+  public fileName: string = 'Theo dõi doanh số khách hàng theo chu kỳ';
   public query: any = {
     retailerId: 717250,
     startDate: new Date('2023-01-01'),
@@ -91,7 +94,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     this.itemsBreadcrumb = [
       { label: 'Trang chủ', routerLink: '/home' },
       { label: 'Hệ thống quản trị khách hàng' },
-      { label: '2. Theo dõi doanh số khách hàng theo chu kỳ' },
+      { label: `2. ${this.fileName}` },
     ];
     this.getListBranch();
   }
@@ -192,12 +195,36 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
   expandedRows: any = {};
   expandAll(type: boolean = false) {
     this.isExpanded = type ? !this.isExpanded : this.isExpanded;
-    if(this.listDatas.length > 0){
-      this.listDatas.forEach(data =>{
+    if (this.listDatas.length > 0) {
+      this.listDatas.forEach(data => {
         this.expandedRows[data.customer.customerName] = this.isExpanded;
       })
     } else {
-      this.expandedRows={};
+      this.expandedRows = {};
     }
+  }
+
+  exportExcel() {
+    const wscols = [
+      { wch: 15 },
+      { wch: 45 },
+      { wch: 5 },
+      { wch: 10 }
+    ]
+    let element = document.getElementById('my-table');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    ws['!cols'] = wscols;
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, `${this.fileName}.xlsx`,{ bookType: 'xlsx', type: 'buffer' });
+  }
+
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
+    });
+    FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 }

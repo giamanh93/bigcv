@@ -7,6 +7,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.component';
 import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-follow-up-customer-sales-product',
   templateUrl: './follow-up-customer-sales-product.component.html',
@@ -30,6 +32,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   public listDatas: any[] = [];
   public listDatasLoading: any[] = Array(20).fill(1).map((x, i) => i);
   public isLoading: boolean = false;
+  public fileName='Theo dõi doanh số khách hàng theo sản phẩm';
   public query: any = {
     retailerId: 717250,
     startDate: new Date('2023-01-01'),
@@ -74,7 +77,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     this.itemsBreadcrumb = [
       { label: 'Trang chủ', routerLink: '/home' },
       { label: 'Hệ thống quản trị khách hàng' },
-      { label: '1. Theo dõi doanh số khách hàng theo sản phẩm' },
+      { label: `1. ${this.fileName}` },
     ];
     this.getListBranch();
   }
@@ -187,6 +190,30 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
       }
     }
     return total;
+  }
+
+  exportExcel() {
+    const wscols = [
+      { wch: 15 },
+      { wch: 45 },
+      { wch: 15 },
+      { wch: 10 }
+    ]
+    let element = document.getElementById('my-table');
+    const ws:XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+    const wb:XLSX.WorkBook = XLSX.utils.book_new();
+    ws['!cols'] = wscols;
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, `${this.fileName}.xlsx`,{ bookType: 'xlsx', type: 'buffer' });
+  } 
+ 
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
+    });
+    FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
 

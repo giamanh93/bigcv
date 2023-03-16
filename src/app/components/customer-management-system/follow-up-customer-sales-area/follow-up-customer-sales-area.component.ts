@@ -44,8 +44,8 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
   }
   public cols: any[] = [
     { field: "customerId", header: "#", typeField : 'text' },
-    { field: "customerName", header: "Khách hàng", typeField : 'text' },
     { field: "areaName", header: "Khu vực", typeField : 'text' },
+    { field: "customerName", header: "Khách hàng", typeField : 'text' },
     { field: "address", header: "Địa chỉ", typeField : 'text' },
     { field: "purchaseDate", header: "Ngày hóa đơn", typeField : 'text' },
     { field: "staff", header: "Nhân viên bán", typeField : 'text' },

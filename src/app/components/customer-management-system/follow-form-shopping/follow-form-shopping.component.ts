@@ -120,7 +120,7 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
     localStorage.setItem('branchId', this.query.branchId?.toString() ?? '');
     this.getLists();
   }
-
+  times = 0
   getLists() {
     this.listDatas = [];
     this.isLoading = true;
@@ -129,10 +129,12 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
     localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
     const queryParams = queryString.stringify(params);
-    this.$http.get('http://3.0.125.181:8888/api/customer/v1/getCustomerRevenueByInvoiceCost?branchId=180921&endDate=2022-12-31&page=1&retailerId=717250&search=&size=65401&startDate=2022-01-01')
+    const startTime = new Date().getTime();
+
+    this.$http.get(`http://3.0.125.181:8888/api/customer/v1/getCustomerRevenueByInvoiceCost?branchId=180921&endDate=2022-12-31&page=${this.query.page}&retailerId=717250&search=&size=${this.query.size}&startDate=2022-01-01`)
       .subscribe((results: any) => {
         console.log("this.listDatas", results.data.content)
-
+        this.times = (new Date().getTime() - startTime)/1000;
         if (results.success) {
           this.listDatas = results.data.content ?? [];
           this.isLoading = false;
@@ -210,6 +212,7 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
     this.columnDefs = [
       {
         field: 'customerId',
+        rowGroup: true
       },
       {
         field: 'customerName',

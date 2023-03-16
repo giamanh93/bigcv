@@ -1,0 +1,33 @@
+<div class="section">
+  <ag-grid-angular 
+    [style.height]="domLayout === '' ? height + 'px' : ''"
+    [excelStyles]="excelStyles"
+    [getContextMenuItems]="getContextMenuItems"
+     #agGrid style="width: 100% "
+     id="{{idGrid}}"
+    class="ag-theme-alpine "
+    [pinnedTopRowData]="pinnedTopRowData"
+    [rowData]="listsData"
+    [columnDefs]="columnDefs"
+    [skipHeaderOnAutoSize]="false"
+    [headerHeight]="headerHeight"
+    [groupDefaultExpanded]="groupDefaultExpanded"
+    [masterDetail]="true"
+    [stopEditingWhenCellsLoseFocus]="true" 
+    [groupDisplayType]="'groupRows'"
+    [rowClassRules]="rowClassRules"
+    [overlayNoRowsTemplate]="noRowsTemplate"
+    [detailCellRendererParams]="detailCellRendererParams"
+    [tooltipShowDelay]="tooltipShowDelay"
+    (gridReady)="onGridReady($event)"
+    [defaultColDef]="defaultColDef"
+    [enableCellTextSelection]="true"
+    [suppressCopyRowsToClipboard]="true"
+    [groupDisplayType]="'groupRows'"
+    [enableRangeSelection]="true"
+    [getRowHeight]="getRowHeight"
+    [accentedSort]="true"
+    [frameworkComponents]="frameworkComponents">
+  </ag-grid-angular>
+</div>
+

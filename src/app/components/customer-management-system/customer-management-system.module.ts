@@ -22,7 +22,8 @@ import { PaginatorModule } from 'primeng/paginator';
 import { ToolbarModule } from 'primeng/toolbar';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {CalendarModule} from 'primeng/calendar';
-
+import { AgGridModule } from 'ag-grid-angular';
+import { ListGridAngularModule } from 'src/app/common/components/list-grid-angular/list-grid-angular.module';
 
 @NgModule({
     imports: [
@@ -41,7 +42,8 @@ import {CalendarModule} from 'primeng/calendar';
         PaginatorModule,
         ToolbarModule,
         OverlayPanelModule,
-        CalendarModule
+        CalendarModule,
+        ListGridAngularModule
     ],
     providers: [
         customerManagementSystem

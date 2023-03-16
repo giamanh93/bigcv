@@ -21,6 +21,7 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ToastModule} from 'primeng/toast';
 import { DatePipe } from '@angular/common';
+import 'ag-grid-enterprise';
 
 @NgModule({
   declarations: [

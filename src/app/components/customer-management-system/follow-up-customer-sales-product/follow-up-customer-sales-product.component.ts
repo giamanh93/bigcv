@@ -96,8 +96,14 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
       .subscribe(results => {
         if (results.success) {
           this.listBranchs = results.data.content ?? [];
-          if (this.query.branchId === 0 && this.listBranchs.length > 0) this.query.branchId = this.listBranchs[0].branchId;
-          this.getLists();
+          if (this.query.branchId === 0 && this.listBranchs.length > 0) {
+            setTimeout(() => {
+              this.query.branchId = this.listBranchs[2].branchId;
+              this.getLists();
+            }, 10);
+          }else {
+            this.getLists();
+          }
         } else {
           this.listDatas = [];
           this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });

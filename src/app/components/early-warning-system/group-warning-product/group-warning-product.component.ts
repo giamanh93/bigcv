@@ -41,7 +41,7 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 		{ field: "productName", header: "Sản phẩm", typeField : 'text' },
 		{ field: "barCode", header: "Mã", typeField : 'text' },
 		{ field: "unit", header: "Đơn vị", typeField : 'text' },
-		{ field: "branchName", header: "Chi nhánh", typeField : 'number' },
+		{ field: "branchName", header: "Chi nhánh", typeField : 'text' },
 		{ field: "buyPrice", header: "Giá mua", typeField : 'number' },
 		{ field: "sellPrice", header: "Giá bán", typeField : 'number' },
 		{ field: "realMargin", header: "Real margin", typeField : 'number' },
@@ -80,8 +80,14 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 			.subscribe(results => {
 				if (results.success) {
 					this.listBranchs = results.data.content ?? [];
-					if (this.query.branchId === 0 && this.listBranchs.length > 0) this.query.branchId = this.listBranchs[0].branchId;
-					this.getLists();
+					if (this.query.branchId === 0 && this.listBranchs.length > 0) {
+						setTimeout(() => {
+						  this.query.branchId = this.listBranchs[2].branchId;
+						  this.getLists();
+						}, 10);
+					  }else {
+						this.getLists();
+					  }
 				} else {
 					this.listDatas = [];
 					this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
@@ -112,7 +118,7 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 				break;
 
 			default:
-				this.loadTab1();
+				// this.loadTab1();
 				break;
 		}
 	}

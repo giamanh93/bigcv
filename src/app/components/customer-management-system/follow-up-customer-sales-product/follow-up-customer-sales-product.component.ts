@@ -136,7 +136,13 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   changeBranch() {
     localStorage.setItem('branchId', this.query.branchId?.toString() ?? '');
     this.query.page = 1;
-    this.query.page = 20;
+    this.query.size = 20;
+    this.first = 1;
+    this.countRecord = {
+      totalRecord: 0,
+      currentRecordStart: 0,
+      currentRecordEnd: 0
+    }
     this.getLists();
   }
 

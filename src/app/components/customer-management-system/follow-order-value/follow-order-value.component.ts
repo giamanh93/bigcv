@@ -134,7 +134,13 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
   changeBranch() {
     localStorage.setItem('branchId', this.query.branchId?.toString() ?? '');
     this.query.page = 1;
-    this.query.page = 20;
+    this.query.size = 20;
+    this.first = 1;
+    this.countRecord = {
+      totalRecord: 0,
+      currentRecordStart: 0,
+      currentRecordEnd: 0
+    }
     this.getLists();
   }
 
@@ -167,9 +173,11 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
 
   first: number = 1;
   paginate(event: any) {
-    this.query.page = event.page + 1;
+    console.log("dddddđ",this.query.page)
+    this.query.page = this.query.page > 1 ? event.page + 1 : 1;
     this.first = event.first;
     this.query.size = event.rows;
+    console.log("dddddđ2222222",this.query.page)
     this.getLists();
   }
 

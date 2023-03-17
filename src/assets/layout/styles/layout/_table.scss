@@ -11,9 +11,15 @@
         }
     }
 }
-.ag-row-footer  {
+.ag-row-footer.ag-row-level-0  {
     .ag-cell-range-right {
         font-weight: 600;
+    }
+}
+.ag-row-footer.ag-row-level--1  {
+    .ag-cell-range-right {
+        font-weight: 600;
+        color: red;
     }
 }
 .ag-row-group-expanded {

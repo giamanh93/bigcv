@@ -28,6 +28,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   @Input() pinnedTopRowData: any[] = [];
   @Input() floatingFilter: boolean = false;
   @Input() groupIncludeFooter: boolean = false;
+  @Input() groupIncludeTotalFooter: boolean = false;
   @Input() groupDefaultExpanded: number = 1;;
   @Input() buttons = [];
   @Input() isShowButton: boolean = false;
@@ -39,7 +40,8 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     resizable: true,
     suppressSorting: false,
     sortable: false,
-    filter: '',
+    filter: true,
+    floatingFilter: true,
     rowHeight: 90,
     cellClass: [],
     tooltipComponentParams: { color: '#ececec' },
@@ -48,7 +50,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   @Input() height: number = 0;
   @Input() heightRow: number = 37;
   @Input() headerHeight: number = 35;
-  @Input() floatingFiltersHeight: number = 36;
+  @Input() floatingFiltersHeight: number = 35;
   @Input() getContextMenuItems: any = null;
   @Input() excelStyles: any[] = [
     {

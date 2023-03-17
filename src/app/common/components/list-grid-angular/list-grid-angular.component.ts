@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { Subject,  } from 'rxjs';
+import { Subject, } from 'rxjs';
 import { TotalValueFooterComponent } from '../total-value-component/total-value-component';
 @Component({
   selector: 'app-list-grid-angular',
@@ -22,13 +22,13 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   @Input() rowSelection: string = 'single';
   @Input() frameworkComponents = {};
   @Input() detailCellRendererParams: any;
-  @Input() autoGroupColumnDef: any =  {};
+  @Input() autoGroupColumnDef: any = {};
   @Input() rowClassRules: any;
   @Input() noRowsTemplate: any = 'Không có kết quả phù hợp';
   @Input() pinnedTopRowData: any[] = [];
   @Input() floatingFilter: boolean = false;
   @Input() groupIncludeFooter: boolean = false;
-  @Input() groupDefaultExpanded: number = 1;  ;
+  @Input() groupDefaultExpanded: number = 1;;
   @Input() buttons = [];
   @Input() isShowButton: boolean = false;
   @Input() title: string = '';
@@ -111,20 +111,56 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
   }
- 
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
     setTimeout(() => {
-      this.onFirstDataRendered()
+      params.api.sizeColumnsToFit();
     }, 100);
+    window.onresize = () => {
+      this.gridApi.sizeColumnsToFit();
+    }
   }
 
-  ngOnChanges(changes: SimpleChanges): void{
-    if(changes && changes.hasOwnProperty('groupDefaultExpanded')) {
-      changes['groupDefaultExpanded']['currentValue'] === 1 ? this.gridApi.expandAll() : this.gridApi.collapseAll()
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes && changes.hasOwnProperty('groupDefaultExpanded') && this.gridApi) {
+      changes['groupDefaultExpanded']['currentValue'] === 1 ? this.gridApi.expandAll() : this.gridApi.collapseAll();
     }
     this.heightAuto = this.height;
+  }
+
+  onGridSizeChanged(params: any) {
+
+    // option chưa dùng được
+    console.log("sdsdsd")
+    // get the current grids width
+    var gridWidth: any = document.getElementById(this.idGrid);
+    console.log("gridWidth", gridWidth)
+    // keep track of which columns to hide/show
+    var columnsToShow = [];
+    var columnsToHide = [];
+
+    // iterate over all columns (visible or not) and work out
+    // now many columns can fit (based on their minWidth)
+    var totalColsWidth = 0;
+    var allColumns = params.columnApi.getAllColumns();
+    for (var i = 0; i < allColumns.length; i++) {
+      let column = allColumns[i];
+      totalColsWidth += column.getMinWidth();
+      if (totalColsWidth > gridWidth.offsetWidth) {
+        columnsToHide.push(column.colId);
+      } else {
+        columnsToShow.push(column.colId);
+      }
+    }
+
+    // show/hide columns based on current grid width
+    params.columnApi.setColumnsVisible(columnsToShow, true);
+    params.columnApi.setColumnsVisible(columnsToHide, false);
+
+    // fill out any available space to ensure there are no gaps
+    params.api.sizeColumnsToFit();
   }
 
   private readonly unsubscribe$: Subject<void> = new Subject();
@@ -137,7 +173,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     this.gridApi.sizeColumnsToFit()
   }
 
-  
+
   autoSizeAll(skipHeader: boolean) {
     const allColumnIds: string[] = [];
     this.gridColumnApi.getColumns()!.forEach((column: any) => {

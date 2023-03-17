@@ -66,6 +66,7 @@ export function AgGridFn(lists: Array<any>) {
                 aggFunc: value.aggFunc,
                 width: value.width,
                 rowGroup: value.rowGroup,
+                rowGroupIndex: value.rowGroupIndex,
                 filterParams: {
                     caseSensitive: true,
                     textFormatter: (r:any) => TextFormatter(r),
@@ -90,6 +91,7 @@ export function AgGridFn(lists: Array<any>) {
                 filter: 'agSetColumnFilter',
                 sortable: false,
                 rowGroup: value.rowGroup,
+                rowGroupIndex: value.rowGroupIndex,
                 editable: value.editable ? value.editable : false,
                 filterParams: {
                     caseSensitive: true,

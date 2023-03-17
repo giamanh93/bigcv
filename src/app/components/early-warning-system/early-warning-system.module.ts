@@ -23,6 +23,7 @@ import { LoadingGridModule } from 'src/app/common/components/loading-grid/loadin
 import { SkeletonModule } from 'primeng/skeleton';
 import {PaginatorModule} from 'primeng/paginator';
 import {ToolbarModule} from 'primeng/toolbar';
+import { ListGridAngularModule } from 'src/app/common/components/list-grid-angular/list-grid-angular.module';
 
 @NgModule({
     imports: [
@@ -44,7 +45,8 @@ import {ToolbarModule} from 'primeng/toolbar';
         LoadingGridModule,
         SkeletonModule,
         PaginatorModule,
-        ToolbarModule
+        ToolbarModule,
+        ListGridAngularModule,
     ],
     providers: [
         EarlyWarningSystemService,

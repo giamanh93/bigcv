@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject,  } from 'rxjs';
+import { TotalValueFooterComponent } from '../total-value-component/total-value-component';
 @Component({
   selector: 'app-list-grid-angular',
   templateUrl: './list-grid-angular.component.html',
@@ -21,10 +22,13 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   @Input() rowSelection: string = 'single';
   @Input() frameworkComponents = {};
   @Input() detailCellRendererParams: any;
+  @Input() autoGroupColumnDef: any =  {};
   @Input() rowClassRules: any;
   @Input() noRowsTemplate: any = 'Không có kết quả phù hợp';
   @Input() pinnedTopRowData: any[] = [];
   @Input() floatingFilter: boolean = false;
+  @Input() groupIncludeFooter: boolean = false;
+  @Input() groupDefaultExpanded: number = 1;  ;
   @Input() buttons = [];
   @Input() isShowButton: boolean = false;
   @Input() title: string = '';
@@ -35,7 +39,6 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     resizable: true,
     suppressSorting: false,
     sortable: false,
-    suppressSizeToFit: false,
     filter: '',
     rowHeight: 90,
     cellClass: [],
@@ -43,8 +46,8 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   };;
   @Input() domLayout: string = '';
   @Input() height: number = 0;
-  @Input() heightRow: number = 40;
-  @Input() headerHeight: number = 45;
+  @Input() heightRow: number = 37;
+  @Input() headerHeight: number = 38;
   @Input() floatingFiltersHeight: number = 36;
   @Input() getContextMenuItems: any = null;
   @Input() excelStyles: any[] = [
@@ -67,7 +70,6 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   gridApi: any;
   getRowHeight: any;
   gridColumnApi: any;
-  groupDefaultExpanded = 0;
   heightAuto = 0;
   tooltipShowDelay = 0;
   titlePage = '';
@@ -77,12 +79,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     private messageService: MessageService,
 
   ) {
-
-
-    this.frameworkComponents = {
-    };
     this.tooltipShowDelay = 0
-
     this.sideBar = {
       toolPanels: [
         {
@@ -106,6 +103,10 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
       ],
       defaultToolPanel: '',
     };
+
+    this.getRowHeight = (params: any) => {
+      return this.heightRow
+    };
   }
 
   ngOnInit(): void {
@@ -114,9 +115,15 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
+    setTimeout(() => {
+      this.onFirstDataRendered()
+    }, 100);
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges): void{
+    if(changes && changes.hasOwnProperty('groupDefaultExpanded')) {
+      changes['groupDefaultExpanded']['currentValue'] === 1 ? this.gridApi.expandAll() : this.gridApi.collapseAll()
+    }
     this.heightAuto = this.height;
   }
 
@@ -124,5 +131,18 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  onFirstDataRendered() {
+    this.gridApi.sizeColumnsToFit()
+  }
+
+  
+  autoSizeAll(skipHeader: boolean) {
+    const allColumnIds: string[] = [];
+    this.gridColumnApi.getColumns()!.forEach((column: any) => {
+      allColumnIds.push(column.getId());
+    });
+    this.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
   }
 }

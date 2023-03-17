@@ -183,18 +183,6 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  calculateCustomerTotal(name: string) {
-    let total = 0;
-    if (this.listDatas) {
-      for (let product of this.listDatas) {
-        if (product.customer.customerName === name) {
-          total += product.revenue
-        }
-      }
-    }
-    return total;
-  };
-
   isExpanded: boolean = true;
   expandedRows: any = {};
   expandAll(type: boolean = false) {

@@ -8,18 +8,22 @@ import { ErrorService } from 'src/app/services/error.service';
   styleUrls: ['./loading-grid.component.css']
 })
 export class LoadingGridComponent implements OnInit {
-  private  $errorService = inject(ErrorService)
+  private $errorService = inject(ErrorService)
   @Input() gridtype = 'hsns';
-  @Input() columnNumber = 17;
+  @Input() colsNumber = 17;
+  @Input() lists = 20;
   listThs: any[] = [];
   isLoad = true;
- async ngOnInit() {
-    this.listThs = Array(this.columnNumber).fill(1).map((x, i) => i);
-     this.$errorService.fetchError().subscribe((res: number) => {
-        if(res === 404 || res === 500) {
-          this.isLoad = false;
-        }
-      })
+  public listDatasLoading: any[] = [];
+  public cols: any[] = [];
+  async ngOnInit() {
+    this.listDatasLoading = Array(this.lists).fill(1).map((x, i) => i)
+    this.cols = Array(this.colsNumber).fill(1).map((x, i) => i);
+    this.$errorService.fetchError().subscribe((res: number) => {
+      if (res === 404 || res === 500) {
+        this.isLoad = false;
+      }
+    })
 
   }
 }

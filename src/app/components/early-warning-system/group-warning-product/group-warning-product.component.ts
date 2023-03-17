@@ -1,9 +1,11 @@
 
 import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, SimpleChanges, OnChanges, HostListener } from '@angular/core';
+import { ColDef } from 'ag-grid-community';
 import { MessageService } from 'primeng/api';
 import queryString from 'query-string';
 import { Subject, takeUntil } from 'rxjs';
 import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.component';
+import { AgGridFn } from 'src/app/common/function/lib';
 import { Branch, CountRecord, ProductWarning, SearchEarlyWarning } from 'src/app/models/early-warning';
 import { EarlyWarningSystemService } from 'src/app/services/earlyWarningSystem.service';
 @Component({
@@ -36,21 +38,27 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 		size: 20,
 		branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
 	}
-
+	public columnDefs: ColDef[] = [];
 	public cols: any[] = [
 		{ field: "productName", header: "Sản phẩm", typeField : 'text' },
 		{ field: "barCode", header: "Mã", typeField : 'text' },
 		{ field: "unit", header: "Đơn vị", typeField : 'text' },
 		{ field: "branchName", header: "Chi nhánh", typeField : 'text' },
-		{ field: "buyPrice", header: "Giá mua", typeField : 'number' },
-		{ field: "sellPrice", header: "Giá bán", typeField : 'number' },
-		{ field: "realMargin", header: "Real margin", typeField : 'number' },
-		{ field: "standardMargin", header: "Standard margin", typeField : 'number' },
+		{ field: "buyPrice", header: "Giá mua", typeField : 'decimal' },
+		{ field: "sellPrice", header: "Giá bán", typeField : 'decimal' },
+		{ field: "realMargin", header: "Real margin", typeField : 'decimal' },
+		{ field: "standardMargin", header: "Standard margin", typeField : 'decimal' },
 	  ];
 
 	ngAfterViewInit() {
 		this.$changeDetech.detectChanges();
 	}
+
+	onInitGrid() {
+		this.columnDefs = [
+		  ...AgGridFn(this.cols)
+		]
+	  }
 
 
 	ngOnDestroy() {
@@ -64,6 +72,7 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit(): void {
+		this.onInitGrid()
 		this.screenWidth = window.innerWidth;
 		this.itemsBreadcrumb = [
 			{ label: 'Trang chủ', routerLink: '/home' },

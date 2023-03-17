@@ -56,12 +56,16 @@
                     </ng-template>
                 </p-overlayPanel>
                 <p-button  (click)="expandAll(true)" [icon]=" isExpanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" label="Expanded" styleClass=""></p-button>
-                <p-button  (click)="exportExcel()" icon="pi pi-file-excel" styleClass="p-button-success mr-2" pTooltip="XLS" tooltipPosition="bottom"></p-button>
             </div>
         </p-toolbar>
        </div>
        <div class="table-default" #container>
-        <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth<= 960" [columns]="cols"
+
+        <app-list-grid-angular  *ngIf="!isLoading" [groupIncludeFooter]="true" [idGrid]="'my-table'" [groupDefaultExpanded]="this.isExpanded ? 1 : 0"
+            [listsData]="listDatas" [height]="heightGrid" [autoGroupColumnDef]="autoGroupColumnDef"
+            [columnDefs]="columnDefs"></app-list-grid-angular>
+            <app-loading-grid *ngIf="isLoading" [colsNumber]="cols.length" [lists]="20"></app-loading-grid>
+        <!-- <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth<= 960" [columns]="cols"
          [resizableColumns]="true" [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px"
           responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">
             <ng-template pTemplate="header" let-columns>
@@ -147,7 +151,7 @@
                 </tr>
                
             </ng-template>
-        </p-table>
+        </p-table> -->
         <div class="paginator flex justify-content-end align-items-center" style="background-color: #fff;background-color: #fff;
         position: fixed;
         bottom: 0;

@@ -47,12 +47,12 @@
                                 name="endDate"></p-calendar>
                             </div>
                         </div>
-                        <div class="p-fluid grid formgrid">
+                        <!-- <div class="p-fluid grid formgrid">
                             <div class="field col-12 md:col-12">
                                 <label for="dateformat">Chu kỳ</label>
                                 <p-dropdown [options]="listPeriod" [(ngModel)]="query.period" [autoDisplayFirst]="false" optionLabel="label" optionValue="value"  [appendTo]="'body'"  ></p-dropdown>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="flex grid justify-content-end">
                             <button type="button" pButton pRipple icon="pi pi-search" label="Tìm kiếm" (click)="search()" class="p-button-warn mr-1"></button>  
@@ -62,99 +62,14 @@
                     </ng-template>
                 </p-overlayPanel>
                 <p-button  (click)="expandAll(true)" [icon]=" isExpanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" label="Expanded" styleClass=""></p-button>
-                <p-button  (click)="exportExcel()" icon="pi pi-file-excel" styleClass="p-button-success mr-2" pTooltip="XLS" tooltipPosition="bottom"></p-button>
             </div>
         </p-toolbar>
        </div>
        <div class="table-default" #container>
-        <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth<= 960" [columns]="cols"
-         [resizableColumns]="true" [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px"
-          responsiveLayout="stack" [breakpoint]="'960px'" styleClass="table-row  p-datatable-sm">
-            <ng-template pTemplate="header" let-columns>
-                <tr>
-                    <th *ngFor="let col of columns">
-                        {{ col.header }}
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-product let-columns="columns">
-                <tr [pSelectableRow]="product">
-                    <ng-container *ngFor="let col of columns">
-                        <td *ngIf="col.typeField === 'text'">
-                            <span class="p-column-title">{{ col.header }}</span><p-skeleton *ngIf="isLoading"></p-skeleton> {{ product[col.field] }}
-                        </td>
-                        <td *ngIf="col.typeField === 'number'">
-                            <span class="p-column-title">{{ col.header }}</span><p-skeleton *ngIf="isLoading"></p-skeleton> {{ product[col.field] | number}}
-                        </td>
-                    </ng-container>
-                </tr>
-            </ng-template>
-        </p-table>
-        <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth> 960 && isLoading" [columns]="cols"
-        [resizableColumns]="true" [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px"
-         responsiveLayout="stack" [breakpoint]="'960px'" styleClass="table-row  p-datatable-sm">
-           <ng-template pTemplate="header" let-columns>
-               <tr>
-                <th *ngFor="let col of columns">
-                    {{ col.header }}
-                </th>
-               </tr>
-           </ng-template>
-           <ng-template pTemplate="body" let-product let-columns="columns">
-               <tr [pSelectableRow]="product">
-                <ng-container *ngFor="let col of columns">
-                    <td *ngIf="col.typeField === 'text'">
-                        <span class="p-column-title">{{ col.header }}</span><p-skeleton *ngIf="isLoading"></p-skeleton> {{ product[col.field] }}
-                    </td>
-                    <td *ngIf="col.typeField === 'number'">
-                        <span class="p-column-title">{{ col.header }}</span><p-skeleton *ngIf="isLoading"></p-skeleton> {{ product[col.field] | number}}
-                    </td>
-                </ng-container>
-               </tr>
-              
-           </ng-template>
-       </p-table>
-        <p-table  *ngIf="screenWidth> 960 && !isLoading" rowGroupMode="subheader" sortField="area.areaName" id="my-table" [columns]="cols"
-            [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px" 
-              responsiveLayout="stack" [expandedRowKeys]="expandedRows"
-             groupRowsBy="area.areaName" dataKey="area.areaName"
-              sortMode="single" [value]="isLoading ? listDatasLoading : listDatas"
-                [resizableColumns]="true"  [breakpoint]="'960px'"
-                 styleClass="table-row  p-datatable-sm">
-                <ng-template pTemplate="header" let-columns>
-                    <tr>
-                        <th *ngFor="let col of columns">
-                            {{ col.header }}
-                        </th>
-                    </tr>
-                </ng-template>
-                <ng-template  pTemplate="groupheader" let-product let-rowIndex="rowIndex" let-expanded="expanded">
-                    <tr>
-                        <td colspan="4">
-                            <button type="button" pButton pRipple [pRowToggler]="product" class="p-button-text td-button-dropdown p-button-rounded p-button-plain mr-2" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
-                            <span class="font-bold ml-2">{{product?.area?.areaName}}</span>
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="groupfooter" let-product>
-                    <tr class="p-rowgroup-footer">
-                        <td colspan="4" style="text-align: left;font-weight: bold;">Tổng tiền: {{calculateCustomerTotal(product.area.areaName) | number}}</td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="rowexpansion" let-product let-columns="columns">
-                    <tr [pSelectableRow]="product">
-                        <ng-container *ngFor="let col of columns">
-                            <td *ngIf="col.typeField === 'text'">
-                                {{ product[col.field] }}
-                            </td>
-                            <td *ngIf="col.typeField === 'number'">
-                                {{ product[col.field] | number}}
-                            </td>
-                        </ng-container>
-                    </tr>
-                   
-                </ng-template>
-            </p-table>
+        <app-list-grid-angular  *ngIf="!isLoading" [groupIncludeFooter]="true" [idGrid]="'my-table'"
+            [listsData]="listDatas" [height]="heightGrid" [autoGroupColumnDef]="autoGroupColumnDef" [groupDefaultExpanded]="this.isExpanded ? 1 : 0"
+            [columnDefs]="columnDefs"></app-list-grid-angular>
+            <app-loading-grid *ngIf="isLoading" [colsNumber]="cols.length" [lists]="20"></app-loading-grid>
         <div class="paginator flex justify-content-end align-items-center" style="background-color: #fff;background-color: #fff;
         position: fixed;
         bottom: 0;

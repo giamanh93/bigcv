@@ -6,8 +6,9 @@ import { ListGridAngularComponent } from './list-grid-angular.component';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { AgGridModule } from 'ag-grid-angular';
+import { TotalValueFooterComponent } from '../total-value-component/total-value-component';
 @NgModule({
-    declarations: [ListGridAngularComponent],
+    declarations: [ListGridAngularComponent, TotalValueFooterComponent],
     imports: [
         FormsModule,
         ReactiveFormsModule,

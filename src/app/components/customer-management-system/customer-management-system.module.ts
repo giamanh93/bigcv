@@ -24,6 +24,8 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {CalendarModule} from 'primeng/calendar';
 import { AgGridModule } from 'ag-grid-angular';
 import { ListGridAngularModule } from 'src/app/common/components/list-grid-angular/list-grid-angular.module';
+import { LoadingGridModule } from 'src/app/common/components/loading-grid/loading-grid.module';
+import { TotalValueFooterComponent } from 'src/app/common/components/total-value-component/total-value-component';
 
 @NgModule({
     imports: [
@@ -43,11 +45,18 @@ import { ListGridAngularModule } from 'src/app/common/components/list-grid-angul
         ToolbarModule,
         OverlayPanelModule,
         CalendarModule,
-        ListGridAngularModule
+        ListGridAngularModule,
+        LoadingGridModule
     ],
     providers: [
         customerManagementSystem
     ],
-    declarations: [CustomerManagementSystemComponent, FollowUpCustomerSalesProductComponent, FollowUpCustomerCycleComponent, FollowOrderValueComponent, FollowFormShoppingComponent, FollowUpCustomerSalesAreaComponent]
+    declarations: [CustomerManagementSystemComponent
+        , FollowUpCustomerSalesProductComponent
+        , FollowUpCustomerCycleComponent
+        , FollowOrderValueComponent
+        , FollowFormShoppingComponent
+        , FollowUpCustomerSalesAreaComponent
+        ]
 })
 export class CustomerManagementSystemModule { }

@@ -9,6 +9,8 @@ import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { ColDef } from 'ag-grid-community';
+import { AgGridFn } from 'src/app/common/function/lib';
 @Component({
   selector: 'app-follow-up-customer-cycle',
   templateUrl: './follow-up-customer-cycle.component.html',
@@ -43,11 +45,25 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     search: '',
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
   }
+  public autoGroupColumnDef: ColDef = {
+    minWidth: 300,
+    cellRendererParams: {
+      footerValueGetter: (params: any) => {
+        const isRootLevel = params.node.level === -1;
+        if (isRootLevel) {
+          return 'Grand Total';
+        }
+        return `Sub Total (${params.value})`;
+      },
+    }
+  };
+
+  public columnDefs: ColDef[] = [];
   public cols: any[] = [
     { field: "customerId", header: "#", typeField : 'text' },
-    { field: "customerName", header: "Khách hàng", typeField : 'text' },
-    { field: "period", header: `Tháng`, typeField : 'number' },
-    { field: "revenue", header: "Doanh thu", typeField : 'number' },
+    { field: "customerName", header: "Khách hàng", typeField : 'text', rowGroup: true, width: 300},
+    { field: "period", header: `Tháng`, typeField : 'decimal' },
+    { field: "revenue", header: "Doanh thu", typeField : 'decimal', aggFunc: 'sum' },
   ];
 
   listPeriod: STATUS[] = [
@@ -68,10 +84,11 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
   initCols() {
     this.cols = [
       { field: "customerId", header: "#", typeField : 'text' },
-      { field: "customerName", header: "Khách hàng", typeField : 'text' },
-      { field: "period", header: `${this.query.period === 1 ? 'Tuần' : this.query.period === 2 ? 'Tháng' : 'Quý'}`, typeField : 'number' },
-      { field: "revenue", header: "Doanh thu", typeField : 'number' },
+      { field: "customerName", header: "Khách hàng", typeField : 'text' ,  rowGroup: true, width: 300},
+      { field: "period", header: `${this.query.period === 1 ? 'Tuần' : this.query.period === 2 ? 'Tháng' : 'Quý'}`, typeField : 'decimal' },
+      { field: "revenue", header: "Doanh thu", typeField : 'decimal', aggFunc: 'sum' },
     ];
+    this.onInitGrid();
   }
 
   ngAfterViewInit() {
@@ -96,7 +113,14 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     this.screenWidth = window.innerWidth;
   }
 
+  onInitGrid() {
+    this.columnDefs = [
+      ...AgGridFn(this.cols)
+    ]
+  }
+
   ngOnInit(): void {
+    this.onInitGrid();
     const filterDate = localStorage.hasOwnProperty('filterDate') && localStorage.getItem('filterDate') ? localStorage.getItem('filterDate') : null;
     if (filterDate) {
       this.query.endDate = JSON.parse(filterDate).endDate;
@@ -203,52 +227,10 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     }
   }
 
-  calculateCustomerTotal(name: string) {
-    let total = 0;
-    if (this.listDatas) {
-      for (let product of this.listDatas) {
-        if (product.customer.customerName === name) {
-          total += product.revenue
-        }
-      }
-    }
-    return total;
-  };
-
   isExpanded: boolean = true;
-  expandedRows: any = {};
   expandAll(type: boolean = false) {
     this.isExpanded = type ? !this.isExpanded : this.isExpanded;
-    if (this.listDatas.length > 0) {
-      this.listDatas.forEach(data => {
-        this.expandedRows[data.customer.customerName] = this.isExpanded;
-      })
-    } else {
-      this.expandedRows = {};
-    }
+   
   }
 
-  exportExcel() {
-    const wscols = [
-      { wch: 15 },
-      { wch: 45 },
-      { wch: 5 },
-      { wch: 10 }
-    ]
-    let element = document.getElementById('my-table');
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    ws['!cols'] = wscols;
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `${this.fileName}.xlsx`,{ bookType: 'xlsx', type: 'buffer' });
-  }
-
-  saveAsExcelFile(buffer: any, fileName: string): void {
-    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    let EXCEL_EXTENSION = '.xlsx';
-    const data: Blob = new Blob([buffer], {
-      type: EXCEL_TYPE
-    });
-    FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
-  }
 }

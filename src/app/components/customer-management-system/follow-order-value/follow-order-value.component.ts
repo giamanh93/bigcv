@@ -8,6 +8,9 @@ import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { AgGridFn } from 'src/app/common/function/lib';
+import { ColDef } from 'ag-grid-community';
+import { TotalValueFooterComponent } from 'src/app/common/components/total-value-component/total-value-component';
 @Component({
   selector: 'app-follow-order-value',
   templateUrl: './follow-order-value.component.html',
@@ -32,6 +35,7 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
   public listDatasLoading: any[] = Array(20).fill(1).map((x, i) => i);
   public isLoading: boolean = false;
   public fileName: string = 'Theo dõi theo giá trị đơn hàng';
+  public columnDefs: ColDef[] = [];
   public query: any = {
     retailerId: 717250,
     startDate: new Date('2023-01-01'),
@@ -40,20 +44,39 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
     size: 20,
     search: '',
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
-  }
+  };
+
+  public autoGroupColumnDef: ColDef = {
+    minWidth: 300,
+    cellRendererParams: {
+      footerValueGetter: (params: any) => {
+        const isRootLevel = params.node.level === -1;
+        if (isRootLevel) {
+          return 'Grand Total';
+        }
+        return `Sub Total (${params.value})`;
+      },
+    }
+  };
 
   public cols = [
-    { field: "customerId", header: "#", typeField : 'text' },
-    { field: "customerName", header: "Khách hàng", typeField : 'text' },
+    { field: "customerId", header: "#", typeField : 'text',  },
+    { field: "customerName", header: "Khách hàng", typeField : 'text' ,  rowGroup: true, width: 300},
     { field: "address", header: "Địa chỉ", typeField : 'text' },
     { field: "purchaseDate", header: "Ngày hóa đơn", typeField : 'text' },
     { field: "staff", header: "Nhân viên bán", typeField : 'text' },
     { field: "salePanel", header: "Kênh bán", typeField : 'text' },
-    { field: "revenue", header: "Doanh thu", typeField : 'number' }
+    { field: "revenue", header: "Doanh thu", typeField : 'decimal', aggFunc: 'sum' }
   ];
 
   ngAfterViewInit() {
     this.$changeDetech.detectChanges();
+  }
+
+  onInitGrid() {
+    this.columnDefs = [
+      ...AgGridFn(this.cols)
+    ]
   }
 
   refresh() {
@@ -75,6 +98,7 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
+    this.onInitGrid();
     const filterDate = localStorage.hasOwnProperty('filterDate') && localStorage.getItem('filterDate') ? localStorage.getItem('filterDate') : null;
     if (filterDate) {
       this.query.endDate = JSON.parse(filterDate).endDate;
@@ -120,6 +144,7 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
   }
 
   getLists() {
+    const startTime = new Date().getTime();
     this.listDatas = [];
     this.isLoading = true;
     const params = { ...this.query };
@@ -128,10 +153,12 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
     localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
     const queryParams = queryString.stringify(params);
     this.$service.getCustomerRevenueByInvoiceCost(queryParams)
-      .pipe(takeUntil(this.unsubscribe$))
+      // .pipe(takeUntil(this.unsubscribe$))
       .subscribe(results => {
+        console.log('API', (new Date().getTime() - startTime)/1000);
         if (results.success) {
           this.listDatas = results.data.content ?? [];
+          console.log('render',(new Date().getTime() - startTime)/1000);
           this.isLoading = false;
           this.fnCountRecord(results.data);
           this.expandAll(false)
@@ -178,55 +205,9 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
     }
   }
 
-  calculateCustomerTotal(name: string) {
-    let total = 0;
-    if (this.listDatas) {
-      for (let product of this.listDatas) {
-        if (product.customer.customerName === name) {
-          total += product.revenue
-        }
-      }
-    }
-    return total;
-  };
-
   isExpanded: boolean = true;
-  expandedRows: any = {};
   expandAll(type: boolean = false) {
     this.isExpanded = type ? !this.isExpanded : this.isExpanded;
-    if (this.listDatas.length > 0) {
-      this.listDatas.forEach(data => {
-        this.expandedRows[data.customer.customerName] = this.isExpanded;
-      })
-    } else {
-      this.expandedRows = {};
-    }
-  }
-  
-  exportExcel() {
-    const wscols = [
-      { wch: 15 },
-      { wch: 45 },
-      { wch: 20 },
-      { wch: 10 },
-      { wch: 10 },
-      { wch: 10 },
-      { wch: 10 },
-    ]
-    let element = document.getElementById('my-table');
-    const ws:XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
-    const wb:XLSX.WorkBook = XLSX.utils.book_new();
-    ws['!cols'] = wscols;
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `${this.fileName}.xlsx`,{ bookType: 'xlsx', type: 'buffer' });
-  } 
- 
-  saveAsExcelFile(buffer: any, fileName: string): void {
-    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    let EXCEL_EXTENSION = '.xlsx';
-    const data: Blob = new Blob([buffer], {
-      type: EXCEL_TYPE
-    });
-    FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+   
   }
 }

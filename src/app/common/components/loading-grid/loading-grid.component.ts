@@ -10,15 +10,13 @@ import { ErrorService } from 'src/app/services/error.service';
 export class LoadingGridComponent implements OnInit {
   private $errorService = inject(ErrorService)
   @Input() gridtype = 'hsns';
-  @Input() colsNumber = 17;
+  @Input() cols: any[] = [];
   @Input() lists = 20;
   listThs: any[] = [];
   isLoad = true;
   public listDatasLoading: any[] = [];
-  public cols: any[] = [];
   async ngOnInit() {
     this.listDatasLoading = Array(this.lists).fill(1).map((x, i) => i)
-    this.cols = Array(this.colsNumber).fill(1).map((x, i) => i);
     this.$errorService.fetchError().subscribe((res: number) => {
       if (res === 404 || res === 500) {
         this.isLoad = false;

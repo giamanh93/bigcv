@@ -1,4 +1,6 @@
-<p-table [value]="listDatasLoading" responsiveLayout="scroll" [columns]="cols"  [resizableColumns]="true" styleClass="p-datatable-gridlines table-lzay" *ngIf="isLoad">
+<p-table [value]="listDatasLoading" responsiveLayout="scroll"
+ [columns]="cols"  [resizableColumns]="true"
+  styleClass="table-row  p-datatable-sm" [resizableColumns]="true" *ngIf="isLoad">
   <ng-template pTemplate="header" let-columns>
       <tr>
           <th *ngFor="let col of columns">
@@ -6,15 +8,13 @@
           </th>
       </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-product>
-    <tr>
-          <td> <p-skeleton></p-skeleton></td>
-          <td> <p-skeleton></p-skeleton></td>
-          <td> <p-skeleton></p-skeleton></td>
-          <td> <p-skeleton></p-skeleton></td>
-          <td> <p-skeleton></p-skeleton></td>
-          <td> <p-skeleton></p-skeleton></td>
-          <td> <p-skeleton></p-skeleton></td>
+  <ng-template pTemplate="body" let-product let-columns="columns">
+    <tr [pSelectableRow]="product">
+        <ng-container *ngFor="let col of columns">
+            <td >
+              <p-skeleton></p-skeleton> 
+            </td>
+        </ng-container>
     </tr>
-  </ng-template>
+</ng-template>
 </p-table>

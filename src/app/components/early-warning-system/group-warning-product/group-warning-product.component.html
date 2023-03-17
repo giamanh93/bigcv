@@ -34,8 +34,8 @@
                 <div class="table-default" #container >
                     <app-list-grid-angular  *ngIf="!isLoading" [idGrid]="'my-table'"
                         [listsData]="listDatas" [height]="heightGrid" 
-                        [columnDefs]="columnDefs"></app-list-grid-angular>
-                        <app-loading-grid *ngIf="isLoading" [colsNumber]="cols.length" [lists]="20"></app-loading-grid>
+                        [columnDefs]="columnDefs" [getContextMenuItems]="getContextMenuItems"></app-list-grid-angular >
+                        <app-loading-grid *ngIf="isLoading" [cols]="cols" [lists]="20"></app-loading-grid>
                     <div class="paginator flex justify-content-end align-items-center" style="background-color: #fff;
                     position: fixed;
                     bottom: 0;

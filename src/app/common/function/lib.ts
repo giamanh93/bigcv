@@ -73,6 +73,7 @@ export function AgGridFn(lists: Array<any>) {
                 // aggFunc: 'sum',
                 tooltipField: value.field,
                 headerTooltip: value.note,
+                type: 'number',
                 valueFormatter: formatMargin
             };
         }  else {
@@ -95,7 +96,8 @@ export function AgGridFn(lists: Array<any>) {
                 hide: value.isHide ? true : false,
                 pinned: value.pinned,
                 tooltipField: value.field,
-                headerTooltip: value.note
+                headerTooltip: value.note,
+                type: 'text',
             }
         }
 

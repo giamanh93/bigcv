@@ -63,8 +63,8 @@
 
         <app-list-grid-angular  *ngIf="!isLoading" [groupIncludeFooter]="true" [idGrid]="'my-table'" [groupDefaultExpanded]="this.isExpanded ? 1 : 0"
             [listsData]="listDatas" [height]="heightGrid" [autoGroupColumnDef]="autoGroupColumnDef"
-            [columnDefs]="columnDefs"></app-list-grid-angular>
-            <app-loading-grid *ngIf="isLoading" [colsNumber]="cols.length" [lists]="20"></app-loading-grid>
+            [columnDefs]="columnDefs" [getContextMenuItems]="getContextMenuItems"></app-list-grid-angular>
+            <app-loading-grid *ngIf="isLoading" [cols]="cols" [lists]="20"></app-loading-grid>
         <!-- <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth<= 960" [columns]="cols"
          [resizableColumns]="true" [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px"
           responsiveLayout="stack" [breakpoint]="'960px'"  styleClass="table-row  p-datatable-sm">

@@ -68,8 +68,8 @@
        <div class="table-default" #container>
         <app-list-grid-angular  *ngIf="!isLoading" [groupIncludeFooter]="true" [idGrid]="'my-table'"
             [listsData]="listDatas" [height]="heightGrid" [autoGroupColumnDef]="autoGroupColumnDef" [groupDefaultExpanded]="this.isExpanded ? 1 : 0"
-            [columnDefs]="columnDefs"></app-list-grid-angular>
-            <app-loading-grid *ngIf="isLoading" [colsNumber]="cols.length" [lists]="20"></app-loading-grid>
+            [columnDefs]="columnDefs" [getContextMenuItems]="getContextMenuItems"></app-list-grid-angular>
+            <app-loading-grid *ngIf="isLoading" [cols]="cols" [lists]="20"></app-loading-grid>
         <div class="paginator flex justify-content-end align-items-center" style="background-color: #fff;background-color: #fff;
         position: fixed;
         bottom: 0;

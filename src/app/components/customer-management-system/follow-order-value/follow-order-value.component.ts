@@ -46,27 +46,20 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
   };
 
-  public autoGroupColumnDef: ColDef = {
-    minWidth: 300,
+  public autoGroupColumnDef = {
     cellRendererParams: {
-      footerValueGetter: (params: any) => {
-        const isRootLevel = params.node.level === -1;
-        if (isRootLevel) {
-          return 'Grand Total';
-        }
-        return `Sub Total (${params.value})`;
-      },
+      footerValueGetter: (params: any) => 'footer',
     }
   };
 
   public cols = [
-    { field: "customerId", header: "#", typeField : 'text',  },
-    { field: "customerName", header: "Khách hàng", typeField : 'text' ,  rowGroup: true, width: 300},
-    { field: "address", header: "Địa chỉ", typeField : 'text' },
-    { field: "purchaseDate", header: "Ngày hóa đơn", typeField : 'text' },
-    { field: "staff", header: "Nhân viên bán", typeField : 'text' },
-    { field: "salePanel", header: "Kênh bán", typeField : 'text' },
-    { field: "revenue", header: "Doanh thu", typeField : 'decimal', aggFunc: 'sum' }
+    { field: "customerId", header: "#", typeField: 'text', },
+    { field: "customerName", header: "Khách hàng", typeField: 'text', rowGroup: true, width: 300 },
+    { field: "address", header: "Địa chỉ", typeField: 'text' },
+    { field: "purchaseDate", header: "Ngày hóa đơn", typeField: 'text' },
+    { field: "staff", header: "Nhân viên bán", typeField: 'text' },
+    { field: "salePanel", header: "Kênh bán", typeField: 'text' },
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' }
   ];
 
   ngAfterViewInit() {
@@ -128,7 +121,7 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
               this.query.branchId = this.listBranchs[2].branchId;
               this.getLists();
             }, 10);
-          }else {
+          } else {
             this.getLists();
           }
         } else {
@@ -140,6 +133,8 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
 
   changeBranch() {
     localStorage.setItem('branchId', this.query.branchId?.toString() ?? '');
+    this.query.page = 1;
+    this.query.page = 20;
     this.getLists();
   }
 
@@ -153,12 +148,12 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
     localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
     const queryParams = queryString.stringify(params);
     this.$service.getCustomerRevenueByInvoiceCost(queryParams)
-      // .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe(results => {
-        console.log('API', (new Date().getTime() - startTime)/1000);
+        console.log('API', (new Date().getTime() - startTime) / 1000);
         if (results.success) {
           this.listDatas = results.data.content ?? [];
-          console.log('render',(new Date().getTime() - startTime)/1000);
+          console.log('render', (new Date().getTime() - startTime) / 1000);
           this.isLoading = false;
           this.fnCountRecord(results.data);
           this.expandAll(false)
@@ -208,6 +203,17 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
   isExpanded: boolean = true;
   expandAll(type: boolean = false) {
     this.isExpanded = type ? !this.isExpanded : this.isExpanded;
-   
   }
+
+  getContextMenuItems(params: any) {
+    var result = [
+      'copy',
+      'paste',
+      'separator',
+      'excelExport'
+    ];
+    return result;
+  }
+
+
 }

@@ -34,7 +34,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   public listDatas: any[] = [];
   public listDatasLoading: any[] = Array(20).fill(1).map((x, i) => i);
   public isLoading: boolean = false;
-  public fileName='Theo dõi doanh số khách hàng theo sản phẩm';
+  public fileName = 'Theo dõi doanh số khách hàng theo sản phẩm';
   public query: any = {
     retailerId: 717250,
     startDate: new Date('2023-01-01'),
@@ -59,10 +59,10 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   public columnDefs: ColDef[] = [];
 
   public cols: any[] = [
-    { field: "customerId", header: "#", typeField : 'text' },
-    { field: "customerName", header: "Khách hàng", typeField : 'text' , rowGroup: true, width: 300 },
-    { field: "productName", header: `Sản phầm`, typeField : 'text' },
-    { field: "revenue", header: "Doanh thu", typeField : 'decimal', aggFunc: 'sum' },
+    { field: "customerId", header: "#", typeField: 'text' },
+    { field: "customerName", header: "Khách hàng", typeField: 'text', rowGroup: true, width: 300 },
+    { field: "productName", header: `Sản phầm`, typeField: 'text' },
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' },
   ];
 
   ngAfterViewInit() {
@@ -123,7 +123,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
               this.query.branchId = this.listBranchs[2].branchId;
               this.getLists();
             }, 10);
-          }else {
+          } else {
             this.getLists();
           }
         } else {
@@ -135,6 +135,8 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
 
   changeBranch() {
     localStorage.setItem('branchId', this.query.branchId?.toString() ?? '');
+    this.query.page = 1;
+    this.query.page = 20;
     this.getLists();
   }
 
@@ -205,22 +207,19 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   isExpanded: boolean = true;
   expandAll(type: boolean = false) {
     this.isExpanded = type ? !this.isExpanded : this.isExpanded;
-    console.log(this.isExpanded)
   }
 
-  calculateCustomerTotal(name: string) {
-    let total = 0;
-    if (this.listDatas) {
-      for (let product of this.listDatas) {
-        if (product.customer.customerName === name) {
-          total += product.revenue
-        }
-      }
-    }
-    return total;
+  getContextMenuItems(params: any) {
+    var result = [
+      'copy',
+      'paste',
+      'separator',
+      'excelExport'
+    ];
+    return result;
   }
 
-  
+
 
 
 }

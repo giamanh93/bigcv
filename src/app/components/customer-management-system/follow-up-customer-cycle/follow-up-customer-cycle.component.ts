@@ -60,10 +60,10 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
 
   public columnDefs: ColDef[] = [];
   public cols: any[] = [
-    { field: "customerId", header: "#", typeField : 'text' },
-    { field: "customerName", header: "Khách hàng", typeField : 'text', rowGroup: true, width: 300},
-    { field: "period", header: `Tháng`, typeField : 'decimal' },
-    { field: "revenue", header: "Doanh thu", typeField : 'decimal', aggFunc: 'sum' },
+    { field: "customerId", header: "#", typeField: 'text' },
+    { field: "customerName", header: "Khách hàng", typeField: 'text', rowGroup: true, width: 300 },
+    { field: "period", header: `Tháng`, typeField: 'decimal' },
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' },
   ];
 
   listPeriod: STATUS[] = [
@@ -83,10 +83,10 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
 
   initCols() {
     this.cols = [
-      { field: "customerId", header: "#", typeField : 'text' },
-      { field: "customerName", header: "Khách hàng", typeField : 'text' ,  rowGroup: true, width: 300},
-      { field: "period", header: `${this.query.period === 1 ? 'Tuần' : this.query.period === 2 ? 'Tháng' : 'Quý'}`, typeField : 'decimal' },
-      { field: "revenue", header: "Doanh thu", typeField : 'decimal', aggFunc: 'sum' },
+      { field: "customerId", header: "#", typeField: 'text' },
+      { field: "customerName", header: "Khách hàng", typeField: 'text', rowGroup: true, width: 300 },
+      { field: "period", header: `${this.query.period === 1 ? 'Tuần' : this.query.period === 2 ? 'Tháng' : 'Quý'}`, typeField: 'decimal' },
+      { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' },
     ];
     this.onInitGrid();
   }
@@ -150,7 +150,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
               this.query.branchId = this.listBranchs[2].branchId;
               this.getLists();
             }, 10);
-          }else {
+          } else {
             this.getLists();
           }
         } else {
@@ -162,6 +162,8 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
 
   changeBranch() {
     localStorage.setItem('branchId', this.query.branchId?.toString() ?? '');
+    this.query.page = 1;
+    this.query.page = 20;
     this.getLists();
   }
   search() {
@@ -230,7 +232,17 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
   isExpanded: boolean = true;
   expandAll(type: boolean = false) {
     this.isExpanded = type ? !this.isExpanded : this.isExpanded;
-   
   }
+
+  getContextMenuItems(params: any) {
+    var result = [
+      'copy',
+      'paste',
+      'separator',
+      'excelExport'
+    ];
+    return result;
+  }
+
 
 }

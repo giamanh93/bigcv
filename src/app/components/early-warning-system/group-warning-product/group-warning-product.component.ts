@@ -40,15 +40,15 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 	}
 	public columnDefs: ColDef[] = [];
 	public cols: any[] = [
-		{ field: "productName", header: "Sản phẩm", typeField : 'text' },
-		{ field: "barCode", header: "Mã", typeField : 'text' },
-		{ field: "unit", header: "Đơn vị", typeField : 'text' },
-		{ field: "branchName", header: "Chi nhánh", typeField : 'text' },
-		{ field: "buyPrice", header: "Giá mua", typeField : 'decimal' },
-		{ field: "sellPrice", header: "Giá bán", typeField : 'decimal' },
-		{ field: "realMargin", header: "Real margin", typeField : 'decimal' },
-		{ field: "standardMargin", header: "Standard margin", typeField : 'decimal' },
-	  ];
+		{ field: "productName", header: "Sản phẩm", typeField: 'text' },
+		{ field: "barCode", header: "Mã", typeField: 'text' },
+		{ field: "unit", header: "Đơn vị", typeField: 'text' },
+		{ field: "branchName", header: "Chi nhánh", typeField: 'text' },
+		{ field: "buyPrice", header: "Giá mua", typeField: 'decimal' },
+		{ field: "sellPrice", header: "Giá bán", typeField: 'decimal' },
+		{ field: "realMargin", header: "Real margin", typeField: 'decimal' },
+		{ field: "standardMargin", header: "Standard margin", typeField: 'decimal' },
+	];
 
 	ngAfterViewInit() {
 		this.$changeDetech.detectChanges();
@@ -56,9 +56,9 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 
 	onInitGrid() {
 		this.columnDefs = [
-		  ...AgGridFn(this.cols)
+			...AgGridFn(this.cols)
 		]
-	  }
+	}
 
 
 	ngOnDestroy() {
@@ -91,12 +91,12 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 					this.listBranchs = results.data.content ?? [];
 					if (this.query.branchId === 0 && this.listBranchs.length > 0) {
 						setTimeout(() => {
-						  this.query.branchId = this.listBranchs[2].branchId;
-						  this.getLists();
+							this.query.branchId = this.listBranchs[2].branchId;
+							this.getLists();
 						}, 10);
-					  }else {
+					} else {
 						this.getLists();
-					  }
+					}
 				} else {
 					this.listDatas = [];
 					this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
@@ -106,6 +106,8 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 
 	changeBranch() {
 		localStorage.setItem('branchId', this.query.branchId?.toString() ?? '');
+		this.query.page = 1;
+		this.query.page = 20;
 		this.getLists();
 	}
 
@@ -237,6 +239,14 @@ export class GroupWarningProductComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-
+	getContextMenuItems(params: any) {
+		var result = [
+			'copy',
+			'paste',
+			'separator',
+			'excelExport'
+		];
+		return result;
+	}
 
 }

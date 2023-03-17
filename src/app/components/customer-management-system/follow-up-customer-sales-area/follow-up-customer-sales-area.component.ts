@@ -8,7 +8,7 @@ import { STATUS } from 'src/app/models/customer-management-system';
 import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
 import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';import { AgGridFn } from 'src/app/common/function/lib';
+import * as XLSX from 'xlsx'; import { AgGridFn } from 'src/app/common/function/lib';
 import { ColDef } from 'ag-grid-community';
 @Component({
   selector: 'app-follow-up-customer-sales-area',
@@ -57,14 +57,14 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
   };
   public columnDefs: ColDef[] = [];
   public cols: any[] = [
-    { field: "customerId", header: "#", typeField : 'text' },
-    { field: "areaName", header: "Khu vực", typeField : 'text', rowGroup: true, width: 200 },
-    { field: "customerName", header: "Khách hàng", typeField : 'text' },
-    { field: "address", header: "Địa chỉ", typeField : 'text' },
-    { field: "purchaseDate", header: "Ngày hóa đơn", typeField : 'text' },
-    { field: "staff", header: "Nhân viên bán", typeField : 'text' },
-    { field: "salePanel", header: "Kênh bán", typeField : 'text' },
-    { field: "revenue", header: "Doanh thu", typeField : 'decimal', aggFunc: 'sum' }
+    { field: "customerId", header: "#", typeField: 'text' },
+    { field: "areaName", header: "Khu vực", typeField: 'text', rowGroup: true, width: 200 },
+    { field: "customerName", header: "Khách hàng", typeField: 'text', width: 300 },
+    { field: "address", header: "Địa chỉ", typeField: 'text' },
+    { field: "purchaseDate", header: "Ngày hóa đơn", typeField: 'text' },
+    { field: "staff", header: "Nhân viên bán", typeField: 'text' },
+    { field: "salePanel", header: "Kênh bán", typeField: 'text' },
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' }
   ];
 
 
@@ -120,7 +120,7 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
               this.query.branchId = this.listBranchs[2].branchId;
               this.getLists();
             }, 10);
-          }else {
+          } else {
             this.getLists();
           }
         } else {
@@ -132,6 +132,8 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
 
   changeBranch() {
     localStorage.setItem('branchId', this.query.branchId?.toString() ?? '');
+    this.query.page = 1;
+    this.query.page = 20;
     this.getLists();
   }
   search() {
@@ -199,7 +201,6 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
   isExpanded: boolean = true;
   expandAll(type: boolean = false) {
     this.isExpanded = type ? !this.isExpanded : this.isExpanded;
-    console.log( this.isExpanded)
   }
 
   onInitGrid() {
@@ -207,4 +208,15 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
       ...AgGridFn(this.cols)
     ]
   }
+
+  getContextMenuItems(params: any) {
+    var result = [
+      'copy',
+      'paste',
+      'separator',
+      'excelExport'
+    ];
+    return result;
+  }
+
 }

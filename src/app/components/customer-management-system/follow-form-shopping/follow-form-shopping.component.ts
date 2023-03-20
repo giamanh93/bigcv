@@ -9,6 +9,11 @@ import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { AgGridFn } from 'src/app/common/function/lib';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { DatasService } from 'src/app/services/datas.service';
+import { ExcelService } from 'src/app/services/excel.service';
+const dataGrids = require('./datas.json');
 @Component({
   selector: 'app-follow-form-shopping',
   templateUrl: './follow-form-shopping.component.html',
@@ -23,6 +28,8 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
     currentRecordEnd: 0
   }
   private readonly unsubscribe$: Subject<void> = new Subject();
+  private $datasService = inject(DatasService);
+  private $excelService = inject(ExcelService);
   private $service = inject(customerManagementSystem);
   private $http = inject(HttpClient);
   private $datepipe = inject(DatePipe);
@@ -44,13 +51,13 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
   }
 
   public cols = [
-    { field: "customerId", header: "#", typeField : 'text' },
-    { field: "customerName", header: "Khách hàng", typeField : 'text' },
-    { field: "address", header: "Địa chỉ", typeField : 'text' },
-    { field: "purchaseDate", header: "Ngày hóa đơn", typeField : 'text' },
-    { field: "staff", header: "Nhân viên bán", typeField : 'text' },
-    { field: "salePanel", header: "Kênh bán", typeField : 'text' },
-    { field: "revenue", header: "Doanh thu", typeField : 'number' }
+    { field: "customerId", header: "#", typeField: 'text', masterDetail: true },
+    { field: "customerName", header: "Khách hàng", typeField: 'text', rowGroup: true, width: 300 },
+    { field: "address", header: "Địa chỉ", typeField: 'text' },
+    { field: "purchaseDate", header: "Ngày hóa đơn", typeField: 'text' },
+    { field: "staff", header: "Nhân viên bán", typeField: 'text' },
+    { field: "salePanel", header: "Kênh bán", typeField: 'text' },
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' }
   ];
 
   ngAfterViewInit() {
@@ -76,7 +83,8 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
-    this.onInitGrid()
+    this.onInitGrid();
+
     const filterDate = localStorage.hasOwnProperty('filterDate') && localStorage.getItem('filterDate') ? localStorage.getItem('filterDate') : null;
     if (filterDate) {
       this.query.endDate = JSON.parse(filterDate).endDate;
@@ -122,30 +130,30 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
   }
   times = 0
   getLists() {
-    this.listDatas = [];
-    this.isLoading = true;
-    const params = { ...this.query };
-    params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
-    params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
-    localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
-    const queryParams = queryString.stringify(params);
-    const startTime = new Date().getTime();
+    // this.listDatas = [];
+    // this.isLoading = true;
+    // const params = { ...this.query };
+    // params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
+    // params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
+    // localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
+    // const queryParams = queryString.stringify(params);
+    // const startTime = new Date().getTime();
 
-    this.$http.get(`http://3.0.125.181:8888/api/customer/v1/getCustomerRevenueByInvoiceCost?branchId=180921&endDate=2022-12-31&page=${this.query.page}&retailerId=717250&search=&size=${this.query.size}&startDate=2022-01-01`)
-      .subscribe((results: any) => {
-        console.log("this.listDatas", results.data.content)
-        this.times = (new Date().getTime() - startTime)/1000;
-        if (results.success) {
-          this.listDatas = results.data.content ?? [];
-          this.isLoading = false;
-          this.fnCountRecord(results.data);
+    // this.$http.get(`http://3.0.125.181:8888/api/customer/v1/getCustomerRevenueByInvoiceCost?branchId=180921&endDate=2022-12-31&page=${this.query.page}&retailerId=717250&search=&size=${this.query.size}&startDate=2022-01-01`)
+    //   .subscribe((results: any) => {
+    //     console.log("this.listDatas", results.data.content)
+    //     this.times = (new Date().getTime() - startTime)/1000;
+    //     if (results.success) {
+    //       this.listDatas = results.data.content ?? [];
+    //       this.isLoading = false;
+    //       this.fnCountRecord(results.data);
 
-        } else {
-          this.listDatas = [];
-          this.isLoading = false;
-          this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
-        }
-      })
+    //     } else {
+    //       this.listDatas = [];
+    //       this.isLoading = false;
+    //       this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
+    //     }
+    //   })
   }
 
   first: number = 1;
@@ -153,7 +161,7 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
     this.query.page = event.page + 1;
     this.first = event.first;
     this.query.size = event.rows;
-    this.getLists();
+    this.getApi();
   }
 
   fnCountRecord(results: any) {
@@ -168,12 +176,12 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
     const a: any = document.querySelector(".header");
     const b: any = document.querySelector(".sidebarBody");
     const c: any = document.querySelector(".breadcrumb");
-    const e: any = document.querySelector(".paginator");
+    // const e: any = document.querySelector(".paginator");
     const d: any = document.querySelector(".toolbar");
     this.loadjs++
     if (this.loadjs === 5) {
       if (b && b.clientHeight && d) {
-        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight + e.clientHeight + 12;
+        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight + 12;
         this.heightGrid = window.innerHeight - totalHeight;
         console.log(this.heightGrid)
         this.$changeDetech.detectChanges();
@@ -198,30 +206,9 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
   columnDefs: any[] = [];
   onInitGrid() {
     this.columnDefs = [
-      {
-        field: 'customerId',
-        rowGroup: true
-      },
-      {
-        field: 'customerName',
-      },
-      {
-        field: 'address',
-      },
-      {
-        field: 'purchaseDate',
-      },
-      {
-        field: 'staff',
-      },
-      {
-        field: 'salePanel',
-      },
-      {
-        field: 'revenue',
-      },
-     
+      ...AgGridFn(this.cols)
     ]
+    this.listDatas = dataGrids
   }
   
   exportExcel() {
@@ -234,12 +221,32 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
       { wch: 10 },
       { wch: 10 },
     ]
-    let element = document.getElementById('my-table');
-    const ws:XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
-    const wb:XLSX.WorkBook = XLSX.utils.book_new();
-    ws['!cols'] = wscols;
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `${this.fileName}.xlsx`,{ bookType: 'xlsx', type: 'buffer' });
+
+    // { field: "customerId", header: "#", typeField: 'text', },
+    // { field: "customerName", header: "Khách hàng", typeField: 'text', rowGroup: true, width: 300 },
+    // { field: "address", header: "Địa chỉ", typeField: 'text' },
+    // { field: "purchaseDate", header: "Ngày hóa đơn", typeField: 'text' },
+    // { field: "staff", header: "Nhân viên bán", typeField: 'text' },
+    // { field: "salePanel", header: "Kênh bán", typeField: 'text' },
+    // { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' }
+    const dataExcels = this.listDatas.map(item => {
+      return {
+        '#': item.customerId,
+        'Khách hàng': item.customerName,
+        'Địa chỉ': item.address,
+        'Ngày hóa đơn': item.purchaseDate,
+        'Nhân viên bán hàng': item.staff,
+        'Kênh bán': item.salePanel,
+        'Doanh thu': item.revenue,
+      }
+    });
+    this.$excelService.exportAsExcelFile(dataExcels, 'sample');
+    // let element = document.getElementById('my-table');
+    // const ws:XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+    // const wb:XLSX.WorkBook = XLSX.utils.book_new();
+    // ws['!cols'] = wscols;
+    // XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // XLSX.writeFile(wb, `${this.fileName}.xlsx`,{ bookType: 'xlsx', type: 'buffer' });
   } 
  
   saveAsExcelFile(buffer: any, fileName: string): void {
@@ -250,4 +257,36 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
     });
     FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
+
+  public defaultColDef: ColDef = {
+    resizable: true,
+  };
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.$datasService.Datas$.subscribe(results => {
+      if(results.length > 0) {
+        this.listDatas = results;
+      }else {
+        this.getApi()
+      }
+      console.log(results)
+    })
+   
+  }
+
+  getApi() {
+    // const startTime = new Date().getTime();
+    // this.$http
+    //   .get<any[]>(
+    //     `http://3.0.125.181:8888/api/customer/v1/getCustomerRevenueByInvoiceCost?branchId=180921&endDate=2022-12-31&page=${this.query.page}&retailerId=717250&search=&size=${this.query.size}&startDate=2022-01-01`
+    //   )
+    //   .subscribe((results: any) => {
+    //     this.listDatas = results.data.content;
+    //     console.log(JSON.stringify(this.listDatas))
+    //     this.$datasService.setStocks(this.listDatas)
+    //     this.times = (new Date().getTime() - startTime)/1000;
+    //     this.fnCountRecord(results.data);
+    //   });
+  }
+
 }

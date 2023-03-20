@@ -6,13 +6,14 @@
      #agGrid style="width: 100% "
      id="{{idGrid}}"
     class="ag-theme-alpine"
-    [groupIncludeFooter]="groupIncludeFooter"
-    [groupIncludeTotalFooter]="groupIncludeTotalFooter"
+    [pinnedBottomRowData]="pinnedBottomData"
     [debounceVerticalScrollbar]="true"
     [rowData]="listsData"
+    [masterDetail]="masterDetail"
     [floatingFiltersHeight]="floatingFiltersHeight"
     [autoGroupColumnDef]="autoGroupColumnDef"
     [columnDefs]="columnDefs"
+    [detailCellRendererParams]="detailCellRendererParams"
     [headerHeight]="headerHeight"
     [groupDefaultExpanded]="groupDefaultExpanded"
     [stopEditingWhenCellsLoseFocus]="true" 
@@ -22,10 +23,19 @@
     (gridReady)="onGridReady($event)"
     [defaultColDef]="defaultColDef"
     [enableCellTextSelection]="true"
+    [getRowId]="getRowId"
     [suppressCopyRowsToClipboard]="true"
     [enableRangeSelection]="true"
+    [enableRangeSelection]="true"
     (onGridSizeChanged)="onGridSizeChanged"
+    (rowGroupOpened)="rowGroupOpened($event)"
+    (onRowSelected)="onRowSelected($event)"
+    [rowSelection]="'single'"
+    (cellClicked)="CellClicked($event)"
     [getRowHeight]="getRowHeight">
   </ag-grid-angular>
 </div>
 
+
+<!-- [groupIncludeFooter]="groupIncludeFooter" -->
+<!-- [groupIncludeTotalFooter]="groupIncludeTotalFooter" -->

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { RowNode } from 'ag-grid-community';
 import { MessageService } from 'primeng/api';
 import { Subject, } from 'rxjs';
 import { TotalValueFooterComponent } from '../total-value-component/total-value-component';
@@ -14,18 +15,21 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   @Output() rowDoubleClicked = new EventEmitter<any>();
   @Output() firstDataRendered = new EventEmitter<any>();
   @Output() cellDoubleClicked = new EventEmitter<any>();
+  @Output() onRowSelectedCallback = new EventEmitter<any>();
+  @Output() rowGroupOpenedCallback = new EventEmitter<any>();
   @Output() onCellClicked = new EventEmitter<any>();
   @Output() callback = new EventEmitter<any>();
   @Output() showConfig = new EventEmitter<any>();
   @Input() columnDefs: Array<any> = [];
+  @Input() masterDetail: boolean = false;
   @Input() isConfig: boolean = true;
   @Input() rowSelection: string = 'single';
   @Input() frameworkComponents = {};
-  @Input() detailCellRendererParams: any;
+  @Input() getRowId:any = null;
+  @Input() detailCellRendererParams: any = null;
   @Input() autoGroupColumnDef: any = {};
   @Input() rowClassRules: any;
   @Input() noRowsTemplate: any = 'Không có kết quả phù hợp';
-  @Input() pinnedTopRowData: any[] = [];
   @Input() floatingFilter: boolean = false;
   @Input() groupIncludeFooter: boolean = false;
   @Input() groupIncludeTotalFooter: boolean = false;
@@ -35,6 +39,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   @Input() title: string = '';
   @Input() idGrid: string = 'myGrid';
   @Input() typeConfig: string = 'myGrid';
+  @Input() columnsWithAggregation: any[] = []; // danh sách sum bottom
   @Input() defaultColDef: any = {
     tooltipComponent: 'customTooltip',
     resizable: true,
@@ -52,6 +57,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   @Input() headerHeight: number = 35;
   @Input() floatingFiltersHeight: number = 35;
   @Input() getContextMenuItems: any = null;
+
   @Input() excelStyles: any[] = [
     {
       id: 'stringType',
@@ -76,6 +82,9 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   tooltipShowDelay = 0;
   titlePage = '';
   listsDataCloone = [];
+  isRowMaster: any;
+  @Input() pinnedBottomData: any[] = [];
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private messageService: MessageService,
@@ -107,11 +116,41 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     };
 
     this.getRowHeight = (params: any) => {
-      return this.heightRow
+      if(params.node.detail) {
+          return 600
+      }else {
+        return this.heightRow
+      }
+    };
+
+    this.isRowMaster = (dataItem: any) => {
+      if (dataItem) {
+        if (dataItem.Details) {
+          return dataItem && dataItem.Details ? dataItem.Details.length > 0 : false;
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
+
     };
   }
 
   ngOnInit(): void {
+  }
+
+  CellClicked(event: any) {
+    this.onCellClicked.emit(event);
+  }
+
+  rowGroupOpened(event: any) {
+    this.rowGroupOpenedCallback.emit(event);
+  }
+
+  onRowSelected(event: any) {
+    console.log("sads")
+    this.rowGroupOpenedCallback.emit(event);
   }
 
   onGridReady(params: any) {
@@ -119,10 +158,43 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     this.gridColumnApi = params.columnApi;
     setTimeout(() => {
       params.api.sizeColumnsToFit();
+      let pinnedBottomData = this.generatePinnedBottomData();
+      this.gridApi.setPinnedBottomRowData([pinnedBottomData]);
     }, 100);
     window.onresize = () => {
       this.gridApi.sizeColumnsToFit();
     }
+  }
+
+  generatePinnedBottomData() {
+    // generate a row-data with null values
+    let result: any = {};
+    this.gridColumnApi.getAllGridColumns().forEach((item: any) => {
+      result[item.colId] = null;
+    });
+    return this.calculatePinnedBottomData(result);
+  }
+
+  calculatePinnedBottomData(target: any) {
+    //**list of columns fo aggregation**
+    this.columnsWithAggregation.forEach(element => {
+      console.log('element', element);
+      this.gridApi.forEachNodeAfterFilter((rowNode: RowNode) => {
+        //if(rowNode.index < 10){
+        //console.log(rowNode);
+        //}
+        if(element === 'customerName') {
+          target[element] = `Khách hàng: ${this.listsData.length} `
+        }else {
+          if (rowNode.data[element])
+          target[element] += Number(rowNode.data[element].toFixed(2));
+        }
+      });
+      // if (target[element])
+      //     target[element] = target[element].toFixed(2);
+    })
+
+    return target;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -133,12 +205,9 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   }
 
   onGridSizeChanged(params: any) {
-
     // option chưa dùng được
-    console.log("sdsdsd")
     // get the current grids width
     var gridWidth: any = document.getElementById(this.idGrid);
-    console.log("gridWidth", gridWidth)
     // keep track of which columns to hide/show
     var columnsToShow = [];
     var columnsToHide = [];

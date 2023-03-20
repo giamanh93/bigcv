@@ -9,7 +9,7 @@ import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
 import { AgGridFn } from 'src/app/common/function/lib';
 @Component({
   selector: 'app-follow-up-customer-sales-product',
@@ -25,6 +25,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     currentRecordStart: 0,
     currentRecordEnd: 0
   }
+  
   private readonly unsubscribe$: Subject<void> = new Subject();
   private $service = inject(customerManagementSystem);
   private $datepipe = inject(DatePipe);
@@ -35,6 +36,9 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   public listDatasLoading: any[] = Array(20).fill(1).map((x, i) => i);
   public isLoading: boolean = false;
   public fileName = 'Theo dõi doanh số khách hàng theo sản phẩm';
+  getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
+    return params.data.customerId;
+  };
   public query: any = {
     retailerId: 717250,
     startDate: new Date('2023-01-01'),
@@ -59,10 +63,15 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   public columnDefs: ColDef[] = [];
 
   public cols: any[] = [
-    { field: "customerId", header: "#", typeField: 'text' },
-    { field: "customerName", header: "Khách hàng", typeField: 'text', rowGroup: true, width: 300 },
+    { field: "customerId", header: "#", typeField: 'text', masterDetail: true  , width: 150},
+    { field: "customerName", header: "Khách hàng", typeField: 'text' },
+    // { field: "productName", header: `Sản phầm`, typeField: 'text' },
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 },
+  ];
+  public colsDetail: any[] = [
+    { field: "productId", header: "#", typeField: 'text', masterDetail: true  , width: 150},
     { field: "productName", header: `Sản phầm`, typeField: 'text' },
-    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' },
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 },
   ];
 
   ngAfterViewInit() {
@@ -85,11 +94,49 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     this.query.endDate = new Date('2023-03-31');
     this.getLists();
   }
-
+  detailCellRendererParams: any = {};
   onInitGrid() {
     this.columnDefs = [
       ...AgGridFn(this.cols)
-    ]
+    ];
+    this.detailCellRendererParams = {
+      detailGridOptions: {
+        headerHeight: 35,
+        frameworkComponents: {
+        },
+        getRowHeight: (params: any) => {
+          return 37;
+        },
+        columnDefs: [
+          ...AgGridFn(this.colsDetail),
+        ],
+
+        enableCellTextSelection: true,
+        onFirstDataRendered(params: any) {
+          params.api.sizeColumnsToFit();
+        },
+      },
+      groupIncludeTotalFooter: true,
+      getDetailRowData(params: any) {
+        params.successCallback(params.data.childrens);
+      },
+      excelStyles: [
+        {
+          id: 'stringType',
+          dataType: 'string'
+        }
+      ],
+      template: function (params: any) {
+        var personName = params.data.customerName;
+        return (
+          '<div style="height: 100%; background-color: #EDF6FF; padding: 20px; box-sizing: border-box;">' +
+          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${params.data.childrens.length})`+
+          '</div>' +
+          '  <div ref="eDetailGrid" style="height: 90%;"></div>' +
+          '</div>'
+        );
+      },
+    };
   }
 
   ngOnInit(): void {
@@ -176,7 +223,6 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
 
   first: number = 1;
   paginate(event: any) {
-    console.log(event)
     this.query.page = event.page + 1;
     this.first = event.first;
     this.query.size = event.rows;
@@ -195,12 +241,12 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     const a: any = document.querySelector(".header");
     const b: any = document.querySelector(".sidebarBody");
     const c: any = document.querySelector(".breadcrumb");
-    const e: any = document.querySelector(".paginator");
+    // const e: any = document.querySelector(".paginator");
     const d: any = document.querySelector(".toolbar");
     this.loadjs++
     if (this.loadjs === 5) {
       if (b && b.clientHeight && d) {
-        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight + e.clientHeight + 12;
+        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight  + 20;
         this.heightGrid = window.innerHeight - totalHeight;
         console.log(this.heightGrid)
         this.$changeDetech.detectChanges();
@@ -223,6 +269,57 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
       'excelExport'
     ];
     return result;
+  }
+
+  rowGroupOpenedCallback(event: any) {
+    console.log(event)
+    if(event.data.childrens.length === 0) {
+      const index = this.listDatas.findIndex(d => d.customerId === event.data.customerId )
+      this.getDaitel(event.data.customerId, event);
+    }else {
+      // setTimeout(function () {
+      //   event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
+      // }, 0);
+    }
+  }
+
+  getDaitel(customerId: string, event: any) {
+    const params = { ...this.query, customerId: customerId };
+    params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
+    params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
+    localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
+    const queryParams = queryString.stringify(params);
+    this.$service.getRevenueByCustomerDetail(queryParams)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(results => {
+        if (results.success) {
+          const itemsToUpdate: any[] = [];
+          event.api.forEachNodeAfterFilterAndSort(function (rowNode: any, index: number) {
+            // // only do first 2
+            // if (index >= 2) {
+            //   return;
+            // }
+           
+            const data = rowNode.data;
+            console.log(" rowNode.data", rowNode.data)
+            data.childrens = results.data.content;
+            itemsToUpdate.push(data);
+          });
+        //  event.api.applyTransaction({ update: itemsToUpdate })!;
+         event.api.insertItemAtIndex({ update: itemsToUpdate })!;
+          setTimeout(function () {
+            event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
+          }, 0);
+          // this.listDatas = results.data.content ?? [];
+          // this.isLoading = false;
+          // this.fnCountRecord(results.data);
+          // this.expandAll(false);
+        } else {
+          this.listDatas = [];
+          this.isLoading = false;
+          this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
+        }
+      })
   }
 
 

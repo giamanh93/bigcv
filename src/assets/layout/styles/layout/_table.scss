@@ -27,3 +27,14 @@
         font-weight: 600;
     }
 }
+
+.ag-body-viewport{
+    .ag-row-level-1{
+        .ag-details-row-fixed-height{
+            padding: 5px 20px !important;
+            .ag-details-grid-fixed-height {
+                margin-top: -25px !important;
+            }
+        }
+    }
+}

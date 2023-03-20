@@ -26,6 +26,8 @@ import { AgGridModule } from 'ag-grid-angular';
 import { ListGridAngularModule } from 'src/app/common/components/list-grid-angular/list-grid-angular.module';
 import { LoadingGridModule } from 'src/app/common/components/loading-grid/loading-grid.module';
 import { TotalValueFooterComponent } from 'src/app/common/components/total-value-component/total-value-component';
+import { DatasService } from 'src/app/services/datas.service';
+import { ExcelService } from 'src/app/services/excel.service';
 
 @NgModule({
     imports: [
@@ -46,10 +48,14 @@ import { TotalValueFooterComponent } from 'src/app/common/components/total-value
         OverlayPanelModule,
         CalendarModule,
         ListGridAngularModule,
-        LoadingGridModule
+        LoadingGridModule,
+        AgGridModule
+        
     ],
     providers: [
-        customerManagementSystem
+        customerManagementSystem,
+        DatasService,
+        ExcelService
     ],
     declarations: [CustomerManagementSystemComponent
         , FollowUpCustomerSalesProductComponent

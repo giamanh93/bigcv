@@ -50,7 +50,7 @@ export const menus = [
           { label: '2. Theo dõi doanh số khách hàng theo chu kỳ', routerLink: '/customer-mgmt-system/follow-up-customer-cycle', class: 'nav-item' },
           { label: '3. Theo dõi theo giá trị đơn hàng', routerLink: '/customer-mgmt-system/follow-order-value', class: 'nav-item' },
           { label: '4. Theo dõi doanh số khách hàng theo khu vực', routerLink: '/customer-mgmt-system/follow-up-customer-sales-area', class: 'nav-item' },
-        //   { label: '5. Theo dõi theo hình thức mua hàng', routerLink: '/customer-mgmt-system/follow-form-shopping', class: 'nav-item' },
+          { label: '5. Theo dõi theo hình thức mua hàng', routerLink: '/customer-mgmt-system/follow-form-shopping', class: 'nav-item' },
 
       ]
   },

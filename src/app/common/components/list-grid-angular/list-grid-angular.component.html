@@ -6,6 +6,7 @@
      #agGrid style="width: 100% "
      id="{{idGrid}}"
     class="ag-theme-alpine"
+    domLayout="autoHeight"
     [pinnedBottomRowData]="pinnedBottomData"
     [debounceVerticalScrollbar]="true"
     [rowData]="listsData"
@@ -29,7 +30,6 @@
     [enableRangeSelection]="true"
     (onGridSizeChanged)="onGridSizeChanged"
     (rowGroupOpened)="rowGroupOpened($event)"
-    (onRowSelected)="onRowSelected($event)"
     [rowSelection]="'single'"
     (cellClicked)="CellClicked($event)"
     [getRowHeight]="getRowHeight">

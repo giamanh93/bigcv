@@ -116,12 +116,12 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     };
 
     this.getRowHeight = (params: any) => {
-      if(params.node.detail) {
-          return 600
-      }else {
-        return this.heightRow
-      }
+      const isDetailRow = params.node.detail;
+      if (!isDetailRow) { return 37; }
+      return 450;
     };
+
+
 
     this.isRowMaster = (dataItem: any) => {
       if (dataItem) {

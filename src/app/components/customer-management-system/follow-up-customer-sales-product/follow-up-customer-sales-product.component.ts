@@ -107,6 +107,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
         getRowHeight: (params: any) => {
           return 37;
         },
+        // domLayout:"autoHeight",
         columnDefs: [
           ...AgGridFn(this.colsDetail),
         ],
@@ -301,12 +302,20 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
             // }
            
             const data = rowNode.data;
-            console.log(" rowNode.data", rowNode.data)
-            data.childrens = results.data.content;
+            if(rowNode.data.customerId === customerId) {
+              data.childrens = results.data.content;
             itemsToUpdate.push(data);
+
+            }
           });
         //  event.api.applyTransaction({ update: itemsToUpdate })!;
-         event.api.insertItemAtIndex({ update: itemsToUpdate })!;
+         event.api.applyTransaction({ update: itemsToUpdate })!;
+        //  event.api.forEachNode( (rowNode: any) => {
+        //   if (rowNode.data && rowNode.data.customerId === customerId) {
+        //     rowNode.detailNode.setRowHeight(results.data.content.length > 3 ? results.data.content * 37 : 250);
+        //   }
+        // });
+        // event.api.onRowHeightChanged()
           setTimeout(function () {
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);

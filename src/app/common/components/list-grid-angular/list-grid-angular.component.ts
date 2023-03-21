@@ -189,7 +189,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
         }else if(element === 'areaName') {
           target[element] = `Khu vực: ${this.listsData.length} `
         }else {
-          if (rowNode.data[element])
+          if (rowNode.data &&  rowNode.data[element])
           target[element] += Number(rowNode.data[element].toFixed(2));
         }
       });

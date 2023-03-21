@@ -64,7 +64,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
 
   public columnDefs: ColDef[] = [];
   public colsDetail: any[] =[
-    { field: "period", header: `Tháng`, typeField: 'decimal' },
+    { field: "period", header: `Tháng`, typeField: 'decimal' , headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse']},
     { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] }
   ];
   public cols: any[] = [
@@ -94,11 +94,11 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
       { field: "customerName", header: "Khách hàng", typeField: 'text', rowGroup: true, width: 300 },
       { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' },
     ];
-    this.colsDetail =[
-      { field: "rowIndex", header: "#", typeField: 'text' },
-      { field: "period", header: `${this.query.period === 1 ? 'Tuần' : this.query.period === 2 ? 'Tháng' : 'Quý'}`, typeField: 'decimal' },
-      { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] }
-    ];
+    // this.colsDetail =[
+    //   { field: "rowIndex", header: "#", typeField: 'text' },
+    //   { field: "period", header: `${this.query.period === 1 ? 'Tuần' : this.query.period === 2 ? 'Tháng' : 'Quý'}`, typeField: 'decimal' },
+    //   { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] }
+    // ];
     
     this.onInitGrid();
   }
@@ -137,6 +137,13 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
         },
         onGridReady: (params: any) => {
           params.api.setDomLayout("autoHeight");
+          const colDefs = params.api.getColumnDefs();
+          colDefs[0].headerName = `${this.query.period === 1 ? 'Tuần' : this.query.period === 2 ? 'Tháng' : 'Quý'}`;
+          params.api.setColumnDefs(colDefs)
+        // colDefs.length=0;
+        // const keys = Object.keys(data[0])
+        // keys.forEach(key => colDefs.push({field : key}));
+        // gridOptions.api.setColumnDefs(colDefs);
         },
         getRowHeight: (params: any) => {
           return 37;
@@ -226,7 +233,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     this.getLists();
   }
   search() {
-    this.initCols();
+    // this.initCols();
     this.getLists();
   }
   getLists() {
@@ -304,7 +311,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
   }
 
   rowGroupOpenedCallback(event: any) {
-    if (event.data.childrens.length === 0) {
+    if (event.data && event.data.childrens.length === 0) {
       const index = this.listDatas.findIndex(d => d.customerId === event.data.customerId)
       this.getDaitel(event.data.customerId, event);
     }
@@ -330,8 +337,10 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
           });
           event.api.applyTransaction({ update: itemsToUpdate })!;
           setTimeout(function () {
+            // console.log(event.api.getColumnDefs())
+            // event.api.refreshHeader();
             event.api.resetRowHeights();
-            event.api.refreshServerSide({ route: customerId, purge: true })
+            // event.api.refreshServerSide({ route: customerId, purge: true })
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);
         } else {

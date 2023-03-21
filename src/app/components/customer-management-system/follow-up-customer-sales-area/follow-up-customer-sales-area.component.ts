@@ -298,7 +298,7 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
           event.api.applyTransaction({ update: itemsToUpdate })!;
           setTimeout(function () {
             event.api.resetRowHeights();
-            event.api.refreshServerSide({ route: customerId, purge: true })
+            // event.api.refreshServerSide({ route: customerId, purge: true })
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);
         } else {

@@ -69,9 +69,6 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
   ];
   
   public colsDetail: any[] = [
-    { field: "customerId", header: "#", typeField: 'text', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
-    { field: "customerName", header: "Khách hàng", typeField: 'text', width: 200, headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
-    { field: "address", header: "Địa chỉ", typeField: 'text', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "purchaseDate", header: "Ngày hóa đơn", typeField: 'text', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "staff", header: "Nhân viên bán", typeField: 'text', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "salePanel", header: "Kênh bán", typeField: 'text', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
@@ -291,7 +288,7 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
     localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
     const queryParams = queryString.stringify(params);
-    this.$service.getRevenueByCustomerDetail(queryParams)
+    this.$service.getCustomerRevenueByInvoiceCostDetail(queryParams)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(results => {
         if (results.success) {
@@ -306,7 +303,7 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
           event.api.applyTransaction({ update: itemsToUpdate })!;
           setTimeout(function () {
             event.api.resetRowHeights();
-            event.api.refreshServerSide({ route: customerId, purge: true })
+            // event.api.refreshServerSide({ route: customerId, purge: true })
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);
         } else {

@@ -79,6 +79,7 @@ export function AgGridFn(lists: Array<any>) {
                 // aggFunc: 'sum',
                 tooltipField: value.field,
                 headerTooltip: value.note,
+                headerClass: value.headerClass,
                 type: 'number',
                 valueFormatter: formatMargin
             };
@@ -104,6 +105,7 @@ export function AgGridFn(lists: Array<any>) {
                 pinned: value.pinned,
                 tooltipField: value.field,
                 headerTooltip: value.note,
+                headerClass: value.headerClass,
                 type: 'text',
             }
         }

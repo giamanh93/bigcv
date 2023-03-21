@@ -69,9 +69,9 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 },
   ];
   public colsDetail: any[] = [
-    { field: "productId", header: "#", typeField: 'text', masterDetail: true  , width: 150},
-    { field: "productName", header: `Sản phầm`, typeField: 'text' },
-    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 },
+    { field: "productId", header: "#", typeField: 'text', masterDetail: true  , width: 150, headerClass : 'bg-orange-100', cellClass: ['bg-orange-100']},
+    { field: "productName", header: `Sản phầm`, typeField: 'text' , headerClass : 'bg-orange-100', cellClass: ['bg-orange-100']},
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 ,  headerClass : 'bg-orange-100', cellClass: ['bg-orange-100']},
   ];
 
   ngAfterViewInit() {
@@ -305,18 +305,18 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
             if(rowNode.data.customerId === customerId) {
               data.childrens = results.data.content;
             itemsToUpdate.push(data);
-
             }
           });
         //  event.api.applyTransaction({ update: itemsToUpdate })!;
          event.api.applyTransaction({ update: itemsToUpdate })!;
-        //  event.api.forEachNode( (rowNode: any) => {
-        //   if (rowNode.data && rowNode.data.customerId === customerId) {
-        //     rowNode.detailNode.setRowHeight(results.data.content.length > 3 ? results.data.content * 37 : 250);
-        //   }
-        // });
-        // event.api.onRowHeightChanged()
+       
           setTimeout(function () {
+            // event.api.forEachNode( (rowNode: any) => {
+            //   if (rowNode.data && rowNode.data.customerId === customerId) {
+            //     rowNode.detailNode.setRowHeight(results.data.content * 37);
+            //   }
+            // });
+            // event.api.onRowHeightChanged()
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);
           // this.listDatas = results.data.content ?? [];

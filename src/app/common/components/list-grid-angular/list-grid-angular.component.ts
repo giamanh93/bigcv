@@ -158,7 +158,6 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   }
 
   onRowSelected(event: any) {
-    console.log("sads")
     this.rowGroupOpenedCallback.emit(event);
   }
 
@@ -194,6 +193,8 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
         //}
         if(element === 'customerName') {
           target[element] = `Khách hàng: ${this.listsData.length} `
+        }if(element === 'areaName') {
+          target[element] = `Khu vực: ${this.listsData.length} `
         }else {
           if (rowNode.data[element])
           target[element] += Number(rowNode.data[element].toFixed(2));

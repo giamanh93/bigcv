@@ -25,7 +25,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     currentRecordStart: 0,
     currentRecordEnd: 0
   }
-  
+
   private readonly unsubscribe$: Subject<void> = new Subject();
   private $service = inject(customerManagementSystem);
   private $datepipe = inject(DatePipe);
@@ -36,7 +36,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   public listDatasLoading: any[] = Array(20).fill(1).map((x, i) => i);
   public isLoading: boolean = false;
   public fileName = 'Theo dõi doanh số khách hàng theo sản phẩm';
-  getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
+  public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
     return params.data.customerId;
   };
   public query: any = {
@@ -63,15 +63,15 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   public columnDefs: ColDef[] = [];
 
   public cols: any[] = [
-    { field: "customerId", header: "#", typeField: 'text', masterDetail: true  , width: 150},
+    { field: "customerId", header: "#", typeField: 'text', masterDetail: true, width: 150 },
     { field: "customerName", header: "Khách hàng", typeField: 'text' },
     // { field: "productName", header: `Sản phầm`, typeField: 'text' },
     { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 },
   ];
   public colsDetail: any[] = [
-    { field: "productId", header: "#", typeField: 'text', masterDetail: true  , width: 150, headerClass : 'bg-primary-reverse', cellClass: ['bg-primary-reverse']},
-    { field: "productName", header: `Sản phầm`, typeField: 'text' , headerClass : 'bg-primary-reverse', cellClass: ['bg-primary-reverse']},
-    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 ,  headerClass : 'bg-primary-reverse', cellClass: ['bg-primary-reverse']},
+    { field: "productId", header: "#", typeField: 'text', masterDetail: true, width: 150, headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "productName", header: `Sản phầm`, typeField: 'text', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150, headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
   ];
 
   ngAfterViewInit() {
@@ -129,10 +129,10 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
       ],
       template: function (params: any) {
         var personName = params.data.customerName;
-        const total =eval(params.data.childrens.map((item: any) => item.revenue).join('+'))
+        const total = eval(params.data.childrens.map((item: any) => item.revenue).join('+'))
         return (
           '<div style="height: 100%; background-color: #EDF6FF; padding: 20px; box-sizing: border-box;">' +
-          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${total ? Number(total).toLocaleString('en-GB') : ''})`+
+          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${total ? Number(total).toLocaleString('en-GB') : ''})` +
           '</div>' +
           '  <div ref="eDetailGrid" style="height: 90%;"></div>' +
           '</div>'
@@ -248,7 +248,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     this.loadjs++
     if (this.loadjs === 5) {
       if (b && b.clientHeight && d) {
-        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight  + 20;
+        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight + 20;
         this.heightGrid = window.innerHeight - totalHeight;
         console.log(this.heightGrid)
         this.$changeDetech.detectChanges();
@@ -274,15 +274,10 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   }
 
   rowGroupOpenedCallback(event: any) {
-    console.log(event)
-    if(event.data.childrens.length === 0) {
-      const index = this.listDatas.findIndex(d => d.customerId === event.data.customerId )
+    if (event.data.childrens.length === 0) {
+      const index = this.listDatas.findIndex(d => d.customerId === event.data.customerId)
       this.getDaitel(event.data.customerId, event);
-    }else {
-      // setTimeout(function () {
-      //   event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
-      // }, 0);
-    }
+    } 
   }
 
   getDaitel(customerId: string, event: any) {
@@ -297,34 +292,18 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
         if (results.success) {
           const itemsToUpdate: any[] = [];
           event.api.forEachNodeAfterFilterAndSort(function (rowNode: any, index: number) {
-            // // only do first 2
-            // if (index >= 2) {
-            //   return;
-            // }
-           
             const data = rowNode.data;
-            if(rowNode.data.customerId === customerId) {
+            if (rowNode.data.customerId === customerId) {
               data.childrens = results.data.content;
-            itemsToUpdate.push(data);
+              itemsToUpdate.push(data);
             }
           });
-        //  event.api.applyTransaction({ update: itemsToUpdate })!;
-         event.api.applyTransaction({ update: itemsToUpdate })!;
-       
+          event.api.applyTransaction({ update: itemsToUpdate })!;
           setTimeout(function () {
-            // event.api.forEachNode( (rowNode: any) => {
-            //   if (rowNode.data && rowNode.data.customerId === customerId) {
-            //     rowNode.detailNode.setRowHeight(results.data.content * 37);
-            //   }
-            // });
             event.api.resetRowHeights();
             event.api.refreshServerSide({ route: customerId, purge: true })
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);
-          // this.listDatas = results.data.content ?? [];
-          // this.isLoading = false;
-          // this.fnCountRecord(results.data);
-          // this.expandAll(false);
         } else {
           this.listDatas = [];
           this.isLoading = false;

@@ -35,6 +35,16 @@ export class customerManagementSystem {
 
     }
 
+    getCustomerRevenueInPeriodDetail(query: string): Observable<Responses> {
+        return this.$http.get<Responses>(baseUrl + `/customer/v1/getCustomerRevenueInPeriodDetail?` + query).pipe(
+            catchError(error => {
+                this.handleError(error)
+                return of(error.error);
+            })
+        );;
+
+    }
+
     getCustomerRevenueInPeriod(query: string): Observable<Responses> {
         return this.$http.get<Responses>(baseUrl + `/customer/v1/getCustomerRevenueInPeriod?` + query).pipe(
             catchError(error => {

@@ -105,6 +105,9 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
         headerHeight: 35,
         frameworkComponents: {
         },
+        onGridReady: (params: any) => {
+          params.api.setDomLayout("autoHeight");
+        },
         getRowHeight: (params: any) => {
           return 37;
         },

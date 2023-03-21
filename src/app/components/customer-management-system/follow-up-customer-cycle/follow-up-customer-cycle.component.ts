@@ -46,7 +46,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
   }
   public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
-    return params.data.areaId;
+    return params.data.customerId;
   };
   detailCellRendererParams: any = null;
   public autoGroupColumnDef: ColDef = {
@@ -63,11 +63,13 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
   };
 
   public columnDefs: ColDef[] = [];
-  public colsDetail: any[] = [];
+  public colsDetail: any[] =[
+    { field: "period", header: `Tháng`, typeField: 'decimal' },
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] }
+  ];
   public cols: any[] = [
     { field: "customerId", header: "#", typeField: 'text', masterDetail: true },
     { field: "customerName", header: "Khách hàng", typeField: 'text', width: 300 },
-    { field: "period", header: `Tháng`, typeField: 'decimal' },
     { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' },
   ];
 
@@ -90,16 +92,14 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     this.cols = [
       { field: "customerId", header: "#", typeField: 'text', masterDetail: true },
       { field: "customerName", header: "Khách hàng", typeField: 'text', rowGroup: true, width: 300 },
-      { field: "period", header: `${this.query.period === 1 ? 'Tuần' : this.query.period === 2 ? 'Tháng' : 'Quý'}`, typeField: 'decimal' },
       { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' },
     ];
-
-    this.colsDetail = [
-      { field: "customerId", header: "#", typeField: 'text', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
-      { field: "customerName", header: "Khách hàng", typeField: 'text', width: 200, headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
-      { field: "period", header: "Địa chỉ", typeField: 'text', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    this.colsDetail =[
+      { field: "rowIndex", header: "#", typeField: 'text' },
+      { field: "period", header: `${this.query.period === 1 ? 'Tuần' : this.query.period === 2 ? 'Tháng' : 'Quý'}`, typeField: 'decimal' },
       { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] }
     ];
+    
     this.onInitGrid();
   }
 
@@ -135,6 +135,9 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
         headerHeight: 35,
         frameworkComponents: {
         },
+        onGridReady: (params: any) => {
+          params.api.setDomLayout("autoHeight");
+        },
         getRowHeight: (params: any) => {
           return 37;
         },
@@ -156,7 +159,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
         }
       ],
       template: function (params: any) {
-        var personName = params.data.areaName;
+        var personName = params.data.customerName;
         const total = eval(params.data.childrens.map((item: any) => item.revenue).join('+'))
         return (
           '<div style="height: 100%; background-color: #EDF6FF; padding: 20px; box-sizing: border-box;">' +
@@ -230,11 +233,12 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     this.listDatas = [];
     this.isLoading = true;
     const params = { ...this.query };
+    delete params.period;
     params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
     localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
     const queryParams = queryString.stringify(params);
-    this.$service.getCustomerRevenueInPeriod(queryParams)
+    this.$service.getRevenueByCustomer(queryParams)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(results => {
         if (results.success) {
@@ -312,7 +316,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
     localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
     const queryParams = queryString.stringify(params);
-    this.$service.getRevenueByCustomerDetail(queryParams)
+    this.$service.getCustomerRevenueInPeriodDetail(queryParams)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(results => {
         if (results.success) {

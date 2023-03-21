@@ -46,7 +46,7 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
   };
   public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
-    return params.data.areaId;
+    return params.data.customerId;
   };
   detailCellRendererParams: any = null;
   public autoGroupColumnDef: ColDef = {
@@ -65,10 +65,6 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
   public cols = [
     { field: "customerId", header: "#", typeField: 'text', masterDetail: true },
     { field: "customerName", header: "Khách hàng", typeField: 'text', width: 300 },
-    { field: "address", header: "Địa chỉ", typeField: 'text' },
-    { field: "purchaseDate", header: "Ngày hóa đơn", typeField: 'text' },
-    { field: "staff", header: "Nhân viên bán", typeField: 'text' },
-    { field: "salePanel", header: "Kênh bán", typeField: 'text' },
     { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum' }
   ];
   
@@ -91,6 +87,47 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
     this.columnDefs = [
       ...AgGridFn(this.cols)
     ]
+    this.detailCellRendererParams = {
+      refreshStrategy: 'everything',
+      detailGridOptions: {
+        headerHeight: 35,
+        frameworkComponents: {
+        },
+        onGridReady: (params: any) => {
+          params.api.setDomLayout("autoHeight");
+        },
+        getRowHeight: (params: any) => {
+          return 37;
+        },
+        columnDefs: [
+          ...AgGridFn(this.colsDetail),
+        ],
+        enableCellTextSelection: true,
+        onFirstDataRendered(params: any) {
+          params.api.sizeColumnsToFit();
+        },
+      },
+      getDetailRowData(params: any) {
+        params.successCallback(params.data.childrens);
+      },
+      excelStyles: [
+        {
+          id: 'stringType',
+          dataType: 'string'
+        }
+      ],
+      template: function (params: any) {
+        var personName = params.data.customerName;
+        const total = eval(params.data.childrens.map((item: any) => item.revenue).join('+'))
+        return (
+          '<div style="height: 100%; background-color: #EDF6FF; padding: 20px; box-sizing: border-box;">' +
+          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${total ? Number(total).toLocaleString('en-GB') : ''})` +
+          '</div>' +
+          '  <div ref="eDetailGrid" style="height: 90%;"></div>' +
+          '</div>'
+        );
+      },
+    };
   }
 
   refresh() {
@@ -174,7 +211,7 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
     localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
     const queryParams = queryString.stringify(params);
-    this.$service.getCustomerRevenueByInvoiceCost(queryParams)
+    this.$service.getRevenueByCustomer(queryParams)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(results => {
         console.log('API', (new Date().getTime() - startTime) / 1000);
@@ -212,12 +249,11 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
     const a: any = document.querySelector(".header");
     const b: any = document.querySelector(".sidebarBody");
     const c: any = document.querySelector(".breadcrumb");
-    const e: any = document.querySelector(".paginator");
     const d: any = document.querySelector(".toolbar");
     this.loadjs++
     if (this.loadjs === 5) {
       if (b && b.clientHeight && d) {
-        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight + e.clientHeight + 12;
+        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight  + 20;
         this.heightGrid = window.innerHeight - totalHeight;
         console.log(this.heightGrid)
         this.$changeDetech.detectChanges();

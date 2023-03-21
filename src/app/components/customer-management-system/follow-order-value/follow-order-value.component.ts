@@ -96,6 +96,10 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
         getRowHeight: (params: any) => {
           return 37;
         },
+        defaultColDef: {
+          filter: true,
+          floatingFilter: true,
+        },
         columnDefs: [
           ...AgGridFn(this.colsDetail),
         ],

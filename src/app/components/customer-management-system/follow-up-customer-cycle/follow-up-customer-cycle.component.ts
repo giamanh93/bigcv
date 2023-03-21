@@ -135,6 +135,11 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
         headerHeight: 35,
         frameworkComponents: {
         },
+        floatingFiltersHeight: 35,
+        defaultColDef: {
+          filter: true,
+          floatingFilter: true,
+        },
         onGridReady: (params: any) => {
           params.api.setDomLayout("autoHeight");
           const colDefs = params.api.getColumnDefs();

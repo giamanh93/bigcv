@@ -100,6 +100,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
       ...AgGridFn(this.cols)
     ];
     this.detailCellRendererParams = {
+      refreshStrategy: 'everything',
       detailGridOptions: {
         headerHeight: 35,
         frameworkComponents: {
@@ -117,7 +118,6 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
           params.api.sizeColumnsToFit();
         },
       },
-      groupIncludeTotalFooter: true,
       getDetailRowData(params: any) {
         params.successCallback(params.data.childrens);
       },
@@ -129,9 +129,10 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
       ],
       template: function (params: any) {
         var personName = params.data.customerName;
+        const total =eval(params.data.childrens.map((item: any) => item.revenue).join('+'))
         return (
           '<div style="height: 100%; background-color: #EDF6FF; padding: 20px; box-sizing: border-box;">' +
-          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${params.data.childrens.length})`+
+          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${total ? Number(total).toLocaleString('en-GB') : ''})`+
           '</div>' +
           '  <div ref="eDetailGrid" style="height: 90%;"></div>' +
           '</div>'
@@ -316,7 +317,8 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
             //     rowNode.detailNode.setRowHeight(results.data.content * 37);
             //   }
             // });
-            event.api.resetRowHeights()
+            event.api.resetRowHeights();
+            event.api.refreshServerSide({ route: customerId, purge: true })
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);
           // this.listDatas = results.data.content ?? [];
@@ -330,6 +332,8 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
         }
       })
   }
+
+
 
 
 

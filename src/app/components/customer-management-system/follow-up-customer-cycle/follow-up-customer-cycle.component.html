@@ -65,9 +65,9 @@
         </p-toolbar>
        </div>
        <div class="table-default" #container>
-        <app-list-grid-angular  *ngIf="!isLoading" [groupIncludeFooter]="true" [idGrid]="'my-table'" [groupDefaultExpanded]="0" [columnsWithAggregation]="['revenue', 'customerName']"
+        <app-list-grid-angular  *ngIf="!isLoading" [idGrid]="'my-table'" [isShowTotalBottom]="true"  [groupDefaultExpanded]="0" [columnsWithAggregation]="['revenue', 'customerName']"
         [listsData]="listDatas" [height]="heightGrid" [autoGroupColumnDef]="autoGroupColumnDef" [masterDetail]="true" (rowGroupOpenedCallback)="rowGroupOpenedCallback($event)"
-        [columnDefs]="columnDefs" [getContextMenuItems]="getContextMenuItems" [groupIncludeTotalFooter]="true" [getRowId]="getRowId"
+        [columnDefs]="columnDefs" [getContextMenuItems]="getContextMenuItems" [getRowId]="getRowId"
         [detailCellRendererParams]="detailCellRendererParams"></app-list-grid-angular>
         <app-loading-grid *ngIf="isLoading" [cols]="cols" [lists]="20"></app-loading-grid>
         </div>

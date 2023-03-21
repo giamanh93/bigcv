@@ -31,11 +31,10 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   @Input() rowClassRules: any;
   @Input() noRowsTemplate: any = 'Không có kết quả phù hợp';
   @Input() floatingFilter: boolean = false;
-  @Input() groupIncludeFooter: boolean = false;
-  @Input() groupIncludeTotalFooter: boolean = false;
   @Input() groupDefaultExpanded: number = 1;;
   @Input() buttons = [];
   @Input() isShowButton: boolean = false;
+  @Input() isShowTotalBottom: boolean = false;
   @Input() title: string = '';
   @Input() idGrid: string = 'myGrid';
   @Input() typeConfig: string = 'myGrid';
@@ -58,7 +57,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   @Input() headerHeight: number = 35;
   @Input() floatingFiltersHeight: number = 35;
   @Input() getContextMenuItems: any = null;
-
+  @Input() pinnedBottomData: any[] = [];
   @Input() excelStyles: any[] = [
     {
       id: 'stringType',
@@ -84,7 +83,6 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   titlePage = '';
   listsDataCloone = [];
   isRowMaster: any;
-  @Input() pinnedBottomData: any[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -166,12 +164,14 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     this.gridColumnApi = params.columnApi;
     setTimeout(() => {
       params.api.sizeColumnsToFit();
-      let pinnedBottomData = this.generatePinnedBottomData();
-      this.gridApi.setPinnedBottomRowData([pinnedBottomData]);
+      if(this.isShowTotalBottom) {
+        let pinnedBottomData = this.generatePinnedBottomData();
+        this.gridApi.setPinnedBottomRowData([pinnedBottomData]);
+      }
     }, 100);
-    window.onresize = () => {
-      this.gridApi.sizeColumnsToFit();
-    }
+    // window.onresize = () => {
+    //   this.gridApi.sizeColumnsToFit();
+    // }
   }
 
   generatePinnedBottomData() {
@@ -186,14 +186,13 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
   calculatePinnedBottomData(target: any) {
     //**list of columns fo aggregation**
     this.columnsWithAggregation.forEach(element => {
-      console.log('element', element);
       this.gridApi.forEachNodeAfterFilter((rowNode: RowNode) => {
         //if(rowNode.index < 10){
         //console.log(rowNode);
         //}
         if(element === 'customerName') {
           target[element] = `Khách hàng: ${this.listsData.length} `
-        }if(element === 'areaName') {
+        }else if(element === 'areaName') {
           target[element] = `Khu vực: ${this.listsData.length} `
         }else {
           if (rowNode.data[element])

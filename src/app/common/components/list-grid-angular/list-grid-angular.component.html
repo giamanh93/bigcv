@@ -6,7 +6,7 @@
    #agGrid style="width: 100% "
    id="{{idGrid}}"
   class="ag-theme-alpine"
-  [pinnedBottomRowData]="pinnedBottomData"
+  [pinnedBottomRowData]="isShowTotalBottom ? pinnedBottomData : []"
   [debounceVerticalScrollbar]="true"
   [rowData]="listsData"
   [masterDetail]="masterDetail"
@@ -31,11 +31,8 @@
   (rowGroupOpened)="rowGroupOpened($event)"
   [rowSelection]="'single'"
   (cellClicked)="CellClicked($event)"
-  [groupIncludeTotalFooter]="true"
-  [groupIncludeFooter]="true"
   [animateRows]= "true"
   [getRowHeight]="getRowHeight">
-    
   </ag-grid-angular>
 </div>
 

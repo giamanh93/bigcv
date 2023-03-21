@@ -30,16 +30,21 @@
 
 .ag-body-viewport{
     .ag-row-level-1{
+       
         .ag-details-row-fixed-height{
             padding: 5px 20px !important;
+            .ag-details-grid-fixed-height{
+                .ag-root-wrapper{
+                    background-color: var(--primary-color-text) !important;
+                }
+            }
             &>div{
                 &:first-child{
                     height: auto !important;
                     padding: 7px 0px !important; 
                 }
             }
-            .ag-details-grid-fixed-height {
-            }
+          
         }
     }
 }

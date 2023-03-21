@@ -47,6 +47,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     sortable: false,
     filter: true,
     floatingFilter: true,
+    flex: 1,
     rowHeight: 90,
     cellClass: [],
     tooltipComponentParams: { color: '#ececec' },
@@ -116,11 +117,19 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     };
 
     this.getRowHeight = (params: any) => {
-      const isDetailRow = params.node.detail;
-      if (!isDetailRow) { return 37; }
-      return 450;
+      if (params.node && params.node.detail) {
+        var offset = 80;
+        var allDetailRowHeight =
+          params.data.childrens.length *
+          params.api.getSizesForCurrentTheme().rowHeight;
+        var gridSizes = params.api.getSizesForCurrentTheme();
+        return (
+          allDetailRowHeight +
+          ((gridSizes && gridSizes.headerHeight) || 0) +
+          offset
+        );
+      }
     };
-
 
 
     this.isRowMaster = (dataItem: any) => {

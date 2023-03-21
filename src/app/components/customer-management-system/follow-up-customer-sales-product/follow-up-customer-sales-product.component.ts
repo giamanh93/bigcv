@@ -69,9 +69,9 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
     { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 },
   ];
   public colsDetail: any[] = [
-    { field: "productId", header: "#", typeField: 'text', masterDetail: true  , width: 150, headerClass : 'bg-orange-100', cellClass: ['bg-orange-100']},
-    { field: "productName", header: `Sản phầm`, typeField: 'text' , headerClass : 'bg-orange-100', cellClass: ['bg-orange-100']},
-    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 ,  headerClass : 'bg-orange-100', cellClass: ['bg-orange-100']},
+    { field: "productId", header: "#", typeField: 'text', masterDetail: true  , width: 150, headerClass : 'bg-primary-reverse', cellClass: ['bg-primary-reverse']},
+    { field: "productName", header: `Sản phầm`, typeField: 'text' , headerClass : 'bg-primary-reverse', cellClass: ['bg-primary-reverse']},
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 ,  headerClass : 'bg-primary-reverse', cellClass: ['bg-primary-reverse']},
   ];
 
   ngAfterViewInit() {
@@ -316,7 +316,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
             //     rowNode.detailNode.setRowHeight(results.data.content * 37);
             //   }
             // });
-            // event.api.onRowHeightChanged()
+            event.api.resetRowHeights()
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);
           // this.listDatas = results.data.content ?? [];

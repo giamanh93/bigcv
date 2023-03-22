@@ -62,11 +62,11 @@ export const menus = [
       icon: 'pi pi-file',
       class: 'navigation-header',
       items: [
-          { label: 'Hệ thống đối soát tài chính 1', routerLink: '/cai-dat/quan-ly-ngay-nghi', class: 'nav-item' },
-          { label: 'Hệ thống đối soát tài chính 2', routerLink: '/cai-dat/quan-ly-ngay-nghi', class: 'nav-item' },
-          { label: 'Hệ thống đối soát tài chính 3', routerLink: '/cai-dat/quan-ly-ngay-nghi', class: 'nav-item' },
-          { label: 'Hệ thống đối soát tài chính 4', routerLink: '/cai-dat/quan-ly-ngay-nghi', class: 'nav-item' },
-          { label: 'Hệ thống đối soát tài chính 5', routerLink: '/cai-dat/quan-ly-ngay-nghi', class: 'nav-item' },
+          { label: '1. Đối soát dòng tiền với doanh số', routerLink: '/financial-control-system/review-revenue-with-flow-of-money', class: 'nav-item' },
+          { label: '2. Đối Soát Thực trả nhà cung cấp', routerLink: '/cai-dat/quan-ly-ngay-nghi', class: 'nav-item' },
+          { label: '3. Kiểm soát công nợ nhà cung cấp', routerLink: '/cai-dat/quan-ly-ngay-nghi', class: 'nav-item' },
+          { label: '4. Kiểm soát công nợ khách hàng', routerLink: '/cai-dat/quan-ly-ngay-nghi', class: 'nav-item' },
+          { label: '5. Theo dõi công nợ nhà cung cấp', routerLink: '/cai-dat/quan-ly-ngay-nghi', class: 'nav-item' },
          
       ]
   },

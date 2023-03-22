@@ -47,4 +47,21 @@
           
         }
     }
+
+    
+}
+
+.ag-tabs-header {
+    display: flex;
+    [aria-label="general"] {
+        order: 2 !important;
+    }
+    [aria-label="filter"] {
+        order: 1 !important;
+    }
+    [aria-label="columns"] {
+        order: 3 !important;
+    }
+    
+    
 }

@@ -78,6 +78,7 @@ export function AgGridFn(lists: Array<any>) {
                 editable: value.editable ? value.editable : false,
                 // aggFunc: 'sum',
                 tooltipField: value.field,
+                menuTabs: ['filterMenuTab', 'generalMenuTab'],
                 headerTooltip: value.note,
                 headerClass: value.headerClass,
                 valueFormatter: formatMargin
@@ -99,6 +100,10 @@ export function AgGridFn(lists: Array<any>) {
                     textFormatter: (r:any) => TextFormatter(r),
                     cellRenderer: cellRendererSanPham,
                 },
+                menuTabs: ['filterMenuTab', 'generalMenuTab'],
+                columnsMenuParams: {
+                    suppressColumnFilter: true,
+                  },
                 cellRenderer: value.masterDetail ? 'agGroupCellRenderer' : '',
                 hide: value.isHide ? true : false,
                 pinned: value.pinned,

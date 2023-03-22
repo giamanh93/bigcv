@@ -105,7 +105,6 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
         headerHeight: 35,
         frameworkComponents: {
         },
-        floatingFiltersHeight: 35,
         defaultColDef: {
           filter: true,
           // floatingFilter: true,

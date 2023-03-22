@@ -45,7 +45,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     suppressSorting: false,
     sortable: false,
     filter: true,
-    floatingFilter: true,
+    // floatingFilter: true,
     flex: 1,
     rowHeight: 90,
     cellClass: [],

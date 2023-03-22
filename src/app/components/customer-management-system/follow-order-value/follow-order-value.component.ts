@@ -98,7 +98,7 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
         },
         defaultColDef: {
           filter: true,
-          floatingFilter: true,
+          // floatingFilter: true,
         },
         columnDefs: [
           ...AgGridFn(this.colsDetail),

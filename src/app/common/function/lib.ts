@@ -61,7 +61,7 @@ export function AgGridFn(lists: Array<any>) {
                 // headerClass: value.headerClass ? value.headerClass : 'BGE8E9ED',
                 cellStyle: value.cellStyle,
                 // cellClassRules: value.conditionClass,
-                filter: 'agSetColumnFilter',
+                // filter: 'agSetColumnFilter',
                 sortable: false,
                 aggFunc: value.aggFunc,
                 width: value.width,
@@ -80,7 +80,6 @@ export function AgGridFn(lists: Array<any>) {
                 tooltipField: value.field,
                 headerTooltip: value.note,
                 headerClass: value.headerClass,
-                type: 'number',
                 valueFormatter: formatMargin
             };
         }  else {
@@ -90,7 +89,7 @@ export function AgGridFn(lists: Array<any>) {
                 headerName: value.header,
                 field: value.field,
                 cellClass: value.cellClass,
-                filter: 'agSetColumnFilter',
+                // filter: 'agSetColumnFilter',
                 sortable: false,
                 rowGroup: value.rowGroup,
                 rowGroupIndex: value.rowGroupIndex,
@@ -106,7 +105,6 @@ export function AgGridFn(lists: Array<any>) {
                 tooltipField: value.field,
                 headerTooltip: value.note,
                 headerClass: value.headerClass,
-                type: 'text',
             }
         }
 

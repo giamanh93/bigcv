@@ -108,7 +108,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
         floatingFiltersHeight: 35,
         defaultColDef: {
           filter: true,
-          floatingFilter: true,
+          // floatingFilter: true,
         },
         onGridReady: (params: any) => {
           params.api.setDomLayout("autoHeight");

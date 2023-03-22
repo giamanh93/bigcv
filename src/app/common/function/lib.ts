@@ -61,8 +61,8 @@ export function AgGridFn(lists: Array<any>) {
                 // headerClass: value.headerClass ? value.headerClass : 'BGE8E9ED',
                 cellStyle: value.cellStyle,
                 // cellClassRules: value.conditionClass,
-                filter: 'agSetColumnFilter',
-                sortable: false,
+                // filter: 'agSetColumnFilter',
+                sortable: true,
                 aggFunc: value.aggFunc,
                 width: value.width,
                 rowGroup: value.rowGroup,
@@ -78,9 +78,9 @@ export function AgGridFn(lists: Array<any>) {
                 editable: value.editable ? value.editable : false,
                 // aggFunc: 'sum',
                 tooltipField: value.field,
+                menuTabs: ['filterMenuTab', 'generalMenuTab'],
                 headerTooltip: value.note,
                 headerClass: value.headerClass,
-                type: 'number',
                 valueFormatter: formatMargin
             };
         }  else {
@@ -90,8 +90,8 @@ export function AgGridFn(lists: Array<any>) {
                 headerName: value.header,
                 field: value.field,
                 cellClass: value.cellClass,
-                filter: 'agSetColumnFilter',
-                sortable: false,
+                // filter: 'agSetColumnFilter',
+                sortable: true,
                 rowGroup: value.rowGroup,
                 rowGroupIndex: value.rowGroupIndex,
                 editable: value.editable ? value.editable : false,
@@ -100,13 +100,16 @@ export function AgGridFn(lists: Array<any>) {
                     textFormatter: (r:any) => TextFormatter(r),
                     cellRenderer: cellRendererSanPham,
                 },
+                menuTabs: ['filterMenuTab', 'generalMenuTab'],
+                columnsMenuParams: {
+                    suppressColumnFilter: true,
+                  },
                 cellRenderer: value.masterDetail ? 'agGroupCellRenderer' : '',
                 hide: value.isHide ? true : false,
                 pinned: value.pinned,
                 tooltipField: value.field,
                 headerTooltip: value.note,
                 headerClass: value.headerClass,
-                type: 'text',
             }
         }
 

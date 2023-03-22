@@ -45,7 +45,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     suppressSorting: false,
     sortable: false,
     filter: true,
-    floatingFilter: true,
+    // floatingFilter: true,
     flex: 1,
     rowHeight: 90,
     cellClass: [],
@@ -117,7 +117,7 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     this.getRowHeight = (params: any) => {
       if (params.node && params.node.detail) {
         var offset = 80;
-        var allDetailRowHeight = params.data.childrens.length * 37;
+        var allDetailRowHeight = params.data.childrens.length > 5 ? params.data.childrens.length * 37 : 200;
         return allDetailRowHeight + offset;
       } else {
         return 37;

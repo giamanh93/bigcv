@@ -5,9 +5,10 @@ import queryString from 'query-string';
 import { Subject, takeUntil } from 'rxjs';
 import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.component';
 import { Branch, CountRecord } from 'src/app/models/early-warning';
-import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
 import { ColDef, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
 import { AgGridFn } from 'src/app/common/function/lib';
+import { RevenueWithFlowOfMoney } from 'src/app/models/financial-control-system';
+import { financialControlSystemService } from 'src/app/services/financialControlSystem.service';
 @Component({
   selector: 'app-review-revenue-with-flow-of-money',
   templateUrl: './review-revenue-with-flow-of-money.component.html',
@@ -23,15 +24,15 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
   }
 
   private readonly unsubscribe$: Subject<void> = new Subject();
-  private $service = inject(customerManagementSystem);
+  private $service = inject(financialControlSystemService);
   private $datepipe = inject(DatePipe);
   private $messageService = inject(MessageService);
   private $changeDetech = inject(ChangeDetectorRef);
   public listBranchs: Branch[] = [];
-  public listDatas: any[] = [];
+  public listDatas: RevenueWithFlowOfMoney[] = [];
   public listDatasLoading: any[] = Array(20).fill(1).map((x, i) => i);
   public isLoading: boolean = false;
-  public fileName = 'Theo dõi doanh số khách hàng theo sản phẩm';
+  public fileName = 'Đối soát dòng tiền với doanh số';
   public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
     return params.data.customerId;
   };
@@ -44,30 +45,16 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     search: '',
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
   }
-  public autoGroupColumnDef: ColDef = {
-    minWidth: 300,
-    cellRendererParams: {
-      footerValueGetter: (params: any) => {
-        const isRootLevel = params.node.level === -1;
-        if (isRootLevel) {
-          return 'Grand Total';
-        }
-        return `Sub Total (${params.value})`;
-      },
-    }
-  };
+
   public columnDefs: ColDef[] = [];
 
   public cols: any[] = [
-    { field: "customerId", header: "#", typeField: 'text', masterDetail: true, width: 150 },
-    { field: "customerName", header: "Khách hàng", typeField: 'text' },
-    // { field: "productName", header: `Sản phầm`, typeField: 'text' },
-    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 },
-  ];
-  public colsDetail: any[] = [
-    { field: "productId", header: "#", typeField: 'text', masterDetail: true, width: 150, headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
-    { field: "productName", header: `Sản phầm`, typeField: 'text', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
-    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150, headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "purchaseDate", header: "Ngày hóa đơn", typeField: 'text'},
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal' },
+    { field: "transfer", header: "Chuyển khoản", typeField: 'decimal' },
+    { field: "card", header: "Quẹt thẻ", typeField: 'decimal' },
+    { field: "cash", header: "Tiền mặt", typeField: 'decimal' },
+    { field: "debt", header: "Công nợ", typeField: 'decimal' },
   ];
 
   ngAfterViewInit() {
@@ -90,59 +77,11 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     this.query.endDate = new Date('2023-03-31');
     this.getLists();
   }
-  detailCellRendererParams: any = {};
+
   onInitGrid() {
     this.columnDefs = [
       ...AgGridFn(this.cols)
     ];
-    this.detailCellRendererParams = {
-      refreshStrategy: 'everything',
-      detailGridOptions: {
-        headerHeight: 35,
-        frameworkComponents: {
-        },
-        floatingFiltersHeight: 35,
-        defaultColDef: {
-          filter: true,
-          floatingFilter: true,
-        },
-        onGridReady: (params: any) => {
-          params.api.setDomLayout("autoHeight");
-        },
-        getRowHeight: (params: any) => {
-          return 37;
-        },
-        // domLayout:"autoHeight",
-        columnDefs: [
-          ...AgGridFn(this.colsDetail),
-        ],
-
-        enableCellTextSelection: true,
-        onFirstDataRendered(params: any) {
-          params.api.sizeColumnsToFit();
-        },
-      },
-      getDetailRowData(params: any) {
-        params.successCallback(params.data.childrens);
-      },
-      excelStyles: [
-        {
-          id: 'stringType',
-          dataType: 'string'
-        }
-      ],
-      template: function (params: any) {
-        var personName = params.data.customerName;
-        const total = eval(params.data.childrens.map((item: any) => item.revenue).join('+'))
-        return (
-          '<div style="height: 100%; background-color: #EDF6FF; padding: 20px; box-sizing: border-box;">' +
-          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${total ? Number(total).toLocaleString('en-GB') : ''})` +
-          '</div>' +
-          '  <div ref="eDetailGrid" style="height: 90%;"></div>' +
-          '</div>'
-        );
-      },
-    };
   }
 
   ngOnInit(): void {
@@ -158,7 +97,7 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     this.screenWidth = window.innerWidth;
     this.itemsBreadcrumb = [
       { label: 'Trang chủ', routerLink: '/home' },
-      { label: 'Hệ thống quản trị khách hàng' },
+      { label: 'Hệ thống đối soát tài chính' },
       { label: `1. ${this.fileName}` },
     ];
     this.getListBranch();
@@ -200,10 +139,6 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
   }
 
   getLists() {
-    // this.$https.get('https://primeng.org/assets/showcase/data/customers-medium.json').subscribe((results: any) => {
-    //   this.listDatas = results.data ?? [];
-    //   this.isLoading = false;
-    // })
     this.listDatas = [];
     this.isLoading = true;
     const params = { ...this.query };
@@ -211,14 +146,12 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
     localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
     const queryParams = queryString.stringify(params);
-    this.$service.getRevenueByCustomer(queryParams)
+    this.$service.getReviewRevenueWithFlowOfMoney(queryParams)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(results => {
         if (results.success) {
           this.listDatas = results.data.content ?? [];
           this.isLoading = false;
-          this.fnCountRecord(results.data);
-          this.expandAll(false);
         } else {
           this.listDatas = [];
           this.isLoading = false;
@@ -247,12 +180,12 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     const a: any = document.querySelector(".header");
     const b: any = document.querySelector(".sidebarBody");
     const c: any = document.querySelector(".breadcrumb");
-    // const e: any = document.querySelector(".paginator");
+    const e: any = document.querySelector(".paginator");
     const d: any = document.querySelector(".toolbar");
     this.loadjs++
     if (this.loadjs === 5) {
       if (b && b.clientHeight && d) {
-        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight + 20;
+        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight + e.clientHeight + 12;
         this.heightGrid = window.innerHeight - totalHeight;
         console.log(this.heightGrid)
         this.$changeDetech.detectChanges();
@@ -260,11 +193,6 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
         this.loadjs = 0;
       }
     }
-  }
-
-  isExpanded: boolean = true;
-  expandAll(type: boolean = false) {
-    this.isExpanded = type ? !this.isExpanded : this.isExpanded;
   }
 
   getContextMenuItems(params: any) {
@@ -276,49 +204,4 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     ];
     return result;
   }
-
-  rowGroupOpenedCallback(event: any) {
-    if (event.data.childrens.length === 0) {
-      const index = this.listDatas.findIndex(d => d.customerId === event.data.customerId)
-      this.getDaitel(event.data.customerId, event);
-    } 
-  }
-
-  getDaitel(customerId: string, event: any) {
-    const params = { ...this.query, customerId: customerId };
-    params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
-    params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
-    localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
-    const queryParams = queryString.stringify(params);
-    this.$service.getRevenueByCustomerDetail(queryParams)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(results => {
-        if (results.success) {
-          const itemsToUpdate: any[] = [];
-          event.api.forEachNodeAfterFilterAndSort(function (rowNode: any, index: number) {
-            const data = rowNode.data;
-            if (rowNode.data.customerId === customerId) {
-              data.childrens = results.data.content;
-              itemsToUpdate.push(data);
-            }
-          });
-          event.api.applyTransaction({ update: itemsToUpdate })!;
-          setTimeout(function () {
-            event.api.resetRowHeights();
-            // event.api.refreshServerSide({ route: customerId, purge: true })
-            event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
-          }, 0);
-        } else {
-          this.listDatas = [];
-          this.isLoading = false;
-          this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
-        }
-      })
-  }
-
-
-
-
-
-
 }

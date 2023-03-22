@@ -1,0 +1,324 @@
+import { DatePipe } from '@angular/common';
+import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, SimpleChanges, OnChanges, HostListener } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import queryString from 'query-string';
+import { Subject, takeUntil } from 'rxjs';
+import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.component';
+import { Branch, CountRecord } from 'src/app/models/early-warning';
+import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
+import { ColDef, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
+import { AgGridFn } from 'src/app/common/function/lib';
+@Component({
+  selector: 'app-review-revenue-with-flow-of-money',
+  templateUrl: './review-revenue-with-flow-of-money.component.html',
+  styleUrls: ['./review-revenue-with-flow-of-money.component.scss']
+})
+export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewInit {
+  itemsBreadcrumb: HrmBreadcrumb[] = [];
+  screenWidth: number = 0;
+  countRecord: CountRecord = {
+    totalRecord: 0,
+    currentRecordStart: 0,
+    currentRecordEnd: 0
+  }
+
+  private readonly unsubscribe$: Subject<void> = new Subject();
+  private $service = inject(customerManagementSystem);
+  private $datepipe = inject(DatePipe);
+  private $messageService = inject(MessageService);
+  private $changeDetech = inject(ChangeDetectorRef);
+  public listBranchs: Branch[] = [];
+  public listDatas: any[] = [];
+  public listDatasLoading: any[] = Array(20).fill(1).map((x, i) => i);
+  public isLoading: boolean = false;
+  public fileName = 'Theo dõi doanh số khách hàng theo sản phẩm';
+  public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
+    return params.data.customerId;
+  };
+  public query: any = {
+    retailerId: 717250,
+    startDate: new Date('2023-01-01'),
+    endDate: new Date('2023-03-31'),
+    page: 1,
+    size: 20,
+    search: '',
+    branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
+  }
+  public autoGroupColumnDef: ColDef = {
+    minWidth: 300,
+    cellRendererParams: {
+      footerValueGetter: (params: any) => {
+        const isRootLevel = params.node.level === -1;
+        if (isRootLevel) {
+          return 'Grand Total';
+        }
+        return `Sub Total (${params.value})`;
+      },
+    }
+  };
+  public columnDefs: ColDef[] = [];
+
+  public cols: any[] = [
+    { field: "customerId", header: "#", typeField: 'text', masterDetail: true, width: 150 },
+    { field: "customerName", header: "Khách hàng", typeField: 'text' },
+    // { field: "productName", header: `Sản phầm`, typeField: 'text' },
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150 },
+  ];
+  public colsDetail: any[] = [
+    { field: "productId", header: "#", typeField: 'text', masterDetail: true, width: 150, headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "productName", header: `Sản phầm`, typeField: 'text', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "revenue", header: "Doanh thu", typeField: 'decimal', aggFunc: 'sum', width: 150, headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+  ];
+
+  ngAfterViewInit() {
+    this.$changeDetech.detectChanges();
+  }
+
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.screenWidth = window.innerWidth;
+  }
+
+  refresh() {
+    this.query.startDate = new Date('2023-01-01');
+    this.query.endDate = new Date('2023-03-31');
+    this.getLists();
+  }
+  detailCellRendererParams: any = {};
+  onInitGrid() {
+    this.columnDefs = [
+      ...AgGridFn(this.cols)
+    ];
+    this.detailCellRendererParams = {
+      refreshStrategy: 'everything',
+      detailGridOptions: {
+        headerHeight: 35,
+        frameworkComponents: {
+        },
+        floatingFiltersHeight: 35,
+        defaultColDef: {
+          filter: true,
+          floatingFilter: true,
+        },
+        onGridReady: (params: any) => {
+          params.api.setDomLayout("autoHeight");
+        },
+        getRowHeight: (params: any) => {
+          return 37;
+        },
+        // domLayout:"autoHeight",
+        columnDefs: [
+          ...AgGridFn(this.colsDetail),
+        ],
+
+        enableCellTextSelection: true,
+        onFirstDataRendered(params: any) {
+          params.api.sizeColumnsToFit();
+        },
+      },
+      getDetailRowData(params: any) {
+        params.successCallback(params.data.childrens);
+      },
+      excelStyles: [
+        {
+          id: 'stringType',
+          dataType: 'string'
+        }
+      ],
+      template: function (params: any) {
+        var personName = params.data.customerName;
+        const total = eval(params.data.childrens.map((item: any) => item.revenue).join('+'))
+        return (
+          '<div style="height: 100%; background-color: #EDF6FF; padding: 20px; box-sizing: border-box;">' +
+          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${total ? Number(total).toLocaleString('en-GB') : ''})` +
+          '</div>' +
+          '  <div ref="eDetailGrid" style="height: 90%;"></div>' +
+          '</div>'
+        );
+      },
+    };
+  }
+
+  ngOnInit(): void {
+    this.onInitGrid();
+    const filterDate = localStorage.hasOwnProperty('filterDate') && localStorage.getItem('filterDate') ? localStorage.getItem('filterDate') : null;
+    if (filterDate) {
+      this.query.endDate = JSON.parse(filterDate).endDate;
+      this.query.startDate = JSON.parse(filterDate).startDate;
+    } else {
+      this.query.startDate = new Date('2023-01-01');
+      this.query.endDate = new Date('2023-03-31');
+    }
+    this.screenWidth = window.innerWidth;
+    this.itemsBreadcrumb = [
+      { label: 'Trang chủ', routerLink: '/home' },
+      { label: 'Hệ thống quản trị khách hàng' },
+      { label: `1. ${this.fileName}` },
+    ];
+    this.getListBranch();
+  }
+
+  getListBranch() {
+    const queryParams = queryString.stringify({ retailerId: 717250 });
+    this.$service.getListBranch(queryParams)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(results => {
+        if (results.success) {
+          this.listBranchs = results.data.content ?? [];
+          if (this.query.branchId === 0 && this.listBranchs.length > 0) {
+            setTimeout(() => {
+              this.query.branchId = this.listBranchs[2].branchId;
+              this.getLists();
+            }, 10);
+          } else {
+            this.getLists();
+          }
+        } else {
+          this.listDatas = [];
+          this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
+        }
+      })
+  }
+
+  changeBranch() {
+    localStorage.setItem('branchId', this.query.branchId?.toString() ?? '');
+    this.query.page = 1;
+    this.query.size = 20;
+    this.first = 1;
+    this.countRecord = {
+      totalRecord: 0,
+      currentRecordStart: 0,
+      currentRecordEnd: 0
+    }
+    this.getLists();
+  }
+
+  getLists() {
+    // this.$https.get('https://primeng.org/assets/showcase/data/customers-medium.json').subscribe((results: any) => {
+    //   this.listDatas = results.data ?? [];
+    //   this.isLoading = false;
+    // })
+    this.listDatas = [];
+    this.isLoading = true;
+    const params = { ...this.query };
+    params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
+    params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
+    localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
+    const queryParams = queryString.stringify(params);
+    this.$service.getRevenueByCustomer(queryParams)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(results => {
+        if (results.success) {
+          this.listDatas = results.data.content ?? [];
+          this.isLoading = false;
+          this.fnCountRecord(results.data);
+          this.expandAll(false);
+        } else {
+          this.listDatas = [];
+          this.isLoading = false;
+          this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
+        }
+      })
+  }
+
+  first: number = 1;
+  paginate(event: any) {
+    this.query.page = event.page + 1;
+    this.first = event.first;
+    this.query.size = event.rows;
+    this.getLists();
+  }
+
+  fnCountRecord(results: any) {
+    this.countRecord.totalRecord = results.totalElements;
+    this.countRecord.currentRecordStart = this.query.page === 1 ? this.query.page = 1 : this.countRecord.currentRecordEnd;
+    this.countRecord.currentRecordEnd = this.query.page === 1 ? this.query.size : this.query.page * Number(this.query.size)
+  }
+
+  loadjs = 0;
+  heightGrid = 0
+  ngAfterViewChecked(): void {
+    const a: any = document.querySelector(".header");
+    const b: any = document.querySelector(".sidebarBody");
+    const c: any = document.querySelector(".breadcrumb");
+    // const e: any = document.querySelector(".paginator");
+    const d: any = document.querySelector(".toolbar");
+    this.loadjs++
+    if (this.loadjs === 5) {
+      if (b && b.clientHeight && d) {
+        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight + 20;
+        this.heightGrid = window.innerHeight - totalHeight;
+        console.log(this.heightGrid)
+        this.$changeDetech.detectChanges();
+      } else {
+        this.loadjs = 0;
+      }
+    }
+  }
+
+  isExpanded: boolean = true;
+  expandAll(type: boolean = false) {
+    this.isExpanded = type ? !this.isExpanded : this.isExpanded;
+  }
+
+  getContextMenuItems(params: any) {
+    var result = [
+      'copy',
+      'paste',
+      'separator',
+      'excelExport'
+    ];
+    return result;
+  }
+
+  rowGroupOpenedCallback(event: any) {
+    if (event.data.childrens.length === 0) {
+      const index = this.listDatas.findIndex(d => d.customerId === event.data.customerId)
+      this.getDaitel(event.data.customerId, event);
+    } 
+  }
+
+  getDaitel(customerId: string, event: any) {
+    const params = { ...this.query, customerId: customerId };
+    params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
+    params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
+    localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
+    const queryParams = queryString.stringify(params);
+    this.$service.getRevenueByCustomerDetail(queryParams)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(results => {
+        if (results.success) {
+          const itemsToUpdate: any[] = [];
+          event.api.forEachNodeAfterFilterAndSort(function (rowNode: any, index: number) {
+            const data = rowNode.data;
+            if (rowNode.data.customerId === customerId) {
+              data.childrens = results.data.content;
+              itemsToUpdate.push(data);
+            }
+          });
+          event.api.applyTransaction({ update: itemsToUpdate })!;
+          setTimeout(function () {
+            event.api.resetRowHeights();
+            // event.api.refreshServerSide({ route: customerId, purge: true })
+            event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
+          }, 0);
+        } else {
+          this.listDatas = [];
+          this.isLoading = false;
+          this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
+        }
+      })
+  }
+
+
+
+
+
+
+}

@@ -5,6 +5,7 @@ export interface RevenueWithFlowOfMoney {
     card?: number;
     cash?: number;
     debt?: number;
+    diff?: number;
 }
 
 export interface STATUS {

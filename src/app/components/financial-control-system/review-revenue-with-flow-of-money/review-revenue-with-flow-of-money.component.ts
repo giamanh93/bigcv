@@ -55,6 +55,7 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     { field: "card", header: "Quẹt thẻ", typeField: 'decimal' },
     { field: "cash", header: "Tiền mặt", typeField: 'decimal' },
     { field: "debt", header: "Công nợ", typeField: 'decimal' },
+    { field: "diff", header: "Chênh lệnh", typeField: 'decimal' },
   ];
 
   ngAfterViewInit() {

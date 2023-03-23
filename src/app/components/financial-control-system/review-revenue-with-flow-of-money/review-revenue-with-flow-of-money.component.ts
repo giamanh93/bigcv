@@ -73,7 +73,7 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
   ];
 
   public colsDetail: any[] = [
-    { field: "invoiceNo", header: "#", typeField: 'text', masterDetail: true, width: 100, headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "invoiceNo", header: "#", typeField: 'text', masterDetail: true,  headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "revenue", header: `Doanh thu`, typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "transfer", header: "Chuyển khoản", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "card", header: "Quẹt thẻ", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },

@@ -92,22 +92,25 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
         headerHeight: 35,
         frameworkComponents: {
         },
-        onGridReady: (params: any) => {
-          params.api.setDomLayout("autoHeight");
-        },
-        getRowHeight: (params: any) => {
-          return 37;
-        },
         defaultColDef: {
           filter: true,
           // floatingFilter: true,
         },
+        onGridReady: (params: any) => {
+          params.api.setDomLayout("autoHeight");
+          params.api.showLoadingOverlay();
+        },
+        getRowHeight: (params: any) => {
+          return 37;
+        },
         columnDefs: [
           ...AgGridFn(this.colsDetail),
         ],
+
         enableCellTextSelection: true,
         onFirstDataRendered(params: any) {
           params.api.sizeColumnsToFit();
+          params.api.hideOverlay();
         },
       },
       getDetailRowData(params: any) {
@@ -289,7 +292,6 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
   }
 
   getDaitel(customerId: string, event: any) {
-    this.$spinner.show();
     const params = { ...this.query, customerId: customerId };
     params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
@@ -304,7 +306,6 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
             const data = rowNode.data;
             if (rowNode.data.customerId === customerId) {
               data.childrens = results.data.content;
-              this.$spinner.hide();
               itemsToUpdate.push(data);
             }
           });
@@ -318,7 +319,6 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
         } else {
           this.listDatas = [];
           this.isLoading = false;
-          this.$spinner.hide();
           this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
         }
       })

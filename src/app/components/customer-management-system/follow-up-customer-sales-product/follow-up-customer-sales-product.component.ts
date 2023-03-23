@@ -113,6 +113,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
         },
         onGridReady: (params: any) => {
           params.api.setDomLayout("autoHeight");
+          params.api.showLoadingOverlay();
         },
         getRowHeight: (params: any) => {
           return 37;
@@ -124,6 +125,7 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
         enableCellTextSelection: true,
         onFirstDataRendered(params: any) {
           params.api.sizeColumnsToFit();
+          params.api.hideOverlay();
         },
       },
       getDetailRowData(params: any) {
@@ -289,7 +291,6 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
   }
 
   getDaitel(customerId: string, event: any) {
-    this.$spinner.show();
     const params = { ...this.query, customerId: customerId };
     params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
@@ -305,19 +306,16 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
             if (rowNode.data.customerId === customerId) {
               data.childrens = results.data.content;
               itemsToUpdate.push(data);
-              this.$spinner.hide();
             }
           });
           event.api.applyTransaction({ update: itemsToUpdate })!;
           setTimeout( () => {
-            this.$spinner.hide();
             event.api.resetRowHeights();
             // event.api.refreshServerSide({ route: customerId, purge: true })
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);
         } else {
           this.listDatas = [];
-          this.$spinner.hide();
           this.isLoading = false;
           this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
         }

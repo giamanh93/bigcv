@@ -129,6 +129,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     this.columnDefs = [
       ...AgGridFn(this.cols)
     ]
+
     this.detailCellRendererParams = {
       refreshStrategy: 'everything',
       detailGridOptions: {
@@ -144,10 +145,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
           const colDefs = params.api.getColumnDefs();
           colDefs[0].headerName = `${this.query.period === 1 ? 'Tuần' : this.query.period === 2 ? 'Tháng' : 'Quý'}`;
           params.api.setColumnDefs(colDefs)
-        // colDefs.length=0;
-        // const keys = Object.keys(data[0])
-        // keys.forEach(key => colDefs.push({field : key}));
-        // gridOptions.api.setColumnDefs(colDefs);
+          params.api.showLoadingOverlay();
         },
         getRowHeight: (params: any) => {
           return 37;
@@ -155,9 +153,11 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
         columnDefs: [
           ...AgGridFn(this.colsDetail),
         ],
+
         enableCellTextSelection: true,
         onFirstDataRendered(params: any) {
           params.api.sizeColumnsToFit();
+          params.api.hideOverlay();
         },
       },
       getDetailRowData(params: any) {
@@ -322,7 +322,6 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
   }
 
   getDaitel(customerId: string, event: any) {
-    this.$spinner.show();
     const params = { ...this.query, customerId: customerId };
     params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
@@ -338,7 +337,6 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
             if (rowNode.data.customerId === customerId) {
               data.childrens = results.data.content;
               itemsToUpdate.push(data);
-              this.$spinner.hide();
             }
           });
           event.api.applyTransaction({ update: itemsToUpdate })!;
@@ -350,7 +348,6 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);
         } else {
-          this.$spinner.hide();
           this.listDatas = [];
           this.isLoading = false;
           this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });

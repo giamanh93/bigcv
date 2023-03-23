@@ -22,7 +22,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ToastModule} from 'primeng/toast';
 import { DatePipe } from '@angular/common';
 import 'ag-grid-enterprise';
-
+import { NgxSpinnerModule } from 'ngx-spinner';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +46,8 @@ import 'ag-grid-enterprise';
     StyleClassModule,
     PanelMenuModule,
     ButtonModule,
-    ToastModule
+    ToastModule,
+    NgxSpinnerModule
   ],
   providers: [
     MessageService,

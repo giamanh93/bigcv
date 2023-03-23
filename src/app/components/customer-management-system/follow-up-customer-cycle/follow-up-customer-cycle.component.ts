@@ -7,10 +7,9 @@ import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-brea
 import { STATUS } from 'src/app/models/customer-management-system';
 import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
-import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
 import { ColDef, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
 import { AgGridFn } from 'src/app/common/function/lib';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-follow-up-customer-cycle',
   templateUrl: './follow-up-customer-cycle.component.html',
@@ -26,6 +25,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
     currentRecordEnd: 0
   }
   private readonly unsubscribe$: Subject<void> = new Subject();
+  private $spinner = inject(NgxSpinnerService);
   private $service = inject(customerManagementSystem);
   private $datepipe = inject(DatePipe);
   private $messageService = inject(MessageService);
@@ -322,6 +322,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
   }
 
   getDaitel(customerId: string, event: any) {
+    this.$spinner.show();
     const params = { ...this.query, customerId: customerId };
     params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
@@ -332,15 +333,16 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
       .subscribe(results => {
         if (results.success) {
           const itemsToUpdate: any[] = [];
-          event.api.forEachNodeAfterFilterAndSort(function (rowNode: any, index: number) {
+          event.api.forEachNodeAfterFilterAndSort( (rowNode: any, index: number) => {
             const data = rowNode.data;
             if (rowNode.data.customerId === customerId) {
               data.childrens = results.data.content;
               itemsToUpdate.push(data);
+              this.$spinner.hide();
             }
           });
           event.api.applyTransaction({ update: itemsToUpdate })!;
-          setTimeout(function () {
+          setTimeout( () =>  {
             // console.log(event.api.getColumnDefs())
             // event.api.refreshHeader();
             event.api.resetRowHeights();
@@ -348,6 +350,7 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);
         } else {
+          this.$spinner.hide();
           this.listDatas = [];
           this.isLoading = false;
           this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });

@@ -10,6 +10,7 @@ import { customerManagementSystem } from 'src/app/services/customerManagementSys
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx'; import { AgGridFn } from 'src/app/common/function/lib';
 import { ColDef, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-follow-up-customer-sales-area',
   templateUrl: './follow-up-customer-sales-area.component.html',
@@ -26,6 +27,7 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
   }
   private readonly unsubscribe$: Subject<void> = new Subject();
   private $service = inject(customerManagementSystem);
+  private $spinner = inject(NgxSpinnerService);
   private $datepipe = inject(DatePipe);
   private $messageService = inject(MessageService);
   private $changeDetech = inject(ChangeDetectorRef);
@@ -278,6 +280,7 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
   }
 
   getDaitel(customerId: string, event: any) {
+    this.$spinner.show();
     const params = { ...this.query, customerId: customerId };
     params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
     params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
@@ -288,21 +291,24 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
       .subscribe(results => {
         if (results.success) {
           const itemsToUpdate: any[] = [];
-          event.api.forEachNodeAfterFilterAndSort(function (rowNode: any, index: number) {
+          event.api.forEachNodeAfterFilterAndSort( (rowNode: any, index: number) =>{
             const data = rowNode.data;
             if (rowNode.data.customerId === customerId) {
               data.childrens = results.data.content;
               itemsToUpdate.push(data);
+              this.$spinner.hide();
             }
           });
           event.api.applyTransaction({ update: itemsToUpdate })!;
-          setTimeout(function () {
+          setTimeout( () =>{
+            this.$spinner.hide();
             event.api.resetRowHeights();
             // event.api.refreshServerSide({ route: customerId, purge: true })
             event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
           }, 0);
         } else {
           this.listDatas = [];
+          this.$spinner.hide();
           this.isLoading = false;
           this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
         }

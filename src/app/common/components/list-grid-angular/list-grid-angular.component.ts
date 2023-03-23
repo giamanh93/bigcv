@@ -255,4 +255,6 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     });
     this.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
   }
+
+ 
 }

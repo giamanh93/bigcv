@@ -7,13 +7,15 @@ import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-brea
 import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { ColDef, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
 import { AgGridFn } from 'src/app/common/function/lib';
-import { RevenueWithFlowOfMoney } from 'src/app/models/financial-control-system';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { financialControlSystemService } from 'src/app/services/financialControlSystem.service';
+import { RevenueWithFlowOfMoney } from 'src/app/models/financial-control-system';
 @Component({
   selector: 'app-review-revenue-with-flow-of-money',
   templateUrl: './review-revenue-with-flow-of-money.component.html',
   styleUrls: ['./review-revenue-with-flow-of-money.component.scss']
 })
+
 export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewInit {
   itemsBreadcrumb: HrmBreadcrumb[] = [];
   screenWidth: number = 0;
@@ -25,6 +27,7 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
 
   private readonly unsubscribe$: Subject<void> = new Subject();
   private $service = inject(financialControlSystemService);
+  private $spinner = inject(NgxSpinnerService);
   private $datepipe = inject(DatePipe);
   private $messageService = inject(MessageService);
   private $changeDetech = inject(ChangeDetectorRef);
@@ -34,7 +37,7 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
   public isLoading: boolean = false;
   public fileName = 'Đối soát dòng tiền với doanh số';
   public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
-    return params.data.customerId;
+    return params.data.purchaseDate;
   };
   public query: any = {
     retailerId: 717250,
@@ -45,17 +48,38 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     search: '',
     branchId: localStorage.hasOwnProperty('branchId') && localStorage.getItem('branchId') ? Number(localStorage.getItem('branchId')) : 0,
   }
-
+  public autoGroupColumnDef: ColDef = {
+    minWidth: 300,
+    cellRendererParams: {
+      footerValueGetter: (params: any) => {
+        const isRootLevel = params.node.level === -1;
+        if (isRootLevel) {
+          return 'Grand Total';
+        }
+        return `Sub Total (${params.value})`;
+      },
+    }
+  };
   public columnDefs: ColDef[] = [];
 
   public cols: any[] = [
-    { field: "purchaseDate", header: "Ngày hóa đơn", typeField: 'text'},
+    { field: "purchaseDate", header: "Ngày hóa đơn", typeField: 'text', masterDetail: true, },
     { field: "revenue", header: "Doanh thu", typeField: 'decimal' },
     { field: "transfer", header: "Chuyển khoản", typeField: 'decimal' },
     { field: "card", header: "Quẹt thẻ", typeField: 'decimal' },
     { field: "cash", header: "Tiền mặt", typeField: 'decimal' },
     { field: "debt", header: "Công nợ", typeField: 'decimal' },
     { field: "diff", header: "Chênh lệnh", typeField: 'decimal' },
+  ];
+
+  public colsDetail: any[] = [
+    { field: "invoiceNo", header: "#", typeField: 'text', masterDetail: true, width: 100, headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "revenue", header: `Doanh thu`, typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "transfer", header: "Chuyển khoản", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "card", header: "Quẹt thẻ", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "cash", header: "Tiền mặt", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "debt", header: "Công nợ", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "diff", header: "Chênh lệnh", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
   ];
 
   ngAfterViewInit() {
@@ -78,11 +102,59 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     this.query.endDate = new Date('2023-03-31');
     this.getLists();
   }
-
+  detailCellRendererParams: any = {};
   onInitGrid() {
     this.columnDefs = [
       ...AgGridFn(this.cols)
     ];
+    this.detailCellRendererParams = {
+      refreshStrategy: 'everything',
+      detailGridOptions: {
+        headerHeight: 35,
+        frameworkComponents: {
+        },
+        defaultColDef: {
+          filter: true,
+          // floatingFilter: true,
+        },
+        onGridReady: (params: any) => {
+          params.api.setDomLayout("autoHeight");
+          params.api.showLoadingOverlay();
+        },
+        getRowHeight: (params: any) => {
+          return 37;
+        },
+        columnDefs: [
+          ...AgGridFn(this.colsDetail),
+        ],
+
+        enableCellTextSelection: true,
+        onFirstDataRendered(params: any) {
+          params.api.sizeColumnsToFit();
+          params.api.hideOverlay();
+        },
+      },
+      getDetailRowData(params: any) {
+        params.successCallback(params.data.childrens);
+      },
+      excelStyles: [
+        {
+          id: 'stringType',
+          dataType: 'string'
+        }
+      ],
+      template: function (params: any) {
+        var personName = params.data.purchaseDate;
+        const total = eval(params.data.childrens.map((item: any) => item.revenue).join('+'))
+        return (
+          '<div style="height: 100%; background-color: #EDF6FF; padding: 20px; box-sizing: border-box;">' +
+          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${total ? Number(total).toLocaleString('en-GB') : ''})` +
+          '</div>' +
+          '  <div ref="eDetailGrid" style="height: 90%;"></div>' +
+          '</div>'
+        );
+      },
+    };
   }
 
   ngOnInit(): void {
@@ -140,6 +212,10 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
   }
 
   getLists() {
+    // this.$https.get('https://primeng.org/assets/showcase/data/customers-medium.json').subscribe((results: any) => {
+    //   this.listDatas = results.data ?? [];
+    //   this.isLoading = false;
+    // })
     this.listDatas = [];
     this.isLoading = true;
     const params = { ...this.query };
@@ -153,6 +229,8 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
         if (results.success) {
           this.listDatas = results.data.content ?? [];
           this.isLoading = false;
+          this.fnCountRecord(results.data);
+          this.expandAll(false);
         } else {
           this.listDatas = [];
           this.isLoading = false;
@@ -181,12 +259,12 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     const a: any = document.querySelector(".header");
     const b: any = document.querySelector(".sidebarBody");
     const c: any = document.querySelector(".breadcrumb");
-    const e: any = document.querySelector(".paginator");
+    // const e: any = document.querySelector(".paginator");
     const d: any = document.querySelector(".toolbar");
     this.loadjs++
     if (this.loadjs === 5) {
       if (b && b.clientHeight && d) {
-        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight + e.clientHeight + 12;
+        const totalHeight = a.clientHeight + b.clientHeight + c.clientHeight + d.clientHeight + 20;
         this.heightGrid = window.innerHeight - totalHeight;
         console.log(this.heightGrid)
         this.$changeDetech.detectChanges();
@@ -194,6 +272,11 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
         this.loadjs = 0;
       }
     }
+  }
+
+  isExpanded: boolean = true;
+  expandAll(type: boolean = false) {
+    this.isExpanded = type ? !this.isExpanded : this.isExpanded;
   }
 
   getContextMenuItems(params: any) {
@@ -205,4 +288,49 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     ];
     return result;
   }
+
+  rowGroupOpenedCallback(event: any) {
+    if (event.data.childrens.length === 0) {
+      const index = this.listDatas.findIndex(d => d.purchaseDate === event.data.purchaseDate)
+      this.getDaitel(event.data.purchaseDate, event);
+    }
+  }
+
+  getDaitel(purchaseDate: string, event: any) {
+    const params = { ...this.query, selectedDate: purchaseDate };
+    params.endDate = this.$datepipe.transform(this.query.endDate, 'yyyy-MM-dd');
+    params.startDate = this.$datepipe.transform(this.query.startDate, 'yyyy-MM-dd');
+    localStorage.setItem('filterDate', JSON.stringify({ endDate: params.endDate, startDate: params.startDate }));
+    const queryParams = queryString.stringify(params);
+    this.$service.getReviewRevenueWithFlowOfMoneyDetail(queryParams)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(results => {
+        if (results.success) {
+          const itemsToUpdate: any[] = [];
+          event.api.forEachNodeAfterFilterAndSort((rowNode: any, index: number) => {
+            const data = rowNode.data;
+            if (rowNode.data.purchaseDate === purchaseDate) {
+              data.childrens = results.data.content;
+              itemsToUpdate.push(data);
+            }
+          });
+          event.api.applyTransaction({ update: itemsToUpdate })!;
+          setTimeout(() => {
+            event.api.resetRowHeights();
+            // event.api.refreshServerSide({ route: customerId, purge: true })
+            event.api.getDisplayedRowAtIndex(event.rowIndex)!.setExpanded(true);
+          }, 0);
+        } else {
+          this.listDatas = [];
+          this.isLoading = false;
+          this.$messageService.add({ severity: 'error', summary: 'Error Message', detail: results.code });
+        }
+      })
+  }
+
+
+
+
+
+
 }

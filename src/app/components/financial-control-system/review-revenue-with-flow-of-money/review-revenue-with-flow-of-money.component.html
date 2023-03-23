@@ -61,9 +61,10 @@
        </div>
        <div class="table-default" #container>
 
-        <app-list-grid-angular  *ngIf="!isLoading" [idGrid]="'my-table'"  [columnsWithAggregation]="['revenue', 'transfer', 'card', 'cash', 'debt', 'diff']"
-            [listsData]="listDatas" [height]="heightGrid"  [isShowTotalBottom]="true"
-            [columnDefs]="columnDefs" [getContextMenuItems]="getContextMenuItems"></app-list-grid-angular>
+        <app-list-grid-angular  *ngIf="!isLoading" [idGrid]="'my-table'" [isShowTotalBottom]="true" [groupDefaultExpanded]="0"  [columnsWithAggregation]="['revenue', 'transfer', 'card', 'cash', 'debt', 'diff']"
+            [listsData]="listDatas" [height]="heightGrid" [autoGroupColumnDef]="autoGroupColumnDef" [masterDetail]="true" (rowGroupOpenedCallback)="rowGroupOpenedCallback($event)"
+            [columnDefs]="columnDefs" [getContextMenuItems]="getContextMenuItems" [getRowId]="getRowId"
+            [detailCellRendererParams]="detailCellRendererParams"></app-list-grid-angular>
             <app-loading-grid *ngIf="isLoading" [cols]="cols" [lists]="20"></app-loading-grid>
         <!-- <p-table [value]="isLoading ? listDatasLoading : listDatas"  *ngIf="screenWidth<= 960" [columns]="cols"
          [resizableColumns]="true" [scrollable]="screenWidth> 960" scrollHeight="{{heightGrid}}px"
@@ -152,14 +153,16 @@
                
             </ng-template>
         </p-table> -->
-        <div class="paginator flex justify-content-end align-items-center" style="background-color: #fff;background-color: #fff;
+        <!-- <div class="paginator flex justify-content-end align-items-center" style="background-color: #fff;background-color: #fff;
         position: fixed;
         bottom: 0;
         width: 100%;
-        left: -18px;">
-            <span>Có {{listDatas.length}} kết quả</span>
-           
-        </div>
+        left: 0;">
+            <span>Từ {{ countRecord.currentRecordStart }} đến {{ countRecord.currentRecordEnd }} trên tổng số {{ countRecord.totalRecord }} kết quả</span>
+            <p-paginator [rows]="query.size" [totalRecords]="countRecord.totalRecord" [first]="first"
+                (onPageChange)="paginate($event)" [rowsPerPageOptions]="[20,40,60,100,200,{ showAll: 'ALL' }]">
+            </p-paginator>
+        </div> -->
         </div>
         </div>
 </div>

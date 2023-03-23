@@ -24,6 +24,15 @@ export class financialControlSystemService {
         );;
 
     }
+    getReviewRevenueWithFlowOfMoneyDetail(query: string): Observable<Responses> {
+        return this.$http.get<Responses>(baseUrl + `/review/v1/getReviewRevenueWithFlowOfMoneyDetail?` + query).pipe(
+            catchError(error => {
+                this.handleError(error)
+                return of(error.error);
+            })
+        );;
+
+    }
 
     getListBranch(query: string): Observable<Responses> {
         return this.$http.get<Responses>(baseUrl + `/branch/v1/getListBranch?` + query)

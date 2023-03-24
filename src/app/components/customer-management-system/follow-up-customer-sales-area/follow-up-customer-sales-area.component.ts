@@ -263,7 +263,7 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
         const total = eval(params.data.childrens.map((item: any) => item.revenue).join('+'))
         return (
           '<div style="height: 100%; background-color: #EDF6FF; padding: 20px; box-sizing: border-box;">' +
-          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${total ? Number(total).toLocaleString('en-GB') : ''})` +
+          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${params.data.childrens.length})` +
           '</div>' +
           '  <div ref="eDetailGrid" style="height: 90%;"></div>' +
           '</div>'

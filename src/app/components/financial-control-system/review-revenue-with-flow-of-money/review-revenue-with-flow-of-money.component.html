@@ -61,7 +61,7 @@
        </div>
        <div class="table-default" #container>
 
-        <app-list-grid-angular  *ngIf="!isLoading" [idGrid]="'my-table'" [isShowTotalBottom]="true" [groupDefaultExpanded]="0"  [columnsWithAggregation]="['revenue', 'transfer', 'card', 'cash', 'debt', 'diff', 'purchaseDate']"
+        <app-list-grid-angular  *ngIf="!isLoading" [idGrid]="'my-table'" [isShowTotalBottom]="true" [groupDefaultExpanded]="0"  [columnsWithAggregation]="['revenue', 'transfer', 'card', 'cash', 'debt', 'diff', 'purchaseDate', 'point', 'voucher']"
             [listsData]="listDatas" [height]="heightGrid" [autoGroupColumnDef]="autoGroupColumnDef" [masterDetail]="true" (rowGroupOpenedCallback)="rowGroupOpenedCallback($event)"
             [columnDefs]="columnDefs" [getContextMenuItems]="getContextMenuItems" [getRowId]="getRowId"
             [detailCellRendererParams]="detailCellRendererParams"></app-list-grid-angular>

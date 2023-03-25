@@ -68,6 +68,8 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     { field: "transfer", header: "Chuyển khoản", typeField: 'decimal' },
     { field: "card", header: "Quẹt thẻ", typeField: 'decimal' },
     { field: "cash", header: "Tiền mặt", typeField: 'decimal' },
+    { field: "point", header: "Điểm", typeField: 'decimal' },
+    { field: "voucher", header: "Voucher", typeField: 'decimal' },
     { field: "debt", header: "Công nợ", typeField: 'decimal' },
     { field: "diff", header: "Chênh lệnh", typeField: 'decimal' },
   ];
@@ -78,6 +80,8 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     { field: "transfer", header: "Chuyển khoản", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "card", header: "Quẹt thẻ", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "cash", header: "Tiền mặt", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "point", header: "Điểm", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "voucher", header: "Voucher", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "debt", header: "Công nợ", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "diff", header: "Chênh lệnh", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
   ];

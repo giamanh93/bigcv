@@ -5,7 +5,7 @@ import { Responses } from '../models/responses';
 import { MessageService } from 'primeng/api';
 import { ErrorService } from './error.service';
 
-const baseUrl = 'http://3.0.125.181:8888/api';
+const baseUrl = 'https://api-ecofoods.bigcv.vn/api';
 
 @Injectable({
     providedIn: 'root'

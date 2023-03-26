@@ -139,7 +139,7 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
     // const queryParams = queryString.stringify(params);
     // const startTime = new Date().getTime();
 
-    // this.$http.get(`http://3.0.125.181:8888/api/customer/v1/getCustomerRevenueByInvoiceCost?branchId=180921&endDate=2022-12-31&page=${this.query.page}&retailerId=717250&search=&size=${this.query.size}&startDate=2022-01-01`)
+    // this.$http.get(`https://api-ecofoods.bigcv.vn/api/customer/v1/getCustomerRevenueByInvoiceCost?branchId=180921&endDate=2022-12-31&page=${this.query.page}&retailerId=717250&search=&size=${this.query.size}&startDate=2022-01-01`)
     //   .subscribe((results: any) => {
     //     console.log("this.listDatas", results.data.content)
     //     this.times = (new Date().getTime() - startTime)/1000;
@@ -278,7 +278,7 @@ export class FollowFormShoppingComponent implements OnInit, AfterViewInit {
     // const startTime = new Date().getTime();
     // this.$http
     //   .get<any[]>(
-    //     `http://3.0.125.181:8888/api/customer/v1/getCustomerRevenueByInvoiceCost?branchId=180921&endDate=2022-12-31&page=${this.query.page}&retailerId=717250&search=&size=${this.query.size}&startDate=2022-01-01`
+    //     `https://api-ecofoods.bigcv.vn/api/customer/v1/getCustomerRevenueByInvoiceCost?branchId=180921&endDate=2022-12-31&page=${this.query.page}&retailerId=717250&search=&size=${this.query.size}&startDate=2022-01-01`
     //   )
     //   .subscribe((results: any) => {
     //     this.listDatas = results.data.content;

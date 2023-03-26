@@ -68,6 +68,8 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     { field: "transfer", header: "Chuyển khoản", typeField: 'decimal' },
     { field: "card", header: "Quẹt thẻ", typeField: 'decimal' },
     { field: "cash", header: "Tiền mặt", typeField: 'decimal' },
+    { field: "point", header: "Điểm", typeField: 'decimal' },
+    { field: "voucher", header: "Voucher", typeField: 'decimal' },
     { field: "debt", header: "Công nợ", typeField: 'decimal' },
     { field: "diff", header: "Chênh lệnh", typeField: 'decimal' },
   ];
@@ -78,6 +80,8 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
     { field: "transfer", header: "Chuyển khoản", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "card", header: "Quẹt thẻ", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "cash", header: "Tiền mặt", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "point", header: "Điểm", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
+    { field: "voucher", header: "Voucher", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "debt", header: "Công nợ", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
     { field: "diff", header: "Chênh lệnh", typeField: 'decimal', aggFunc: 'sum', headerClass: 'bg-primary-reverse', cellClass: ['bg-primary-reverse'] },
   ];
@@ -148,7 +152,7 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
         const total = eval(params.data.childrens.map((item: any) => item.revenue).join('+'))
         return (
           '<div style="height: 100%; background-color: #EDF6FF; padding: 20px; box-sizing: border-box;">' +
-          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${total ? Number(total).toLocaleString('en-GB') : ''})` +
+          `  <div style="height: 10%; padding: 2px; font-weight: bold;">Danh sách ${personName} (${params.data.childrens.length})` +
           '</div>' +
           '  <div ref="eDetailGrid" style="height: 90%;"></div>' +
           '</div>'

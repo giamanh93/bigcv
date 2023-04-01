@@ -6,7 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { HrmBreadcrumb } from 'src/app/common/components/hrm-breadcrumb/hrm-breadcrumb.component';
 import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { ColDef, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
-import { AgGridFn } from 'src/app/common/function/lib';
+import { AgGridFn, autoSizeAllGrid } from 'src/app/common/function/lib';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { financialControlSystemService } from 'src/app/services/financialControlSystem.service';
 import { RevenueWithFlowOfMoney } from 'src/app/models/financial-control-system';
@@ -134,7 +134,8 @@ export class ReviewRevenueWithFlowOfMoneyComponent implements OnInit, AfterViewI
 
         enableCellTextSelection: true,
         onFirstDataRendered(params: any) {
-          params.api.sizeColumnsToFit();
+          // params.api.sizeColumnsToFit();
+          autoSizeAllGrid(false,params.columnApi)
           params.api.hideOverlay();
         },
       },

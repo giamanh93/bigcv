@@ -8,7 +8,7 @@ import { STATUS } from 'src/app/models/customer-management-system';
 import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
 import { ColDef, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
-import { AgGridFn } from 'src/app/common/function/lib';
+import { AgGridFn, autoSizeAllGrid } from 'src/app/common/function/lib';
 import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-follow-up-customer-cycle',
@@ -156,7 +156,8 @@ export class FollowUpCustomerCycleComponent implements OnInit, AfterViewInit {
 
         enableCellTextSelection: true,
         onFirstDataRendered(params: any) {
-          params.api.sizeColumnsToFit();
+          autoSizeAllGrid(false,params.columnApi)
+          // params.api.sizeColumnsToFit();
           params.api.hideOverlay();
         },
       },

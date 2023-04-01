@@ -149,3 +149,11 @@ export function TextFormatter(r: any) {
         .replace(/[ùúûü]/g, 'u')
         .replace(/[ýÿ]/g, 'y');
 }
+
+export function autoSizeAllGrid(skipHeader: boolean, gridColumnApi: any) {
+    const allColumnIds: string[] = [];
+    gridColumnApi.getColumns()!.forEach((column: any) => {
+      allColumnIds.push(column.getId());
+    });
+    gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
+  }

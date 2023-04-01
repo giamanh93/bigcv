@@ -8,7 +8,7 @@ import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { AgGridFn } from 'src/app/common/function/lib';
+import { AgGridFn, autoSizeAllGrid } from 'src/app/common/function/lib';
 import { ColDef, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
 import { TotalValueFooterComponent } from 'src/app/common/components/total-value-component/total-value-component';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -109,7 +109,8 @@ export class FollowOrderValueComponent implements OnInit, AfterViewInit {
 
         enableCellTextSelection: true,
         onFirstDataRendered(params: any) {
-          params.api.sizeColumnsToFit();
+          // params.api.sizeColumnsToFit();
+          autoSizeAllGrid(false,params.columnApi)
           params.api.hideOverlay();
         },
       },

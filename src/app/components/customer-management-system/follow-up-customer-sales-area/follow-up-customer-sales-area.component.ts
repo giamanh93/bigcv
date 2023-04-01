@@ -8,7 +8,7 @@ import { STATUS } from 'src/app/models/customer-management-system';
 import { Branch, CountRecord } from 'src/app/models/early-warning';
 import { customerManagementSystem } from 'src/app/services/customerManagementSystem.service';
 import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx'; import { AgGridFn } from 'src/app/common/function/lib';
+import * as XLSX from 'xlsx'; import { AgGridFn, autoSizeAllGrid } from 'src/app/common/function/lib';
 import { ColDef, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
 import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
@@ -245,7 +245,8 @@ export class FollowUpCustomerSalesAreaComponent implements OnInit, AfterViewInit
 
         enableCellTextSelection: true,
         onFirstDataRendered(params: any) {
-          params.api.sizeColumnsToFit();
+          // params.api.sizeColumnsToFit();
+          autoSizeAllGrid(false,params.columnApi)
           params.api.hideOverlay();
         },
       },

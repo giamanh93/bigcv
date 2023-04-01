@@ -10,7 +10,7 @@ import { customerManagementSystem } from 'src/app/services/customerManagementSys
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ColDef, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
-import { AgGridFn } from 'src/app/common/function/lib';
+import { AgGridFn, autoSizeAllGrid } from 'src/app/common/function/lib';
 import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-follow-up-customer-sales-product',
@@ -124,7 +124,8 @@ export class FollowUpCustomerSalesProductComponent implements OnInit, AfterViewI
 
         enableCellTextSelection: true,
         onFirstDataRendered(params: any) {
-          params.api.sizeColumnsToFit();
+          // params.api.sizeColumnsToFit();
+          autoSizeAllGrid(false,params.columnApi)
           params.api.hideOverlay();
         },
       },

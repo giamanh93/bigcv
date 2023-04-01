@@ -157,11 +157,11 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
     setTimeout(() => {
-      params.api.sizeColumnsToFit();
       if(this.isShowTotalBottom) {
         let pinnedBottomData = this.generatePinnedBottomData();
         this.gridApi.setPinnedBottomRowData([pinnedBottomData]);
       }
+      this.autoSizeAll(false)
     }, 100);
     // window.onresize = () => {
     //   this.gridApi.sizeColumnsToFit();
@@ -213,12 +213,8 @@ export class ListGridAngularComponent implements OnInit, OnChanges {
     // option chưa dùng được
     // get the current grids width
     var gridWidth: any = document.getElementById(this.idGrid);
-    // keep track of which columns to hide/show
     var columnsToShow = [];
     var columnsToHide = [];
-
-    // iterate over all columns (visible or not) and work out
-    // now many columns can fit (based on their minWidth)
     var totalColsWidth = 0;
     var allColumns = params.columnApi.getAllColumns();
     for (var i = 0; i < allColumns.length; i++) {

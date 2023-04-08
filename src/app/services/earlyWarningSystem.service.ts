@@ -23,7 +23,6 @@ export class EarlyWarningSystemService {
                 return of(error.error);
             })
         );;
-
     }
 
     getListBranch(query: string): Observable<Responses> {

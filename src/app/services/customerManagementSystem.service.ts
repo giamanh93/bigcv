@@ -21,8 +21,16 @@ export class customerManagementSystem {
                 this.handleError(error)
                 return of(error.error);
             })
-        );;
+        );
+    }
 
+    getCustomerDebt(query: string): Observable<Responses> {
+        return this.$http.get<Responses>(baseUrl + `/customer/v1/getCustomerDebt?` + query).pipe(
+            catchError(error => {
+                this.handleError(error)
+                return of(error.error);
+            })
+        );
     }
 
     getRevenueByCustomerDetail(query: string): Observable<Responses> {
@@ -31,8 +39,16 @@ export class customerManagementSystem {
                 this.handleError(error)
                 return of(error.error);
             })
-        );;
+        );
+    }
 
+    getCustomerDebtDetail(query: string): Observable<Responses> {
+        return this.$http.get<Responses>(baseUrl + `/customer/v1/getCustomerDebtDetail?` + query).pipe(
+            catchError(error => {
+                this.handleError(error)
+                return of(error.error);
+            })
+        );
     }
 
     getCustomerRevenueByInvoiceCostDetail(query: string): Observable<Responses> {
@@ -41,7 +57,7 @@ export class customerManagementSystem {
                 this.handleError(error)
                 return of(error.error);
             })
-        );;
+        );
 
     }
 
@@ -51,7 +67,7 @@ export class customerManagementSystem {
                 this.handleError(error)
                 return of(error.error);
             })
-        );;
+        );
 
     }
 
@@ -61,7 +77,7 @@ export class customerManagementSystem {
                 this.handleError(error)
                 return of(error.error);
             })
-        );;
+        );
     }
 
     getCustomerRevenueByArea(query: string): Observable<Responses> {
@@ -70,7 +86,7 @@ export class customerManagementSystem {
                 this.handleError(error)
                 return of(error.error);
             })
-        );;
+        );
     }
 
     getCustomerRevenueByInvoiceCost(query: string): Observable<Responses> {
@@ -84,7 +100,7 @@ export class customerManagementSystem {
                     this.handleError(error)
                     return of(error.error);
                 })
-            );;
+            );
     }
 
     private handleError(error: any) {

@@ -28,6 +28,7 @@ import { LoadingGridModule } from 'src/app/common/components/loading-grid/loadin
 import { TotalValueFooterComponent } from 'src/app/common/components/total-value-component/total-value-component';
 import { DatasService } from 'src/app/services/datas.service';
 import { ExcelService } from 'src/app/services/excel.service';
+import { FollowDebtCustomerComponent } from './follow-debt-customer/follow-debt-customer.component';
 
 @NgModule({
     imports: [
@@ -63,6 +64,7 @@ import { ExcelService } from 'src/app/services/excel.service';
         , FollowOrderValueComponent
         , FollowFormShoppingComponent
         , FollowUpCustomerSalesAreaComponent
+        , FollowDebtCustomerComponent
         ]
 })
 export class CustomerManagementSystemModule { }
